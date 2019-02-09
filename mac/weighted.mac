@@ -1,0 +1,23 @@
+
+/GUORE/generator/select Muon
+
+/run/setCutForRegion OuterRockRegion 1 m
+/run/setCutForRegion InnerRockRegion 10 cm
+/run/setCutForRegion WaterRegion_1 10 cm
+/run/setCutForRegion LArRegion_1 1 cm
+/run/setCutForRegion WaterRegion_2 10 cm
+/run/setCutForRegion LArRegion_2 1 cm
+
+/vis/open HepRepFile
+/vis/drawVolume
+/vis/viewer/flush
+/vis/scene/add/trajectories
+#/vis/filtering/trajectories/create/particleFilter
+#/vis/filtering/trajectories/particleFilter-0/add gamma
+#/vis/filtering/trajectories/particleFilter-0/add mu-
+#/vis/filtering/trajectories/particleFilter-0/active true
+/vis/scene/add/hits
+/vis/scene/endOfEventAction accumulate
+
+
+/run/beamOn 10

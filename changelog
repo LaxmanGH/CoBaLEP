@@ -1,0 +1,106 @@
+I should have started this a long time ago. But I guess now's as good
+a time as any.
+
+This changelog will be where I document any changes I make to any part
+of this entire directory. Source files, macros, even scripts and
+simulation file processing changes. So without further ado...
+
+
+
+September 7 2018
+
+Currently there's great debate about whether or not the muon energy
+sampling method is correct. The position distribution is negligibly
+altered from the original muon source file, and the angular
+distributions have been extensively analyzed and found to be in good
+agreement with expectation. However, until the energy issue is
+resolved, no further simulations will be created or processed.
+
+One major change to note at this time is a fundamental altering of the
+world geometry. The information about the original world geometry and
+the world geometry used after that will be kept in
+Detector_CJStyle.icc under the options "OriginalWithRock" and
+"OriginalWithRangeCuts" options, respectively. The "OriginalNoRock"
+option will also be available, and is identical to OriginalWithRock
+but with the rock all removed.
+
+The new option will be "September2018WithCuts" and will feature the
+following changes:
+
+- The detector assembly will no longer be centered in the
+  world. Instead, it will be shifted down 6.5 m.
+
+  ("the detector assembly" refers to the watershield, the fill gas,
+  the liquid argon, the copper cryostats and the germanium detectors
+  themselves.)
+
+- There was 23.5 m of rock located below the detector assembly. This
+  will be reduced to 5 m.
+
+- There was 15.5 m of rock located above the top of the lab
+  space. This will be reduced to 10m.
+
+- The world's size on the z axis will be reduced from 60 m to
+  (60-(15.5-10)-(23.5-5)) = (60-5.5-18.5) = 36 m. The x and y axes
+  will remain at 100m each.
+
+- The lab cutout currently extends outside of the world. This has not
+  thrown any errors because it is a subtraction solid. However, if we
+  ever want to make the lab "real" and filled with something like air,
+  it must fit inside the world boundaries. For this reason, its length
+  on the x axis will be reduced from 70m to 60m, and it will be
+  shifted 20m to the left of center, rather than 25 m. So its x bounds
+  will be -50<x<10, rather than -60<x<10.
+
+
+So much for geometric changes. The sampling method will also
+experience significant changes. The sampling plane was 5 m above the
+detector assembly. This meant part of it was actually in the lab
+volume, and some muons didn't even cross through any rock before
+hitting the top of the detector assembly (which is at the lab
+floor). To give all muons a chance to shower properly, the sampling
+plane is being shifted up 13m, and will sit 18m above the
+assembly. This ensures that in the minimum case (muon travelling
+straight downward, directly above the assembly) 10 m of rock will be
+crossed (lab height = 8 m). To compensate for the increased vertical
+distance, a larger plane must be made to simulate muons with large
+horizontal momenta in such a way that they will hit the top of the
+assembly isotropically. This increases the size of the sampling plane
+to 99m in both x and y directions. To ensure isotropic behavior on the
+sides of the assembly, the sampling plane would need to be 171m in
+both x and y, which is currently considered unacceptably large. This
+may change in the future, though, and would require a larger world.
+
+Another change to the sampling method is that a geometric
+calculation will be performed when a new muon is sampled. If a
+straight line (along the muon's momentum) does not pass within 5m of
+the detector assembly, that muon will be immediately killed before it
+can propagate. This is to save on the enormous amounts of time muons
+take to travel through the rock. This calculation will look very
+complicated, but is in fact based on elementary trigonometry. It will,
+of course, be thoroughly validated in a script before implementation.
+
+As a final change to the sampling method, the position sampling of the
+muons is being moved to ShowerGenerator.cc (where it should have been
+all along, to be honest). It's going to be randomized and flatly
+sampled on both the x and y axes. This will cause a difference from
+the original muon's position information. The justification for this
+is that the mountain profile is changing very slowly, so a small
+change in location within the lab space will cause a negligible change
+in the muon's other information.
+	
+Tentatively, it's likely that muon sampling will use a different input
+file than it did previously. This is not being implemented until after
+the energy validation, though, so stay tuned.
+
+
+1/21/2019
+G4Polycone seems to be completely broken after the move to Lawrence (minor alterations made to the code to make it compatible with GEANT4 10.02 btw). I've had to change the geometry so that rather than the inner/outer cryostats, liquid argon, and water shield being made out of a single polycone each, they're now each made out of 2 disks and a hollow cylinder. What a pain in the ass.
+
+02/02/2019
+I've added geometry options and modified the main file for the neutron multiplicity study. I should probably use two different main files for this... Look for an update soon saying that I've separated the two. The macro for the neutron study is neutronMultiplicitySource.mac
+
+02/05/2019
+Switched the module from neutron mode to muon mode, or whatever the heck you want to call it. Also, there were some mondo problems with the neutron study. The cause was the .000001 cm air gap I was leaving between each slab of rock. I forgot all about it when I told the module to kill any particles that changed boundaries into something that wasn't rock. I left the gap in the interest of preventing any weird boundary overlap issues, but it cause more problems for me than the boundary overlap ever would! What a world.
+
+Anyway, switched over to muon mode, ran a test sim, made sure the geometric cut was working properly (AGAIN). Fixed hitbuilder, eventbuilder, jobsubmit, manysubmit to be compatible with Lawrence. Fixed traceback and trace2 (I hope).

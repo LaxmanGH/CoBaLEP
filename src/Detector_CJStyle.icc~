@@ -1,0 +1,167 @@
+//Rock optioning
+
+//Must declare all variables outside of the conditional statements
+
+//Original rock variables
+G4Tubs* solid_CutOut;
+G4SubtractionSolid *solid_Rock2;//Lab cut out
+G4SubtractionSolid *solid_Rock3;//Detector space cut out
+G4LogicalVolume* logical_Rock;
+G4VPhysicalVolume* physical_Rock;
+
+
+//Original rock with range cuts variables
+G4Tubs* inner_CutOut; //Space for detectors and inner rock region
+G4SubtractionSolid *outer_Rock; //Outer rock with inner cutout removed
+G4SubtractionSolid *outer_Rock2;//Inner cutout AND lab space removed
+G4LogicalVolume* logical_outerRock;
+G4VPhysicalVolume* physical_outerRock;
+G4Tubs* inner_Rock;//Inner rock
+G4SubtractionSolid* inner_Rock2;//Inner rock with lab space removed
+G4LogicalVolume* logical_innerRock;
+G4VPhysicalVolume* physical_innerRock;
+G4Region *OuterRockRegion;//For range cuts
+G4Region *InnerRockRegion;//For range cuts
+
+G4Box* solid_Rock; //= new G4Box("sol_Rock",50*m,50*m,30*m);
+G4Box* solid_Lab; //= new G4Box("sol_Lab",35*m,10*m,4*m);
+
+
+
+if(RockOption == "OriginalWithRock")//Original rock definition
+  {//Rock is all one big shape, with holes cut out for lab and detector
+
+    G4cout << G4endl <<  "OriginalWithRock: using rock at SURF without range cuts..." << G4endl << G4endl;
+
+    solid_Rock = new G4Box("sol_Rock",50*m,50*m,30*m);
+    solid_Lab = new G4Box("sol_Lab",35*m,10*m,4*m);
+    
+    solid_Rock2 = new G4SubtractionSolid("sol_Rock2", solid_Rock, solid_Lab ,0 , G4ThreeVector(-25*m,0,10.5*m));
+    solid_CutOut = new G4Tubs("sol_CutOut",0, 6.50001*m ,6.50001*m, 0, 2*M_PI);
+    solid_Rock3 = new G4SubtractionSolid("sol_Rock3", solid_Rock2, solid_CutOut ,0 , G4ThreeVector(0,0,0));
+
+  logical_Rock = new G4LogicalVolume(solid_Rock3,mat_Rock,"log_Rock");
+  logical_Rock->SetVisAttributes ( new G4VisAttributes(G4Colour(0.7, 0.7, 0.7, 0.5) )); //grey 50% transparent
+  physical_Rock = new G4PVPlacement(0,G4ThreeVector(),logical_Rock,"phy_Rock",logical_World,false,0,checkOverlaps);
+  
+  }//OldRock
+
+
+ else if(RockOption=="NewRock")
+  {
+    G4cout << G4endl << "OriginalWithRangeCuts: using rock at SURF with range cuts..." << G4endl << G4endl;
+
+    solid_Rock = new G4Box("sol_Rock",50*m,50*m,30*m);
+    solid_Lab = new G4Box("sol_Lab",35*m,10*m,4*m);
+
+    
+    //Separate the rock into two regions
+    //The region closer to the detector will have better position res.
+
+    inner_CutOut = new G4Tubs("inn_CutOut",0*m, 11.5*m, 11.5*m,0, 2*M_PI);
+
+    outer_Rock = new G4SubtractionSolid("out_Rock", solid_Rock, solid_Lab ,0 , G4ThreeVector(-25*m,0,10.5*m));//cut out lab
+    
+    outer_Rock2 = new G4SubtractionSolid("out_Rock2", outer_Rock, inner_CutOut ,0 , G4ThreeVector(0,0,0));//cut out assembly and innerrock
+    
+    inner_Rock = new G4Tubs("inn_Rock",6.50001*m, 11.49999*m, 11.49999*m, 0, 2*M_PI); //assembly already cut out
+    
+    inner_Rock2 = new G4SubtractionSolid("inn_Rock2", inner_Rock, solid_Lab ,0 , G4ThreeVector(-25*m,0,10.5*m));//cut out lab
+    
+    logical_outerRock = new G4LogicalVolume(outer_Rock2,mat_Rock,"log_outRock");
+    
+    logical_outerRock->SetVisAttributes ( new G4VisAttributes(G4Colour(0.7, 0.7, 0.7, 0.5) )); //grey 50% transparent
+    
+    physical_outerRock = new G4PVPlacement(0,G4ThreeVector(),logical_outerRock,"phy_outerRock",logical_World,false,0,checkOverlaps);
+    
+    logical_innerRock = new G4LogicalVolume(inner_Rock2,mat_Rock,"log_innRock");
+    
+    logical_innerRock->SetVisAttributes ( new G4VisAttributes(G4Colour(0.7, 0.7, 0.7, 0.5) )); //grey 50% transparent
+    
+    physical_innerRock = new G4PVPlacement(0,G4ThreeVector(),logical_innerRock,"phy_innerRock",logical_World,false,0,checkOverlaps);
+    
+    
+    //Define regions for custom range cuts in macro
+    OuterRockRegion = new G4Region("OuterRockRegion");
+    OuterRockRegion-> AddRootLogicalVolume(logical_outerRock);
+    InnerRockRegion = new G4Region("InnerRockRegion");
+    InnerRockRegion-> AddRootLogicalVolume(logical_innerRock);
+  }//NewRock
+
+ else if(RockOption == "September2018WithCuts")
+   {
+     //September 2018 geometry changes implemented
+    G4cout << G4endl << "September2018WithCuts: using rock at SURF with range cuts and September2018 geometry..." << G4endl << G4endl;
+
+    assemblyzoffset = -6.5*m;
+    
+     solid_Rock = new G4Box("sol_Rock",50*m,50*m,18*m);
+     solid_Lab = new G4Box("sol_Lab",30*m,10*m,4*m);
+
+         //Separate the rock into two regions
+    //The region closer to the detector will have better position res.
+
+    inner_CutOut = new G4Tubs("inn_CutOut",0*m, 11.5*m, 11.5*m,0, 2*M_PI);
+
+    outer_Rock = new G4SubtractionSolid("out_Rock", solid_Rock, solid_Lab ,0 , G4ThreeVector(-20*m,0,4*m));//cut out lab
+    
+    outer_Rock2 = new G4SubtractionSolid("out_Rock2", outer_Rock, inner_CutOut ,0 , G4ThreeVector(0,0,-6.5*m));//cut out inner rock and assembly
+    
+    inner_Rock = new G4Tubs("inn_Rock",6.50001*m, 11.49999*m, 11.49999*m, 0, 2*M_PI); //assembly already cut out
+    
+    inner_Rock2 = new G4SubtractionSolid("inn_Rock2", inner_Rock, solid_Lab ,0 , G4ThreeVector(-20*m,0,10.5*m));//cut out lab
+    
+    logical_outerRock = new G4LogicalVolume(outer_Rock2,mat_Rock,"log_outRock");
+    
+    logical_outerRock->SetVisAttributes ( new G4VisAttributes(G4Colour(0.7, 0.7, 0.7, 0.5) )); //grey 50% transparent
+    
+    physical_outerRock = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_outerRock,"phy_outerRock",logical_World,false,0,checkOverlaps);
+    
+    logical_innerRock = new G4LogicalVolume(inner_Rock2,mat_Rock,"log_innRock");
+    
+    logical_innerRock->SetVisAttributes ( new G4VisAttributes(G4Colour(0.7, 0.7, 0.7, 0.5) )); //grey 50% transparent
+    
+    physical_innerRock = new G4PVPlacement(0,G4ThreeVector(0,0,-6.5*m),logical_innerRock,"phy_innerRock",logical_World,false,0,checkOverlaps);
+    
+    
+    //Define regions for custom range cuts in macro
+    OuterRockRegion = new G4Region("OuterRockRegion");
+    OuterRockRegion-> AddRootLogicalVolume(logical_outerRock);
+    InnerRockRegion = new G4Region("InnerRockRegion");
+    InnerRockRegion-> AddRootLogicalVolume(logical_innerRock);
+     
+   }
+
+ else if(RockOption == "NeutronMultiplicityValidation")
+   {
+     //For validating the multiplicity of neutron showers with out module setup.
+     G4Box* solid_innerWorld = new G4Box("sol_innerWorld",30*m,30*m,12*m);	  
+     G4LogicalVolume* logical_innerWorld = new G4LogicalVolume(solid_innerWorld,mat_air,"log_innerWorld");
+     logical_innerWorld->SetVisAttributes (G4VisAttributes::Invisible);
+G4VPhysicalVolume* physical_innerWorld  = new G4PVPlacement(0,G4ThreeVector(),logical_innerWorld,"phy_innerWorld",logical_World,false,0,checkOverlaps);
+
+     G4Box* solid_neutronRock = new G4Box("sol_neutronRock",.5*cm,10*m,10*m);
+     G4LogicalVolume* logical_neutronRock = new G4LogicalVolume(solid_neutronRock,mat_Rock,"log_neutronRock");
+     logical_neutronRock->SetVisAttributes ( new G4VisAttributes(G4Colour(0.7, 0.7, 0.7, 0.5) )); //grey 50% transparent
+G4VPhysicalVolume* physical_neutronRock;
+ G4String rock_name;
+ G4ThreeVector rock_position;
+ for(int j = 0;j<2000;j++)
+   {
+     rock_name = "phy_neutronRock";
+     rock_name+=G4UIcommand::ConvertToString(j);
+     rock_position = G4ThreeVector(j*cm,0,0);
+     new G4PVPlacement(0,rock_position,logical_neutronRock,rock_name,logical_innerWorld,false,j,checkOverlaps);
+   }
+
+
+
+     return physical_World;
+   }
+
+
+
+ else//NoRock, or a garbage value, results in rock not being included
+   {
+     G4cout << G4endl << "NoRock (or invalid value): rock  not included in SURF simulation..." << G4endl << G4endl;
+   }
