@@ -134,9 +134,10 @@ if(RockOption == "OriginalWithRock")//Original rock definition
 
  else if(RockOption == "NeutronMultiplicityValidation")
    {
+    G4cout << G4endl << "NeutronMultiplicityValidation: Running a neutron multiplicity study geometry, with pure rock..." << G4endl << G4endl;
      //For validating the multiplicity of neutron showers with out module setup.
      G4Box* solid_innerWorld = new G4Box("sol_innerWorld",30*m,30*m,12*m);	  
-     G4LogicalVolume* logical_innerWorld = new G4LogicalVolume(solid_innerWorld,mat_air,"log_innerWorld");
+     G4LogicalVolume* logical_innerWorld = new G4LogicalVolume(solid_innerWorld,mat_vacuum,"log_innerWorld");
      logical_innerWorld->SetVisAttributes (G4VisAttributes::Invisible);
 G4VPhysicalVolume* physical_innerWorld  = new G4PVPlacement(0,G4ThreeVector(),logical_innerWorld,"phy_innerWorld",logical_World,false,0,checkOverlaps);
 

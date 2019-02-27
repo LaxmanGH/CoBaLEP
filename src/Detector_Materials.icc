@@ -3,7 +3,7 @@
   G4NistManager* nist = G4NistManager::Instance();
   // Option to switch on/off checking of volumes overlaps
 
-  G4Material* mat_vacuum = nist->FindOrBuildMaterial("G4_Galactic");//
+  G4Material* mat_vacuum = nist->FindOrBuildMaterial("G4_Galactic");
   G4Material* mat_air = nist->FindOrBuildMaterial("G4_AIR");
   G4Material* mat_GeNat = nist->FindOrBuildMaterial("G4_Ge");
 	G4Material* mat_Cu = nist->FindOrBuildMaterial("G4_Cu");

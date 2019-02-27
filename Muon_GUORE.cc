@@ -64,13 +64,9 @@
 //This version also has an option for hits in the LAr as a channel. This is quite memory intensive.
 //There is NO summing in this version. Cuts are implemented on a case by case basis.
 
-//This version was used for the neutron multiplicity study
-//To do more studies, simply move the Muon_GUORE.cc currently in the main directory
-//Elsewhere, and replace it with this (make sure it's named Muon_GUORE.cc)
-//Then, set "DetectorConstruction.cc"'s variable RockOption to "NeutronMultiplicityValidation"
-//More information in Detector_CJStyle.icc
 
-//Some bare bones templates copied directly from the Geant4 Users' Guide
+
+//Some templates copied directly from the Geant4 Users' Guide
 #include <G4UserRunAction.hh>
 #include <G4UImessenger.hh>
 #include <TFile.h>
@@ -101,7 +97,6 @@ public:
   //member functions
   void Open(char* inputseed);
   void Write(G4Track *track, int isadetector, int isentry);
-  void NeutronMultiplicityStudyWrite(G4Track* track);
   void Close();
 
   //output file
@@ -149,8 +144,6 @@ public:
 
   char outputfilename[100];
 
-  //Neutron multiplicity study variables
-
 };
 
 
@@ -162,7 +155,7 @@ void IO::Open(char* inputseed)
 {
   
   //Name output file based on the seed number given at the start of the program
-  char prefix[15] = "neutronstudy";
+  char prefix[15] = "output";
   char suffix[10] = ".root";
   
   strcat(outputfilename, prefix);
@@ -259,7 +252,7 @@ void IO::Write(G4Track *track, int isadetector, int isentry)
   muonenergy = G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetKineticEnergy()/CLHEP::keV;
   
   eventnumber = G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetEventID();
-  stepnumber = currentsteps;
+  stepnumber = savedsteps;
   steplength = track->GetStep()->GetStepLength()/CLHEP::mm;
   tracknumber = track->GetTrackID();
   isentryevent = isentry;
@@ -293,8 +286,6 @@ void IO::Write(G4Track *track, int isadetector, int isentry)
 	}//for(std...
  
       detectornumber = atoi(num);
-      //if(detectornumber==0)
-      //detectornumber=2001;
     }//if(isadetector==1
 
   if(isadetector==0)
@@ -308,20 +299,6 @@ void IO::Write(G4Track *track, int isadetector, int isentry)
   
 } //Io::Write
 
-void IO::NeutronMultiplicityStudyWrite(G4Track *track)
-{//Not currently implemented
-  PID = track->GetDefinition()->GetPDGEncoding();
-  ParentID = track->GetParentID();
-  time = track->GetGlobalTime()/CLHEP::ns;
-  x = track->GetStep()->GetPreStepPoint()->GetPosition().x()/CLHEP::mm;
-  y = track->GetStep()->GetPreStepPoint()->GetPosition().y()/CLHEP::mm;
-  z = track->GetStep()->GetPreStepPoint()->GetPosition().z()/CLHEP::mm;
-  px = track->GetMomentumDirection().x();
-  py = track->GetMomentumDirection().y();
-  pz = track->GetMomentumDirection().z();
-
-
-}
 
 void IO::Close()
 {
@@ -408,37 +385,9 @@ public:
 
 void SteppingAction::UserSteppingAction(const G4Step* step)
 {
-  currentsteps++;
   //cuts go here
-
-  //Neutron multiplicity study
-  //Presteppoint at beginning or possteppoint at end cause seg faults - beware  
-  int PIDcompare = step->GetTrack()->GetDefinition()->GetPDGEncoding();
-  G4String whatgeometry = "";
-
-  if(PIDcompare!=13)
-    {
-      whatgeometry = step->GetPreStepPoint()->GetPhysicalVolume()->GetName();
-      
-      if(whatgeometry == "phy_innerWorld"||whatgeometry == "phy_World")
-	step->GetTrack()->SetTrackStatus(fKillTrackAndSecondaries);//No need to simulate particles not in the slab
-      
-      else if(whatgeometry!=step->GetPostStepPoint()->GetPhysicalVolume()->GetName()&&PIDcompare==2112)
-	{  //If the particle is a neutron and it changes volumes
-
-	  //if((step->GetPostStepPoint()->GetPosition().x()-step->GetPreStepPoint()->GetPosition().x())>0)
-	  //{//particle moving to the right (disabled for now)
-	      savedsteps++;
-	      fio->Write(step->GetTrack(), 1, 1);//~might be broken
-	      //}
-	}
-      //if(currentsteps%1000==0)
-      //G4cout << currentsteps << G4endl;
-
-    }//PIDcompare
-
-  /*~Temporarily commented out for neutron multiplicity study  
-  if(currentsteps<maxsteps)
+  currentsteps++;
+  if(savedsteps<maxsteps)
     {//hits inside detector detection
       
       G4String whatgeometry = step->GetPreStepPoint()->GetPhysicalVolume()->GetName();
@@ -450,7 +399,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
       if(strstr(whatgeometry.c_str(),detectornames.c_str())) //if pre step point originates in a detector
 	{
 	  fio->Write(step->GetTrack(), 1, 0); //non-entry event
-	  currentsteps++;
+	 savedsteps++;
 	}//if(strstr
 
 
@@ -485,7 +434,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
       return;
     }
 ~*/	    
-
+    }//savedsteps
 }	     //void SteppingAction
 
 //////////////////////////////////////////////////

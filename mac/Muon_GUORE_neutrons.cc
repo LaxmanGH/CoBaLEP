@@ -68,6 +68,7 @@
 //To do more studies, simply move the Muon_GUORE.cc currently in the main directory
 //Elsewhere, and replace it with this (make sure it's named Muon_GUORE.cc)
 //Then, set "DetectorConstruction.cc"'s variable RockOption to "NeutronMultiplicityValidation"
+//Finally, change the world material from vacuum back to air.
 //More information in Detector_CJStyle.icc
 
 //Some bare bones templates copied directly from the Geant4 Users' Guide
@@ -162,7 +163,6 @@ void IO::Open(char* inputseed)
 {
   
   //Name output file based on the seed number given at the start of the program
-  //~changeo
   char prefix[15] = "neutronstudy";
   char suffix[10] = ".root";
   
@@ -294,8 +294,8 @@ void IO::Write(G4Track *track, int isadetector, int isentry)
 	}//for(std...
  
       detectornumber = atoi(num);
-      if(detectornumber==0)
-	detectornumber=2001;
+      //if(detectornumber==0)
+      //detectornumber=2001;
     }//if(isadetector==1
 
   if(isadetector==0)
@@ -310,7 +310,7 @@ void IO::Write(G4Track *track, int isadetector, int isentry)
 } //Io::Write
 
 void IO::NeutronMultiplicityStudyWrite(G4Track *track)
-{
+{//Not currently implemented
   PID = track->GetDefinition()->GetPDGEncoding();
   ParentID = track->GetParentID();
   time = track->GetGlobalTime()/CLHEP::ns;
@@ -409,6 +409,7 @@ public:
 
 void SteppingAction::UserSteppingAction(const G4Step* step)
 {
+  currentsteps++;
   //cuts go here
 
   //Neutron multiplicity study
@@ -426,18 +427,20 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
       else if(whatgeometry!=step->GetPostStepPoint()->GetPhysicalVolume()->GetName()&&PIDcompare==2112)
 	{  //If the particle is a neutron and it changes volumes
 
-	  if((step->GetPostStepPoint()->GetPosition().x()-step->GetPreStepPoint()->GetPosition().x())>0)
-	    {//particle moving to the right
-	      savedsteps++;
-	      fio->Write(step->GetTrack(), 1, 1);//~might be broken
-	    }
+	  // if((step->GetPostStepPoint()->GetPosition().x()-step->GetPreStepPoint()->GetPosition().x())<0)
+	  // {//particle moving to the ~LEFT at ALL
+	      //    step->GetTrack()->SetTrackStatus(fKillTrackAndSecondaries);//No need to simulate particles not in the slab
+	      //  }
+	      // else
+	      // {
+	  savedsteps++;
+	  fio->Write(step->GetTrack(), 1, 1);//~might be broken (seeming less likely now)
+	      // }
 	}
-      //if(currentsteps%1000==0)
-      //G4cout << currentsteps << G4endl;
-	  currentsteps++;
+
     }//PIDcompare
 
-  /*~Temporarily commented out for neutron multiplicity study  
+  /* Commented out for neutron multiplicity study  
   if(currentsteps<maxsteps)
     {//hits inside detector detection
       
@@ -455,35 +458,35 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
 
       //Deprecated collection tags, use at own risk
-      /*
-      if(strstr(whatgeometry.c_str(),fillgasname.c_str()))//if pre step point is in fill gas
-	{
-	  thatgeometry = step->GetPostStepPoint()->GetPhysicalVolume()->GetName();
-	  if(strstr(thatgeometry.c_str(),detectornames.c_str()))//but post step point is in Ge
-	    {
-	      fio->Write(step->GetTrack(), 1, 1); //entry event
-	      currentsteps++;
-	    }
-	}
       
-      if(strstr(whatgeometry.c_str(),liquidargon.c_str())) //liquidargon as a channel, comment out these 5 lines to not write these hits 
+      //if(strstr(whatgeometry.c_str(),fillgasname.c_str()))//if pre step point is in fill gas
+	  //{
+	  //thatgeometry = step->GetPostStepPoint()->GetPhysicalVolume()->GetName();
+	  //if(strstr(thatgeometry.c_str(),detectornames.c_str()))//but post step point is in Ge
+	      //{
+	      //fio->Write(step->GetTrack(), 1, 1); //entry event
+	      //currentsteps++;
+      //}
+      //}
+      
+      //if(strstr(whatgeometry.c_str(),liquidargon.c_str())) //liquidargon as a channel, comment out these 5 lines to not write these hits 
 //Beware, this is VERY memory intensive
-	{
-	  fio->Write(step->GetTrack(),0, 0); //comment to not write liquidargon hits to a channel
-	  currentsteps++;
-	}
-      ~ASTERISK/    
+      //{
+      //  fio->Write(step->GetTrack(),0, 0); //comment to not write liquidargon hits to a channel
+      //  currentsteps++;
+      //}
+      //~ASTERISK/    
 	  
 	     ///else if(strstr
 
 
 	}   //if maxsteps
 
-  if(currentsteps>=maxsteps)
-    {
-      G4cout << G4endl << "I NEED AN ADULT" << G4endl;
-      return;
-    }
+  //if(currentsteps>=maxsteps)
+   // {
+    //  G4cout << G4endl << "I NEED AN ADULT" << G4endl;
+    //  return;
+   // }
 ~*/	    
 
 }	     //void SteppingAction
@@ -556,9 +559,7 @@ int main(int argc,char** argv)
     inputseed="413413413";
 #ifdef G4UI_USE
     G4UIExecutive* ui = new G4UIExecutive(argc, argv);
-#ifdef G4VIS_USE
-    //    UImanager->ApplyCommand("/control/execute vis.mac");
-#endif
+
     ui->SessionStart();
     delete ui;
 #endif

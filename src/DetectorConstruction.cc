@@ -91,7 +91,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 	//Options are: September2018WithCuts (recommended), OriginalWithRock, NewRock, NoRock,
 	//and NeutronMultiplicityValidation (for neutron study only)
-	G4String RockOption = "NeutronMultiplicityValidation";
+	G4String RockOption = "September2018WithCuts";
 	G4String LArScintillators = "NotImplementedYet";
 	G4String DetectorComposition = "NotImplementedYet";
 	
