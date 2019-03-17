@@ -62,7 +62,7 @@ DetectorConstruction::DetectorConstruction()
 {
   detectorMessenger = new DetectorMessenger(this);
 	detector_type = "GERDA";
-	innerVessel_FillMaterial = "NitrogenGas";
+	innerVessel_FillMaterial = "ArgonLiquid";
 	checkOverlaps = false;
 }
 
@@ -89,13 +89,16 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	logical_World->SetVisAttributes (G4VisAttributes::Invisible);
 	G4VPhysicalVolume* physical_World = new G4PVPlacement(0,G4ThreeVector(),logical_World,"phy_World",0,false,0,checkOverlaps);
 
+	G4double assemblyzoffset = -4*m;//for displacing the detector assembly from the center of the world
+	//May change with different geometry selections
 	//Options are: September2018WithCuts (recommended), OriginalWithRock, NewRock, NoRock,
 	//and NeutronMultiplicityValidation (for neutron study only)
+	//March2019WithCuts in testing phase
 	G4String RockOption = "September2018WithCuts";
 	G4String LArScintillators = "NotImplementedYet";
 	G4String DetectorComposition = "NotImplementedYet";
 	
-	G4double assemblyzoffset = -6.5*m;//for displacing the detector assembly from the center of the world
+
 	
 #include "Detector_CJStyle.icc"
 

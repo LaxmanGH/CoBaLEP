@@ -95,17 +95,17 @@ if(RockOption == "OriginalWithRock")//Original rock definition
 
     assemblyzoffset = -6.5*m;
     
-     solid_Rock = new G4Box("sol_Rock",50*m,50*m,18*m);
+     solid_Rock = new G4Box("sol_Rock",32.5*m,15*m,18*m);
      solid_Lab = new G4Box("sol_Lab",30*m,10*m,4*m);
 
-         //Separate the rock into two regions
-    //The region closer to the detector will have better position res.
+     //Separate the rock into two regions
+     //The region closer to the detector will have better position res.
 
     inner_CutOut = new G4Tubs("inn_CutOut",0*m, 11.5*m, 11.5*m,0, 2*M_PI);
 
-    outer_Rock = new G4SubtractionSolid("out_Rock", solid_Rock, solid_Lab ,0 , G4ThreeVector(-20*m,0,4*m));//cut out lab
+    outer_Rock = new G4SubtractionSolid("out_Rock", solid_Rock, solid_Lab ,0 , G4ThreeVector(-2.5*m,0,4*m));//cut out lab
     
-    outer_Rock2 = new G4SubtractionSolid("out_Rock2", outer_Rock, inner_CutOut ,0 , G4ThreeVector(0,0,-6.5*m));//cut out inner rock and assembly
+    outer_Rock2 = new G4SubtractionSolid("out_Rock2", outer_Rock, inner_CutOut ,0 , G4ThreeVector(17.5*m,0,-6.5*m));//cut out inner rock and assembly
     
     inner_Rock = new G4Tubs("inn_Rock",6.50001*m, 11.49999*m, 11.49999*m, 0, 2*M_PI); //assembly already cut out
     
@@ -115,7 +115,7 @@ if(RockOption == "OriginalWithRock")//Original rock definition
     
     logical_outerRock->SetVisAttributes ( new G4VisAttributes(G4Colour(0.7, 0.7, 0.7, 0.5) )); //grey 50% transparent
     
-    physical_outerRock = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_outerRock,"phy_outerRock",logical_World,false,0,checkOverlaps);
+    physical_outerRock = new G4PVPlacement(0,G4ThreeVector(-17.5*m,0,0),logical_outerRock,"phy_outerRock",logical_World,false,0,checkOverlaps);
     
     logical_innerRock = new G4LogicalVolume(inner_Rock2,mat_Rock,"log_innRock");
     
@@ -131,6 +131,47 @@ if(RockOption == "OriginalWithRock")//Original rock definition
     InnerRockRegion-> AddRootLogicalVolume(logical_innerRock);
      
    }
+
+ else if(RockOption == "March2019WithCuts")
+   {
+     //Excess rock removed, world xy volume same size for sake of sampling plane
+     solid_Rock = new G4Box("sol_Rock",32.499999*m,15*m,9*m);
+     solid_Lab = new G4Box("sol_Lab",30*m,10*m,4*m);
+     assemblyzoffset = -4*m;
+
+     //Separate the rock into two regions
+     //The region closer to the detector will have better position res.
+
+    inner_CutOut = new G4Tubs("inn_CutOut",0*m, 11.5*m, 11.5*m,0, 2*M_PI);
+
+    outer_Rock = new G4SubtractionSolid("out_Rock", solid_Rock, solid_Lab ,0 , G4ThreeVector(-5*m,0,0));//cut out lab from top rock
+    
+    outer_Rock2 = new G4SubtractionSolid("out_Rock2", outer_Rock, inner_CutOut ,0 , G4ThreeVector(17.5*m,0,-10.5*m));//cut out inner rock and assembly
+    
+    inner_Rock = new G4Tubs("inn_Rock",6.50001*m, 11.49999*m, 11.49999*m, 0, 2*M_PI); //assembly already cut out
+    
+    inner_Rock2 = new G4SubtractionSolid("inn_Rock2", inner_Rock, solid_Lab ,0 , G4ThreeVector(-20*m,0,10.5*m));//cut out lab from inner rock
+    
+    logical_outerRock = new G4LogicalVolume(outer_Rock2,mat_Rock,"log_outRock");
+    
+    logical_outerRock->SetVisAttributes ( new G4VisAttributes(G4Colour(0.7, 0.7, 0.7, 0.5) )); //grey 50% transparent
+    
+    physical_outerRock = new G4PVPlacement(0,G4ThreeVector(-17.5*m,0,6.5*m),logical_outerRock,"phy_outerRock",logical_World,false,0,checkOverlaps);
+    
+    logical_innerRock = new G4LogicalVolume(inner_Rock2,mat_Rock,"log_innRock");
+    
+    logical_innerRock->SetVisAttributes ( new G4VisAttributes(G4Colour(0.7, 0.7, 0.7, 0.5) )); //grey 50% transparent
+    
+    physical_innerRock = new G4PVPlacement(0,G4ThreeVector(0,0,-4*m),logical_innerRock,"phy_innerRock",logical_World,false,0,checkOverlaps);
+    
+    
+    //Define regions for custom range cuts in macro
+    OuterRockRegion = new G4Region("OuterRockRegion");
+    OuterRockRegion-> AddRootLogicalVolume(logical_outerRock);
+    InnerRockRegion = new G4Region("InnerRockRegion");
+    InnerRockRegion-> AddRootLogicalVolume(logical_innerRock);
+   }
+
 
  else if(RockOption == "NeutronMultiplicityValidation")
    {

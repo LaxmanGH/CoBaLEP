@@ -5,21 +5,21 @@
 
 /gps/particle mu-
 /gps/pos/type Point
-/gps/position -0.000001 0 0 m
+/gps/position 0.010001 0 0 m
 
-/gps/direction 1 0 0
+/gps/direction 0 0 -1
 /gps/ene/mono 300000.00 MeV
 
-#/vis/open HepRepFile
-#/vis/drawVolume
-#/vis/viewer/flush
-#/vis/scene/add/trajectories
+/vis/open HepRepFile
+/vis/drawVolume
+/vis/viewer/flush
+/vis/scene/add/trajectories
 #/vis/filtering/trajectories/create/particleFilter
 #/vis/filtering/trajectories/particleFilter-0/add gamma
 #/vis/filtering/trajectories/particleFilter-0/add mu-
 #/vis/filtering/trajectories/particleFilter-0/active true
-#/vis/scene/add/hits
-#/vis/scene/endOfEventAction accumulate
+/vis/scene/add/hits
+/vis/scene/endOfEventAction accumulate
 
 
-/run/beamOn 1000
+/run/beamOn 10

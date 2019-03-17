@@ -57,16 +57,6 @@
 #endif
 
 #include "Randomize.hh"
-
-
-//V 1.02 requires a random seed to be input after the first macro argument
-//It uses C++'s class system to safely pass variables between different methods
-//This version also has an option for hits in the LAr as a channel. This is quite memory intensive.
-//There is NO summing in this version. Cuts are implemented on a case by case basis.
-
-
-
-//Some templates copied directly from the Geant4 Users' Guide
 #include <G4UserRunAction.hh>
 #include <G4UImessenger.hh>
 #include <TFile.h>
@@ -77,11 +67,114 @@
 #include <iostream>
 #include <time.h>
 #include<stdlib.h>
+#include <typeinfo>
+#include "G4UserTrackingAction.hh"
+#include "globals.hh"
+#include "G4TrackingManager.hh"
+#include "G4Track.hh"
+#include "G4TrackVector.hh"
+//#include "T01TrackInformation.hh"
+#include "G4Allocator.hh"
+#include "G4VUserTrackInformation.hh"
+#include "G4ios.hh"
+
+
+//V 1.02 requires a random seed to be input after the first macro argument
+//It uses C++'s class system to safely pass variables between different methods
+//This version also has an option for hits in the LAr as a channel. This is quite memory intensive, and probably broken at this point.
+//There is NO summing in this version. Cuts are implemented on a case by case basis.
+
+
+//Some templates copied directly from the Geant4 Users' Guide
 
 const int maxsteps=100000000;
 int currentsteps=0; //global ints just to keep track of file size limits
 int savedsteps = 0;
+using std::vector;
 //////////////////////////////////////////////////
+
+//Class used to store and retrieve user-defined information from the track of the particle.
+//Currently the user information stores information about the nucleus which created the particle (if any).
+
+class T01TrackInformation : public G4VUserTrackInformation 
+{
+public:
+  T01TrackInformation();
+  T01TrackInformation(const G4Track* aTrack);
+  T01TrackInformation(const T01TrackInformation* aTrackInfo);
+  virtual ~T01TrackInformation();
+   
+  inline void *operator new(size_t);
+  inline void operator delete(void *aTrackInfo);
+  inline int operator ==(const T01TrackInformation& right) const
+  {return (this==&right);}
+
+
+private:
+  vector<int>                   originalTrackID;
+  vector<G4ParticleDefinition*> particleDefinition;
+  vector<G4ThreeVector>         originalPosition;
+  vector<G4ThreeVector>         originalMomentum;
+  vector<G4double>              originalEnergy;
+  vector<G4double>              originalTime;
+
+public:
+  inline vector<int> GetOriginalTrackID() const {return originalTrackID;}
+    inline vector<G4ParticleDefinition*> GetOriginalParticle() const {return particleDefinition;}
+    inline vector<G4ThreeVector> GetOriginalPosition() const {return originalPosition;}
+    inline vector<G4ThreeVector> GetOriginalMomentum() const {return originalMomentum;}
+    inline vector<G4double> GetOriginalEnergy() const {return originalEnergy;}
+    inline vector<G4double> GetOriginalTime() const {return originalTime;}
+};
+
+G4Allocator<T01TrackInformation> aTrackInformationAllocator;
+
+inline void* T01TrackInformation::operator new(size_t)
+{ void* aTrackInfo;
+  aTrackInfo = (void*)aTrackInformationAllocator.MallocSingle();
+  return aTrackInfo;
+}
+
+inline void T01TrackInformation::operator delete(void *aTrackInfo)
+{ aTrackInformationAllocator.FreeSingle((T01TrackInformation*)aTrackInfo);}
+
+
+
+
+T01TrackInformation::T01TrackInformation()
+{
+  originalTrackID;
+  particleDefinition;
+  originalPosition;
+  originalMomentum;
+  originalEnergy;
+  originalTime;
+}
+
+T01TrackInformation::T01TrackInformation(const G4Track* aTrack)
+{
+  originalTrackID.push_back(aTrack->GetTrackID());
+  particleDefinition.push_back(aTrack->GetDefinition());
+  originalPosition.push_back(aTrack->GetPosition());
+  originalMomentum.push_back(aTrack->GetMomentum());
+  originalEnergy.push_back(aTrack->GetTotalEnergy());
+  originalTime.push_back(aTrack->GetGlobalTime());
+}
+
+T01TrackInformation::T01TrackInformation(const T01TrackInformation* aTrackInfo)
+{
+  originalTrackID = aTrackInfo->originalTrackID;
+  particleDefinition = aTrackInfo->particleDefinition;
+  originalPosition = aTrackInfo->originalPosition;
+  originalMomentum = aTrackInfo->originalMomentum;
+  originalEnergy = aTrackInfo->originalEnergy;
+  originalTime = aTrackInfo->originalTime;
+}
+
+T01TrackInformation::~T01TrackInformation(){;}
+
+
+
 
 //over-class IO that all action classes inherit from, to pass information for writing etc.
 
@@ -135,7 +228,10 @@ public:
   double starty;
   double startz;
   int randomseed;
-  
+  vector<int> nuclearPID;
+  vector<double> nuclearx;
+  vector<double> nucleary;
+  vector<double> nuclearz;
   //variables specifically to parse detector number from detector name (used in the Write method)
   G4String name;
   G4String num;
@@ -170,10 +266,10 @@ void IO::Open(char* inputseed)
   //Branches to be filled
   fTree->Branch("PID",&PID,"PID/I");
   //PDG encoding particle ID
-  fTree->Branch("ParentID",&ParentID,"ParentID/I");
+  //fTree->Branch("ParentID",&ParentID,"ParentID/I");
   fTree->Branch("energy",&energy,"energy/D");
   fTree->Branch("kineticenergy", &kineticenergy, "kineticenergy/D");
-  fTree->Branch("deltaenergy",&deltaenergy,"deltaenergy/D");
+  //fTree->Branch("deltaenergy",&deltaenergy,"deltaenergy/D");
   fTree->Branch("time",&time,"time/D");
   fTree->Branch("x",&x,"x/D");
   fTree->Branch("y",&y,"y/D");
@@ -191,16 +287,20 @@ void IO::Open(char* inputseed)
   fTree->Branch("eventnumber",&eventnumber,"eventnumber/I");
   fTree->Branch("stepnumber",&stepnumber,"stepnumber/I");
   fTree->Branch("steplength",&steplength,"steplength/D");
-  fTree->Branch("tracknumber",&tracknumber,"tracknumber/I");
+  //fTree->Branch("tracknumber",&tracknumber,"tracknumber/I");
   fTree->Branch("detectornumber",&detectornumber,"detectornumber/I");
-  fTree->Branch("isentryevent", &isentryevent, "isentryevent/I");
+  //fTree->Branch("isentryevent", &isentryevent, "isentryevent/I");
   fTree->Branch("creatorprocess", &creatorprocess);
-  fTree->Branch("material", &material);
+  //fTree->Branch("material", &material);
   fTree->Branch("startx",&startx,"startx/D");
   fTree->Branch("starty",&starty,"starty/D");
   fTree->Branch("startz",&startz,"startz/D");
   fTree->Branch("randomseed",&randomseed,"randomseed/I");
-
+  fTree->Branch("nuclearPID",&nuclearPID);
+  fTree->Branch("nuclearx",&nuclearx);
+  fTree->Branch("nucleary",&nucleary);
+  fTree->Branch("nuclearz",&nuclearz);
+  
   randomseed = atoi(inputseed);
   
   G4cout << "Output file opened." << G4endl;
@@ -294,9 +394,40 @@ void IO::Write(G4Track *track, int isadetector, int isentry)
       
     }//if(isadetector==0
 
+  if(track->GetUserInformation())
+    {
+      T01TrackInformation* info = (T01TrackInformation*)(track->GetUserInformation());
+int size = info->GetOriginalParticle().size();
+      nuclearPID.clear();
+      nuclearPID.resize(size);
+      nuclearx.clear();
+      nuclearx.resize(size);
+      nucleary.clear();
+      nucleary.resize(size);
+      nuclearz.clear();
+      nuclearz.resize(size);
+
+      for(int i = 0;i<size;i++)
+	{
+	  nuclearPID.at(i)=info->GetOriginalParticle().at(i)->GetPDGEncoding();
+	  nuclearx.at(i)=info->GetOriginalPosition().at(i).x();
+	  nucleary.at(i)=info->GetOriginalPosition().at(i).y();
+	  nuclearz.at(i)=info->GetOriginalPosition().at(i).z();
+	}
+    
+      
+
+    }
+  
+
+
+  else
+    {
+      nuclearPID.push_back(0);
+    }
 
   fTree->Fill();
-  
+  nuclearPID.clear();
 } //Io::Write
 
 
@@ -343,6 +474,84 @@ public:
        
 //////////////////////////////////////////////////
 
+class TrackingAction: public G4UserTrackingAction 
+{
+     
+  //--------
+public:
+  //--------
+     
+  // Constructor and destructor
+  TrackingAction(): G4UserTrackingAction(){};
+  ~TrackingAction(){};
+
+    //Member functions
+  void UserTrackingAction();
+  void PreUserTrackingAction(const G4Track* aTrack)
+  {
+
+
+    if(aTrack->GetUserInformation())
+      {//aready has userinfo so just add more to it
+	//if(aTrack->GetDefinition()->GetPDGEncoding()>10000000)
+	  //{//Particle is a daughter! Fun.
+
+	    //G4cout <<"Daughter nuclei found!"<< G4endl;
+	    //T01TrackInformation* orinfo = (T01TrackInformation*)(aTrack->GetUserInformation());
+	    //G4cout << orinfo->GetOriginalParticle()->GetPDGEncoding() << G4endl << G4endl;
+	    //G4cout << aTrack->GetDefinition()->GetPDGEncoding() << G4endl;
+	    //}
+	
+	T01TrackInformation* anInfo = (T01TrackInformation*)aTrack->GetUserInformation();
+	G4Track* theTrack = (G4Track*)aTrack;
+	anInfo->GetOriginalTrackID().push_back(aTrack->GetTrackID());
+	(anInfo->GetOriginalParticle()).push_back(aTrack->GetDefinition());
+	(anInfo->GetOriginalPosition()).push_back(aTrack->GetPosition());
+	(anInfo->GetOriginalMomentum()).push_back(aTrack->GetMomentum());
+	(anInfo->GetOriginalEnergy()).push_back(aTrack->GetTotalEnergy());
+	(anInfo->GetOriginalTime()).push_back(aTrack->GetGlobalTime());
+	theTrack->SetUserInformation(anInfo);
+	
+      }//if(info
+
+    else if(aTrack->GetDefinition()->GetPDGEncoding()>10000000)
+      {//New info
+
+	T01TrackInformation* anInfo = new T01TrackInformation(aTrack);
+	G4Track* theTrack = (G4Track*)aTrack;
+	theTrack->SetUserInformation(anInfo);
+      } 
+
+  }
+
+
+  void PostUserTrackingAction(const G4Track* aTrack)
+  {
+    if(aTrack->GetUserInformation())
+      {
+	G4TrackVector* secondaries = fpTrackingManager->GimmeSecondaries();
+	if(secondaries)
+	  {
+	    T01TrackInformation* info = (T01TrackInformation*)(aTrack->GetUserInformation());
+	    size_t nSeco = secondaries->size();
+	    if(nSeco>0)
+	      {
+		for(size_t i=0;i<nSeco;i++)
+		  { 
+		    T01TrackInformation* infoNew = new T01TrackInformation(info);
+
+		    (*secondaries)[i]->SetUserInformation(infoNew);
+		  }
+	      }
+	  }//if(secondaries
+      }//if(aTrack->GetUser
+  }//PostUser
+
+};//TrackingAction
+       
+
+/////////////////////////////////////////////////
+
 class EventAction: public G4UserEventAction 
 //Not currently implemented for anything, but this structure should work in case we need it later.
 {
@@ -357,7 +566,6 @@ public:
 
   //Member functions
   void UserEventAction();
-
 };
        
 
@@ -385,56 +593,44 @@ public:
 
 void SteppingAction::UserSteppingAction(const G4Step* step)
 {
-  //cuts go here
+  int PID =step->GetTrack()->GetDefinition()->GetPDGEncoding(); 
+  G4String material;
+  if(PID!=13)
+    material = step->GetPreStepPoint()->GetMaterial()->GetName();  
+//cuts go here
   currentsteps++;
+
   if(savedsteps<maxsteps)
     {//hits inside detector detection
       
       G4String whatgeometry = step->GetPreStepPoint()->GetPhysicalVolume()->GetName();
-      //G4String thatgeometry = "";
+
       const G4String detectornames = "phy_Det";
       const G4String fillgasname = "phy_FillGas"; //LAr surrounding detector
       const G4String liquidargon = "phy_liquidArgon";
       
+      /*if(material!="G4_AIR"&&material!="Rock")
+	{
+	  T01TrackInformation* info = (T01TrackInformation*)(step->GetTrack()->GetUserInformation());
+	  if(info)
+	    G4cout << material << G4endl << PID << G4endl << info->GetOriginalParticle()->GetPDGEncoding() << G4endl << G4endl;
+	    }//Material*/
+
       if(strstr(whatgeometry.c_str(),detectornames.c_str())) //if pre step point originates in a detector
 	{
 	  fio->Write(step->GetTrack(), 1, 0); //non-entry event
 	 savedsteps++;
 	}//if(strstr
 
-
-      //Deprecated collection tags, use at own risk
-      /*
-      if(strstr(whatgeometry.c_str(),fillgasname.c_str()))//if pre step point is in fill gas
-	{
-	  thatgeometry = step->GetPostStepPoint()->GetPhysicalVolume()->GetName();
-	  if(strstr(thatgeometry.c_str(),detectornames.c_str()))//but post step point is in Ge
-	    {
-	      fio->Write(step->GetTrack(), 1, 1); //entry event
-	      currentsteps++;
-	    }
-	}
-      
-      if(strstr(whatgeometry.c_str(),liquidargon.c_str())) //liquidargon as a channel, comment out these 5 lines to not write these hits 
-//Beware, this is VERY memory intensive
-	{
-	  fio->Write(step->GetTrack(),0, 0); //comment to not write liquidargon hits to a channel
-	  currentsteps++;
-	}
-      ~ASTERISK/    
-	  
-	     ///else if(strstr
-
-
-	}   //if maxsteps
+    }   //if maxsteps
 
   if(currentsteps>=maxsteps)
     {
       G4cout << G4endl << "I NEED AN ADULT" << G4endl;
       return;
     }
-~*/	    
-    }//savedsteps
+	    
+
 }	     //void SteppingAction
 
 //////////////////////////////////////////////////
@@ -477,6 +673,7 @@ int main(int argc,char** argv)
 
   runManager->SetUserAction(new RunAction(io, inputseed));
   runManager->SetUserAction(new EventAction());  
+  runManager->SetUserAction(new TrackingAction());  
   runManager->SetUserAction(new SteppingAction(io));
 
   

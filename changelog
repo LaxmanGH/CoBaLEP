@@ -104,3 +104,11 @@ I've added geometry options and modified the main file for the neutron multiplic
 Switched the module from neutron mode to muon mode, or whatever the heck you want to call it. Also, there were some mondo problems with the neutron study. The cause was the .000001 cm air gap I was leaving between each slab of rock. I forgot all about it when I told the module to kill any particles that changed boundaries into something that wasn't rock. I left the gap in the interest of preventing any weird boundary overlap issues, but it cause more problems for me than the boundary overlap ever would! What a world.
 
 Anyway, switched over to muon mode, ran a test sim, made sure the geometric cut was working properly (AGAIN). Fixed hitbuilder, eventbuilder, jobsubmit, manysubmit to be compatible with Lawrence. Fixed traceback and trace2 (I hope).
+
+03/03/2019
+Neutron study went well. Implemented a custom tracking action. This tracking action effectively 'tags' nuclei created in the simulation as well as all their daughters/secondaries. When one of these particles shows up in the germanium, the information in the tag can be used to find information about the original nucleus, regardless of where it originated. Right now the only parameter stored and retrieved in this fashion is called 'nuclearPID', but I expect to add more very soon.
+
+03/11/2019
+Modified the new tracking action class to store vectors rather than single objects. Previously, I could only record the information about the original nucleus and the final particle which entered the germanium. This way, if for example, the nucleus creates secondaries, which create their OWN secondaries, the information about all three particles can be stored. This is definitely a work in progress and is not in its final build.
+
+Also, switched back to neutron mode to run some modified neutron simulations.

@@ -5,7 +5,7 @@
 /gps/ion 27 60 27
 /gps/pos/type Volume
 /gps/pos/shape Cylinder
-/gps/pos/centre 0 0 0 m
+/gps/pos/centre 0 0 -6.5 m
 /gps/pos/radius 0.95 m
 /gps/pos/halfz 0.95 m
 /gps/ang/type iso
