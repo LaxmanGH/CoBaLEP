@@ -81,7 +81,7 @@
 
 //V 1.02 requires a random seed to be input after the first macro argument
 //It uses C++'s class system to safely pass variables between different methods
-//This version also has an option for hits in the LAr as a channel. This is quite memory intensive, and probably broken at this point.
+//This version also has an option for hits in the LAr as a channel. This is quite memory intensive.
 //There is NO summing in this version. Cuts are implemented on a case by case basis.
 
 
@@ -90,7 +90,6 @@
 const int maxsteps=100000000;
 int currentsteps=0; //global ints just to keep track of file size limits
 int savedsteps = 0;
-using std::vector;
 //////////////////////////////////////////////////
 
 //Class used to store and retrieve user-defined information from the track of the particle.
@@ -109,22 +108,24 @@ public:
   inline int operator ==(const T01TrackInformation& right) const
   {return (this==&right);}
 
+  void Print() const;
 
 private:
-  vector<int>                   originalTrackID;
-  vector<G4ParticleDefinition*> particleDefinition;
-  vector<G4ThreeVector>         originalPosition;
-  vector<G4ThreeVector>         originalMomentum;
-  vector<G4double>              originalEnergy;
-  vector<G4double>              originalTime;
+  G4int                 originalTrackID;
+  G4ParticleDefinition* particleDefinition;
+  G4ThreeVector         originalPosition;
+  G4ThreeVector         originalMomentum;
+  G4double              originalEnergy;
+  G4double              originalTime;
+  int generation = 0;
 
 public:
-  inline vector<int> GetOriginalTrackID() const {return originalTrackID;}
-    inline vector<G4ParticleDefinition*> GetOriginalParticle() const {return particleDefinition;}
-    inline vector<G4ThreeVector> GetOriginalPosition() const {return originalPosition;}
-    inline vector<G4ThreeVector> GetOriginalMomentum() const {return originalMomentum;}
-    inline vector<G4double> GetOriginalEnergy() const {return originalEnergy;}
-    inline vector<G4double> GetOriginalTime() const {return originalTime;}
+  inline G4int GetOriginalTrackID() const {return originalTrackID;}
+  inline G4ParticleDefinition* GetOriginalParticle() const {return particleDefinition;}
+  inline G4ThreeVector GetOriginalPosition() const {return originalPosition;}
+  inline G4ThreeVector GetOriginalMomentum() const {return originalMomentum;}
+  inline G4double GetOriginalEnergy() const {return originalEnergy;}
+  inline G4double GetOriginalTime() const {return originalTime;}
 };
 
 G4Allocator<T01TrackInformation> aTrackInformationAllocator;
@@ -143,22 +144,22 @@ inline void T01TrackInformation::operator delete(void *aTrackInfo)
 
 T01TrackInformation::T01TrackInformation()
 {
-  originalTrackID;
-  particleDefinition;
-  originalPosition;
-  originalMomentum;
-  originalEnergy;
-  originalTime;
+  originalTrackID = 0;
+  particleDefinition = 0;
+  originalPosition = G4ThreeVector(0.,0.,0.);
+  originalMomentum = G4ThreeVector(0.,0.,0.);
+  originalEnergy = 0.;
+  originalTime = 0.;
 }
 
 T01TrackInformation::T01TrackInformation(const G4Track* aTrack)
 {
-  originalTrackID.push_back(aTrack->GetTrackID());
-  particleDefinition.push_back(aTrack->GetDefinition());
-  originalPosition.push_back(aTrack->GetPosition());
-  originalMomentum.push_back(aTrack->GetMomentum());
-  originalEnergy.push_back(aTrack->GetTotalEnergy());
-  originalTime.push_back(aTrack->GetGlobalTime());
+  originalTrackID = aTrack->GetTrackID();
+  particleDefinition = aTrack->GetDefinition();
+  originalPosition = aTrack->GetPosition();
+  originalMomentum = aTrack->GetMomentum();
+  originalEnergy = aTrack->GetTotalEnergy();
+  originalTime = aTrack->GetGlobalTime();
 }
 
 T01TrackInformation::T01TrackInformation(const T01TrackInformation* aTrackInfo)
@@ -169,11 +170,17 @@ T01TrackInformation::T01TrackInformation(const T01TrackInformation* aTrackInfo)
   originalMomentum = aTrackInfo->originalMomentum;
   originalEnergy = aTrackInfo->originalEnergy;
   originalTime = aTrackInfo->originalTime;
+  generation++;
 }
 
 T01TrackInformation::~T01TrackInformation(){;}
 
-
+void T01TrackInformation::Print() const
+{
+    G4cout 
+      << "Original track ID " << originalTrackID 
+      << " at " << originalPosition << G4endl;
+}
 
 
 //over-class IO that all action classes inherit from, to pass information for writing etc.
@@ -228,10 +235,11 @@ public:
   double starty;
   double startz;
   int randomseed;
-  vector<int> nuclearPID;
-  vector<double> nuclearx;
-  vector<double> nucleary;
-  vector<double> nuclearz;
+  int nuclearPID;
+  double nuclearx;  
+  double nucleary;  
+  double nuclearz;  
+
   //variables specifically to parse detector number from detector name (used in the Write method)
   G4String name;
   G4String num;
@@ -266,7 +274,7 @@ void IO::Open(char* inputseed)
   //Branches to be filled
   fTree->Branch("PID",&PID,"PID/I");
   //PDG encoding particle ID
-  //fTree->Branch("ParentID",&ParentID,"ParentID/I");
+  fTree->Branch("ParentID",&ParentID,"ParentID/I");
   fTree->Branch("energy",&energy,"energy/D");
   fTree->Branch("kineticenergy", &kineticenergy, "kineticenergy/D");
   //fTree->Branch("deltaenergy",&deltaenergy,"deltaenergy/D");
@@ -296,11 +304,10 @@ void IO::Open(char* inputseed)
   fTree->Branch("starty",&starty,"starty/D");
   fTree->Branch("startz",&startz,"startz/D");
   fTree->Branch("randomseed",&randomseed,"randomseed/I");
-  fTree->Branch("nuclearPID",&nuclearPID);
-  fTree->Branch("nuclearx",&nuclearx);
-  fTree->Branch("nucleary",&nucleary);
-  fTree->Branch("nuclearz",&nuclearz);
-  
+  fTree->Branch("nuclearPID",&nuclearPID,"nuclearPID/I");
+  fTree->Branch("nuclearx",&nuclearx,"nuclearx/D");
+  fTree->Branch("nucleary",&nucleary,"nucleary/D");
+  fTree->Branch("nuclearz",&nuclearz,"nuclearz/D");
   randomseed = atoi(inputseed);
   
   G4cout << "Output file opened." << G4endl;
@@ -397,37 +404,17 @@ void IO::Write(G4Track *track, int isadetector, int isentry)
   if(track->GetUserInformation())
     {
       T01TrackInformation* info = (T01TrackInformation*)(track->GetUserInformation());
-int size = info->GetOriginalParticle().size();
-      nuclearPID.clear();
-      nuclearPID.resize(size);
-      nuclearx.clear();
-      nuclearx.resize(size);
-      nucleary.clear();
-      nucleary.resize(size);
-      nuclearz.clear();
-      nuclearz.resize(size);
-
-      for(int i = 0;i<size;i++)
-	{
-	  nuclearPID.at(i)=info->GetOriginalParticle().at(i)->GetPDGEncoding();
-	  nuclearx.at(i)=info->GetOriginalPosition().at(i).x();
-	  nucleary.at(i)=info->GetOriginalPosition().at(i).y();
-	  nuclearz.at(i)=info->GetOriginalPosition().at(i).z();
-	}
-    
-      
-
-    }
-  
-
-
+      nuclearPID = info->GetOriginalParticle()->GetPDGEncoding();
+      nuclearx = info->GetOriginalPosition().x();
+      nucleary = info->GetOriginalPosition().y();
+      nuclearz = info->GetOriginalPosition().z();
+  }
   else
-    {
-      nuclearPID.push_back(0);
-    }
+    nuclearPID = nuclearx = nucleary = nuclearz = 0;
+
 
   fTree->Fill();
-  nuclearPID.clear();
+  
 } //Io::Write
 
 
@@ -490,40 +477,33 @@ public:
   void PreUserTrackingAction(const G4Track* aTrack)
   {
 
+    if(aTrack->GetDefinition()->GetPDGEncoding()>10000000)
+      {//Particle is a nucleus, its secondaries should be tagged
 
-    if(aTrack->GetUserInformation())
-      {//aready has userinfo so just add more to it
-	//if(aTrack->GetDefinition()->GetPDGEncoding()>10000000)
-	  //{//Particle is a daughter! Fun.
-
-	    //G4cout <<"Daughter nuclei found!"<< G4endl;
-	    //T01TrackInformation* orinfo = (T01TrackInformation*)(aTrack->GetUserInformation());
-	    //G4cout << orinfo->GetOriginalParticle()->GetPDGEncoding() << G4endl << G4endl;
-	    //G4cout << aTrack->GetDefinition()->GetPDGEncoding() << G4endl;
-	    //}
+	/*if(aTrack->GetUserInformation())
+	  {	 
+	    G4cout <<"Daughter nuclei found!"<< G4endl;
+	    T01TrackInformation* orinfo = (T01TrackInformation*)(aTrack->GetUserInformation());
+	    G4cout << orinfo->GetOriginalParticle()->GetPDGEncoding() << G4endl << G4endl;
+	    G4cout << aTrack->GetDefinition()->GetPDGEncoding() << G4endl;
+	    }*/
 	
-	T01TrackInformation* anInfo = (T01TrackInformation*)aTrack->GetUserInformation();
-	G4Track* theTrack = (G4Track*)aTrack;
-	anInfo->GetOriginalTrackID().push_back(aTrack->GetTrackID());
-	(anInfo->GetOriginalParticle()).push_back(aTrack->GetDefinition());
-	(anInfo->GetOriginalPosition()).push_back(aTrack->GetPosition());
-	(anInfo->GetOriginalMomentum()).push_back(aTrack->GetMomentum());
-	(anInfo->GetOriginalEnergy()).push_back(aTrack->GetTotalEnergy());
-	(anInfo->GetOriginalTime()).push_back(aTrack->GetGlobalTime());
-	theTrack->SetUserInformation(anInfo);
-	
-      }//if(info
-
-    else if(aTrack->GetDefinition()->GetPDGEncoding()>10000000)
-      {//New info
-
 	T01TrackInformation* anInfo = new T01TrackInformation(aTrack);
 	G4Track* theTrack = (G4Track*)aTrack;
 	theTrack->SetUserInformation(anInfo);
-      } 
+	
+      }
+
+    
 
   }
-
+    /*    if(aTrack->GetParentID()>0 || aTrack->GetUserInformation()==0)
+      {
+	T01TrackInformation* anInfo = new T01TrackInformation(aTrack);
+	G4Track* theTrack = (G4Track*)aTrack;
+	theTrack->SetUserInformation(anInfo);
+      }
+      }*/
 
   void PostUserTrackingAction(const G4Track* aTrack)
   {

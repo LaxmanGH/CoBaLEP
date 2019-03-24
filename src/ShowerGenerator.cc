@@ -258,6 +258,7 @@ void ShowerGenerator::GeneratePrimaryVertex(G4Event* anEvent)
   double comparee = 0;
   int counter = 0;
   int justforfun = 0;
+  double energynorm = 0;
   while(!validmuon)
     {
   // Select random entry within file
@@ -312,6 +313,23 @@ void ShowerGenerator::GeneratePrimaryVertex(G4Event* anEvent)
        //G4cout << "Counter: " << counter << G4endl;
        //G4cout << G4endl << "MUON MOMENTUM: " << px_MJD << " " << py_MJD << " " << pz_MJD << " " << G4endl;
 
+       //Temporarily implemented as of March 2019
+       //Retroactively make the energy a flat distribution from 0 to 200 TeV
+       //First normalize the momenta so the particle thinks it's at 1 GeV
+
+       energynorm = TMath::Sqrt(px_MJD*px_MJD+py_MJD*py_MJD+pz_MJD*pz_MJD);
+       px_MJD = px_MJD/energynorm;
+       py_MJD = py_MJD/energynorm;
+       pz_MJD = pz_MJD/energynorm;
+       //Now multiple by a random number between 0 and 20000
+       //Should technically be 200000, but I want statistics!dammit!
+       energynorm = G4UniformRand()*20000;
+       px_MJD = px_MJD*energynorm;//G4RandExponential::shoot(20000);
+       py_MJD = py_MJD*energynorm;//G4RandExponential::shoot(20000);
+       pz_MJD = pz_MJD*energynorm;//G4RandExponential::shoot(20000);
+       energynorm = TMath::Sqrt(px_MJD*px_MJD+py_MJD*py_MJD+pz_MJD*pz_MJD);
+       //G4cout <<"Particle energy (in GeV): " << energynorm << G4endl;
+       //G4cout <<"Px: "<< px_MJD << "Py: " <<py_MJD << "Pz: " << pz_MJD<< G4endl;
   G4ThreeVector momentum(px_MJD*GeV,py_MJD*GeV,pz_MJD*GeV);
 
 	G4PrimaryParticle* thePrimaryParticle =

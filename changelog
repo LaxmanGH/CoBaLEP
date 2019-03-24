@@ -112,3 +112,11 @@ Neutron study went well. Implemented a custom tracking action. This tracking act
 Modified the new tracking action class to store vectors rather than single objects. Previously, I could only record the information about the original nucleus and the final particle which entered the germanium. This way, if for example, the nucleus creates secondaries, which create their OWN secondaries, the information about all three particles can be stored. This is definitely a work in progress and is not in its final build.
 
 Also, switched back to neutron mode to run some modified neutron simulations.
+
+03/21/2019
+Undid the modifications from the previous entry in this log. Vectors have proven to be too much trouble, especially with the finaltrace.C script.
+
+Officially began production again with the following setup:
+	Geometry: September2018WithCuts (see Detector_CJStyle.icc) Muons:
+	Position and direction sampled from Ralph's 2017 file, energy flat
+	between 0 and 20 TeV 100 muons per file, 100 files per production folder
