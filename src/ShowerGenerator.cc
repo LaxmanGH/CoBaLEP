@@ -323,7 +323,8 @@ void ShowerGenerator::GeneratePrimaryVertex(G4Event* anEvent)
        pz_MJD = pz_MJD/energynorm;
        //Now multiple by a random number between 0 and 20000
        //Should technically be 200000, but I want statistics!dammit!
-       energynorm = G4UniformRand()*20000;
+       //Edit: Energy sampling now 20000-200000
+       energynorm = G4UniformRand()*200000;
        px_MJD = px_MJD*energynorm;//G4RandExponential::shoot(20000);
        py_MJD = py_MJD*energynorm;//G4RandExponential::shoot(20000);
        pz_MJD = pz_MJD*energynorm;//G4RandExponential::shoot(20000);

@@ -62,7 +62,7 @@ DetectorConstruction::DetectorConstruction()
 {
   detectorMessenger = new DetectorMessenger(this);
 	detector_type = "GERDA";
-	innerVessel_FillMaterial = "ArgonLiquid";
+	innerVessel_FillMaterial = "NitrogenGas";
 	checkOverlaps = false;
 }
 

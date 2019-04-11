@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////
 // This code implementation is the intellectual property of the
-// ton-scale 0vbb in Germanium collaboration. It is based on Geant4, an
+// LEGEND collaboration. It is based on Geant4, an
 // intellectual property of the RD44 GEANT4 collaboration.
 //
 // *********************
@@ -295,7 +295,7 @@ void IO::Open(char* inputseed)
   fTree->Branch("eventnumber",&eventnumber,"eventnumber/I");
   fTree->Branch("stepnumber",&stepnumber,"stepnumber/I");
   fTree->Branch("steplength",&steplength,"steplength/D");
-  //fTree->Branch("tracknumber",&tracknumber,"tracknumber/I");
+  fTree->Branch("tracknumber",&tracknumber,"tracknumber/I");
   fTree->Branch("detectornumber",&detectornumber,"detectornumber/I");
   //fTree->Branch("isentryevent", &isentryevent, "isentryevent/I");
   fTree->Branch("creatorprocess", &creatorprocess);
@@ -604,11 +604,11 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
     }   //if maxsteps
 
-  if(currentsteps>=maxsteps)
-    {
-      G4cout << G4endl << "I NEED AN ADULT" << G4endl;
-      return;
-    }
+  //if(currentsteps>=maxsteps)
+  //  {
+  //    G4cout << G4endl << "I NEED AN ADULT" << G4endl;
+  //    return;
+  //  }
 	    
 
 }	     //void SteppingAction
