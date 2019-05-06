@@ -88,7 +88,7 @@ the original muon's position information. The justification for this
 is that the mountain profile is changing very slowly, so a small
 change in location within the lab space will cause a negligible change
 in the muon's other information.
-	
+
 Tentatively, it's likely that muon sampling will use a different input
 file than it did previously. This is not being implemented until after
 the energy validation, though, so stay tuned.
@@ -97,21 +97,26 @@ the energy validation, though, so stay tuned.
 1/21/2019
 G4Polycone seems to be completely broken after the move to Lawrence (minor alterations made to the code to make it compatible with GEANT4 10.02 btw). I've had to change the geometry so that rather than the inner/outer cryostats, liquid argon, and water shield being made out of a single polycone each, they're now each made out of 2 disks and a hollow cylinder. What a pain in the ass.
 
+
 02/02/2019
 I've added geometry options and modified the main file for the neutron multiplicity study. I should probably use two different main files for this... Look for an update soon saying that I've separated the two. The macro for the neutron study is neutronMultiplicitySource.mac
+
 
 02/05/2019
 Switched the module from neutron mode to muon mode, or whatever the heck you want to call it. Also, there were some mondo problems with the neutron study. The cause was the .000001 cm air gap I was leaving between each slab of rock. I forgot all about it when I told the module to kill any particles that changed boundaries into something that wasn't rock. I left the gap in the interest of preventing any weird boundary overlap issues, but it cause more problems for me than the boundary overlap ever would! What a world.
 
 Anyway, switched over to muon mode, ran a test sim, made sure the geometric cut was working properly (AGAIN). Fixed hitbuilder, eventbuilder, jobsubmit, manysubmit to be compatible with Lawrence. Fixed traceback and trace2 (I hope).
 
+
 03/03/2019
 Neutron study went well. Implemented a custom tracking action. This tracking action effectively 'tags' nuclei created in the simulation as well as all their daughters/secondaries. When one of these particles shows up in the germanium, the information in the tag can be used to find information about the original nucleus, regardless of where it originated. Right now the only parameter stored and retrieved in this fashion is called 'nuclearPID', but I expect to add more very soon.
+
 
 03/11/2019
 Modified the new tracking action class to store vectors rather than single objects. Previously, I could only record the information about the original nucleus and the final particle which entered the germanium. This way, if for example, the nucleus creates secondaries, which create their OWN secondaries, the information about all three particles can be stored. This is definitely a work in progress and is not in its final build.
 
 Also, switched back to neutron mode to run some modified neutron simulations.
+
 
 03/21/2019
 Undid the modifications from the previous entry in this log. Vectors have proven to be too much trouble, especially with the finaltrace.C script.
@@ -119,4 +124,40 @@ Undid the modifications from the previous entry in this log. Vectors have proven
 Officially began production again with the following setup:
 	Geometry: September2018WithCuts (see Detector_CJStyle.icc) Muons:
 	Position and direction sampled from Ralph's 2017 file, energy flat
-	between 0 and 20 TeV 100 muons per file, 100 files per production folder
+	between 0 and 20 TeV 100 muons per file, 100 files per production
+	folder Fillgas (gas right next to detectors): Liquid argon
+	250,000 muons simulated.
+
+
+04/21/2019
+
+Several production runs have been produced. Below is a list of their start dates, their properties, and the number of muons simulated so far in each one.
+
+	03/29/2019: Same as 03/21/2019, but with a flat energy spectrum from 20-200 TeV, rather than 0-20 TeV. 90,000 muons simulated.
+
+	04/05/2019: Same as before, with flat spectrum 0-200 TeV, and fillgas as gaseous nitrogen. 100,000 muons simulated.
+
+	04/13/2019: Same as before, with flat spectrum 0-20 TeV. 50,000 muons simulated.
+	Also, at this time implemented second file. See below.
+
+	04/17/2019: Identical to 03/21/2019 setup, but with the second file from 04/13/2019. 500,000 muons simulated.
+
+The second file referenced above is a new output file created at the time of simulation.
+It contains information saved from the TRACK level, whenever a new nucleus is produced, ANYWHERE in the simulation geometry.
+Contrast this to the first output file, which saves step level information, but only for steps inside the Ge detectors.
+
+On a minor note, removed the radioactive impurities which were included in the rock of the simulation. Not sure why they were there to begin with...
+
+Finally, a new directory has been added to /all/, called collections/, and is used to combine results from identical runs like 03/21/2019 and 04/17/2019.
+
+
+05/06/2019
+
+Updated scripts to look nice and work better with collections/
+
+Added a new branch to the first output file, called "weight", which attempts to retroactively add an energy distribution to files which were sampled from a flat energy distribution (which is all of them recently). It uses the energy distribution function proposed in the 2005 paper by Mei and Hime,
+	https://arxiv.org/abs/astro-ph/0512125
+This branch needs to be carried over in the hitbuilder and eventbuilder as well. Currently, this is done outside of regular production, but there are plans to incorporate it into the regular production scripts. There are modified versions of the plotting scripts which use "weight" to weight the energy spectra.
+
+Renamed the simulation module from "Muon_GUORE" to "CoBaLEP", and updated the licensing info accordingly, all with Ralph's blessing.
+
