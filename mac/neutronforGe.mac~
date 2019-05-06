@@ -1,0 +1,25 @@
+#generates monoenergetic muons for the neutron multiplicity study
+
+
+/GUORE/generator/select GPS
+
+/gps/particle neutron
+/gps/pos/type Point
+/gps/position 0 0 0.0001 m
+
+/gps/direction 0 0 -1
+/gps/ene/mono 10.0 keV
+
+#/vis/open HepRepFile
+#/vis/drawVolume
+#/vis/viewer/flush
+#/vis/scene/add/trajectories
+#/vis/filtering/trajectories/create/particleFilter
+#/vis/filtering/trajectories/particleFilter-0/add gamma
+#/vis/filtering/trajectories/particleFilter-0/add mu-
+#/vis/filtering/trajectories/particleFilter-0/active true
+#/vis/scene/add/hits
+#/vis/scene/endOfEventAction accumulate
+
+
+/run/beamOn 100000

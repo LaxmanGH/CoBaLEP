@@ -36,7 +36,7 @@
 // on the Program) you indicate your acceptance of this statement,
 // and all its terms.
 ///////////////////////////////////////////////////////////////////////////
-/// \file Muon_GUORE.cc
+/// \file CoBaLEP.cc
 /// \brief Main program of the  example
 
 #include "DetectorConstruction.hh"
@@ -65,8 +65,8 @@
 //There is NO summing in this version. Cuts are implemented on a case by case basis.
 
 //This version was used for the neutron multiplicity study
-//To do more studies, simply move the Muon_GUORE.cc currently in the main directory
-//Elsewhere, and replace it with this (make sure it's named Muon_GUORE.cc)
+//To do more studies, simply move the CoBaLEP.cc currently in the main directory
+//Elsewhere, and replace it with this (make sure it's named CoBaLEP.cc)
 //Then, set "DetectorConstruction.cc"'s variable RockOption to "NeutronMultiplicityValidation"
 //Finally, change the world material from vacuum back to air.
 //More information in Detector_CJStyle.icc

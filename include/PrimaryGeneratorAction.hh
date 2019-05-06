@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////
 // This code implementation is the intellectual property of the
-// ton-scale 0vbb in Germanium collaboration. It is based on Geant4, an
+// LEGEND collaboration. It is based on Geant4, an
 // intellectual property of the RD44 GEANT4 collaboration.
 //
 // *********************
@@ -17,7 +17,7 @@
 /// \brief Definition of the PrimaryGeneratorAction class
 //
 //
-// $Id: PrimaryGeneratorAction.hh 83883 2014-09-22 11:20:48Z maire $
+//
 //
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

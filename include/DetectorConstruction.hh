@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////
 // This code implementation is the intellectual property of the
-// ton-scale 0vbb in Germanium collaboration. It is based on Geant4, an
+// LEGEND collaboration. It is based on Geant4, an
 // intellectual property of the RD44 GEANT4 collaboration.
 //
 // *********************

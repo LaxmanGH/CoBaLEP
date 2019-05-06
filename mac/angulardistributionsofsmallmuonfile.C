@@ -20,7 +20,7 @@ void BinLogX(TH1*h)
 void angulardistributionsofsmallmuonfile(void)
 {
 
-  const char* muon_path = "/home/CJ.Barton/Muon_GUORE/Truon_GUORE/mac";
+  const char* muon_path = "/home/CJ.Barton/CoBaLEP/Truon_GUORE/mac";
   inputfile = new TFile(Form("%s/newSmallMuonFile.root", muon_path) ,"READ");
   datatree = (TTree*)inputfile->Get("muontree");
 

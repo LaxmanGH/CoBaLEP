@@ -3,7 +3,7 @@ names, and how they interact
 
 
 
-After using 'make' to compile Muon_GUORE.cc into an executable, we can
+After using 'make' to compile CoBaLEP.cc into an executable, we can
 begin the simulation phase. The executable requires two inputs: a
 macro, and a number. The macro should handle primary particle
 generation, and the input number will act as the seed for the
@@ -11,7 +11,7 @@ simulation's random number generator. An example set of commands to
 make this happen would be:
 
 1a. >) make
-2a. >) ./Muon_GUORE muons.mac 309841 //user defined input seed
+2a. >) ./CoBaLEP muons.mac 309841 //user defined input seed
 
 muons.mac generates high energy but monoenergetic muons, and Co60.mac
 generates stationary Cobalt 60 nuclei. weighted.mac (the recommended
@@ -28,7 +28,7 @@ submission protocols for running multiple simulations at a time. This
 script also randomizes the input number for the simulation. If your
 institution uses a different job submission protocol, you'll have to
 create your own script, keeping in mind that the script should feed a
-macro name and a random number into the Muon_Guore executable as
+macro name and a random number into the CoBaLEP executable as
 indicated on step 2a up above. I also made a quick root script, called
 jobsubmit, which will use simulationbatch1_.qsub to submit 100
 simulations jobs at a time through qsub. So in reality, my first few
@@ -47,7 +47,7 @@ simulating using the weighted.mac parameters. Pretty simple, huh?
 
 
 
-After the main MUON_GUORE executable is ran, it should output a .root
+After the main CoBaLEP executable is ran, it should output a .root
 file with the name 'output#####.root', where the #s are equal to the
 input seed. This is where the so called 'processing' phase begins. At
 present the processing involves 3 steps: hit building, event building,
@@ -131,16 +131,16 @@ argument.
 
 
 
-//Change to the directory containing the Muon_GUORE.cc file, make sure
+//Change to the directory containing the CoBaLEP.cc file, make sure
 cmake has been used to set it up initially
 
 //Copy a necessary folder with the following command :
 
-0a. >)cp -f /home/CJ.Barton/Muon_GUORE/Truon_GUORE/mac .
+0a. >)cp -f /home/CJ.Barton/CoBaLEP/Truon_GUORE/mac .
 
 //Copy the Copy folder and rename it
 
-0b. >)cp -f /home/CJ.Barton/Muon_GUORE/Truon_GUORE/simfiles/Copy .
+0b. >)cp -f /home/CJ.Barton/CoBaLEP/Truon_GUORE/simfiles/Copy .
 
 //This should be the directory from which you run steps 2. to 5.
 
@@ -154,19 +154,19 @@ src/ShowerGenerator.cc has a path you can find by searching for
 to your own 'mac' directory.
 
 The very last line of Copy/simulationbatch1_.qsub needs to be changed
-twice: the first path should point to the directory your Muon_GUORE
+twice: the first path should point to the directory your CoBaLEP
 executable is in. The second path should point to your 'mac' folder.
 
 
 
-1. >)make //Builds the Muon_GUORE executable out of the source codes
+1. >)make //Builds the CoBaLEP executable out of the source codes
 
 //Change to the renamed instance of the Copy directory
 
 2. >)root -x jobsubmit.C //takes 100 seconds to run
 
 //Dependencies of step 2: simulationbatch1_.qsub,
-//Muon_GUORE (the executable), weighted.mac
+//CoBaLEP (the executable), weighted.mac
 
 //Simulations can take up to 24 hours, depending on whether or not the
 rock has been removed from the simulation geometry. This is an

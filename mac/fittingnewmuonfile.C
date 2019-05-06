@@ -25,7 +25,7 @@ void fittingnewmuonfile(void)
 {
 
   //Dr. Xu: change this to your current working directory
-  const char* muon_path = "/home/CJ.Barton/Muon_GUORE/Truon_GUORE/mac";
+  const char* muon_path = "/home/CJ.Barton/CoBaLEP/Truon_GUORE/mac";
   inputfile = new TFile(Form("%s/SmallMuonFile.root", muon_path) ,"READ");
   datatree = (TTree*)inputfile->Get("muontree");
 

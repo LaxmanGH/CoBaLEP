@@ -36,7 +36,7 @@
 // on the Program) you indicate your acceptance of this statement,
 // and all its terms.
 ///////////////////////////////////////////////////////////////////////////
-/// \file Muon_GUORE.cc
+/// \file CoBaLEP.cc
 /// \brief Main program of the  example
 
 #include "DetectorConstruction.hh"

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////
 // This code implementation is the intellectual property of the
-// ton-scale 0vbb in Germanium collaboration. It is based on Geant4, an
+// LEGEND collaboration. It is based on Geant4, an
 // intellectual property of the RD44 GEANT4 collaboration.
 //
 // *********************
@@ -62,7 +62,7 @@ DetectorConstruction::DetectorConstruction()
 {
   detectorMessenger = new DetectorMessenger(this);
 	detector_type = "GERDA";
-	innerVessel_FillMaterial = "NitrogenGas";
+	innerVessel_FillMaterial = "ArgonLiquid";
 	checkOverlaps = false;
 }
 
@@ -85,7 +85,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // World
   //
   G4Box* solid_World = new G4Box("sol_World",50*m,50*m,18*m);
-  G4LogicalVolume* logical_World = new G4LogicalVolume(solid_World,mat_air,"log_World");
+  G4LogicalVolume* logical_World = new G4LogicalVolume(solid_World,mat_vacuum,"log_World");
 	logical_World->SetVisAttributes (G4VisAttributes::Invisible);
 	G4VPhysicalVolume* physical_World = new G4PVPlacement(0,G4ThreeVector(),logical_World,"phy_World",0,false,0,checkOverlaps);
 

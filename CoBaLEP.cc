@@ -3,7 +3,7 @@
 // LEGEND collaboration. It is based on Geant4, an
 // intellectual property of the RD44 GEANT4 collaboration.
 //
-// *********************
+// ********************
 // ********************************************************************
 // * License and Disclaimer                                           *
 // *                                                                  *
@@ -35,8 +35,22 @@
 // By copying, distributing or modifying the Program (or any work based
 // on the Program) you indicate your acceptance of this statement,
 // and all its terms.
+//
+//
+//The initial geometry based on Muon_GOURE
+//https://github.com/massarczyk/Muon_GUORE
+//
+//Primary author of this simulation package: Clay Barton
+//For inquiries please email CJ.Barton@coyotes.usd.edu
+//
+//This material is based upon work supported by the National Science
+//Foundation under Grant No. 1812356. Any opinions, findings, and 
+//conclusions or recommendations expressed in this material are those
+//of the author(s) and do not necessarily reflect the views of the
+//National Science Foundation.
+//
 ///////////////////////////////////////////////////////////////////////////
-/// \file Muon_GUORE.cc
+/// \file CoBaLEP.cc
 /// \brief Main program of the  example
 
 #include "DetectorConstruction.hh"
@@ -79,9 +93,9 @@
 #include "G4ios.hh"
 
 
-//V 1.02 requires a random seed to be input after the first macro argument
+//This module requires a random seed to be input after the first macro argument
 //It uses C++'s class system to safely pass variables between different methods
-//This version also has an option for hits in the LAr as a channel. This is quite memory intensive.
+//This version also has an option for hits in the LAr as a channel. It's currently broken.
 //There is NO summing in this version. Cuts are implemented on a case by case basis.
 
 
@@ -93,7 +107,7 @@ int savedsteps = 0;
 //////////////////////////////////////////////////
 
 //Class used to store and retrieve user-defined information from the track of the particle.
-//Currently the user information stores information about the nucleus which created the particle (if any).
+//Currently the Userinformation stores information about the nucleus which created the particle (if any).
 
 class T01TrackInformation : public G4VUserTrackInformation 
 {
@@ -183,7 +197,7 @@ void T01TrackInformation::Print() const
 }
 
 
-//over-class IO that all action classes inherit from, to pass information for writing etc.
+//mediator class IO that all action classes incorporate, to pass information for writing etc.
 
 class IO : public G4UImessenger
 {
@@ -197,57 +211,61 @@ public:
   //member functions
   void Open(char* inputseed);
   void Write(G4Track *track, int isadetector, int isentry);
+  void WriteNuclear(G4Track *track);
   void Close();
 
-  //output file
+  //output files
   TFile *fFile;
   TTree *fTree;
 
-  //variables to write to output file
-  int PID;
-  int ParentID;
-  double energy;
-  double kineticenergy;
-  double deltaenergy;
-  double time;
-  double x;
-  double y;
-  double z;
-  double px;
-  double py;
-  double pz;
-  double muonx;
-  double muony;
-  double muonz;
-  double muonpx;
-  double muonpy;
-  double muonpz;
-  double muonenergy;
-  int eventnumber;
-  int stepnumber;
-  double steplength;
-  int tracknumber;
-  int detectornumber;
-  int isentryevent;
+  TFile *nuclearFile;
+  TTree *nuclearTree;
+
+  //variables to write to output files
+  int         PID;
+  int         ParentID;
+  double      energy;
+  double      kineticenergy;
+  double      deltaenergy;
+  double      time;
+  double      x;
+  double      y;
+  double      z;
+  double      px;
+  double      py;
+  double      pz;
+  double      muonx;
+  double      muony;
+  double      muonz;
+  double      muonpx;
+  double      muonpy;
+  double      muonpz;
+  double      muonenergy;
+  int         eventnumber;
+  int         stepnumber;
+  double      steplength;
+  int         tracknumber;
+  int         detectornumber;
+  int         isentryevent;
   std::string creatorprocess;
   std::string material;
-  double startx;
-  double starty;
-  double startz;
-  int randomseed;
-  int nuclearPID;
-  double nuclearx;  
-  double nucleary;  
-  double nuclearz;  
+  double      startx;
+  double      starty;
+  double      startz;
+  int         randomseed;
+  int         nuclearPID;
+  double      nuclearx;  
+  double      nucleary;  
+  double      nuclearz;  
 
   //variables specifically to parse detector number from detector name (used in the Write method)
-  G4String name;
-  G4String num;
-  int j;
+  G4String    name;
+  G4String    num;
+  int         j;
 
 
-  char outputfilename[100];
-
+  char        outputfilename[100];
+  char        nuclearfilename[100];
 };
 
 
@@ -270,6 +288,17 @@ void IO::Open(char* inputseed)
   
   fFile = new TFile(outputfilename,"recreate");
   fTree = new TTree("fTree","fTree");
+
+  char nuclearprefix[12] = "nuclearinfo";
+
+  strcat(nuclearfilename, nuclearprefix);
+  strcat(nuclearfilename, inputseed);
+  strcat(nuclearfilename, suffix);
+
+  G4cout << nuclearfilename << G4endl;
+
+  nuclearFile = new TFile(nuclearfilename,"recreate");
+  nuclearTree = new TTree("nuclearTree","nuclearTree");
 
   //Branches to be filled
   fTree->Branch("PID",&PID,"PID/I");
@@ -299,7 +328,6 @@ void IO::Open(char* inputseed)
   fTree->Branch("detectornumber",&detectornumber,"detectornumber/I");
   //fTree->Branch("isentryevent", &isentryevent, "isentryevent/I");
   fTree->Branch("creatorprocess", &creatorprocess);
-  //fTree->Branch("material", &material);
   fTree->Branch("startx",&startx,"startx/D");
   fTree->Branch("starty",&starty,"starty/D");
   fTree->Branch("startz",&startz,"startz/D");
@@ -309,8 +337,21 @@ void IO::Open(char* inputseed)
   fTree->Branch("nucleary",&nucleary,"nucleary/D");
   fTree->Branch("nuclearz",&nuclearz,"nuclearz/D");
   randomseed = atoi(inputseed);
-  
-  G4cout << "Output file opened." << G4endl;
+
+  nuclearTree->Branch("material", &material);
+  nuclearTree->Branch("PID",&PID,"PID/I");
+  nuclearTree->Branch("x",&x,"x/D");
+  nuclearTree->Branch("y",&y,"y/D");
+  nuclearTree->Branch("z",&z,"z/D");
+  nuclearTree->Branch("muonpx",&muonpx,"muonpx/D");
+  nuclearTree->Branch("muonpy",&muonpy,"muonpy/D");
+  nuclearTree->Branch("muonpz",&muonpz,"muonpz/D");
+  nuclearTree->Branch("tracknumber",&tracknumber,"tracknumber/I");
+  nuclearTree->Branch("randomseed",&randomseed,"randomseed/I");
+  nuclearTree->Branch("nuclearPID",&nuclearPID,"nuclearPID/I");
+  nuclearTree->Branch("creatorprocess",&creatorprocess);
+
+  G4cout << "Output files opened." << G4endl;
 
 }
 
@@ -325,10 +366,6 @@ void IO::Write(G4Track *track, int isadetector, int isentry)
   deltaenergy = track->GetStep()->GetDeltaEnergy()/CLHEP::keV;
   time = track->GetGlobalTime()/CLHEP::ns;
 
-  //  if(energy>100)
-
-  //  G4cout <<"Momentum: " << G4ParticleGun::GetParticleMomentum() << G4endl;
-  
   if(isentry==0) //Step did NOT start in LAr and end up in Ge
     {
       x = track->GetStep()->GetPreStepPoint()->GetPosition().x()/CLHEP::mm;
@@ -338,7 +375,7 @@ void IO::Write(G4Track *track, int isadetector, int isentry)
     }
 
   if(isentry==1) //Step started in LAr and ended in Ge; so called 'entry event'
-    {
+    {//Turns out this is defunct. I left it in for legacy purposes.
       x = track->GetStep()->GetPostStepPoint()->GetPosition().x()/CLHEP::mm;
       y = track->GetStep()->GetPostStepPoint()->GetPosition().y()/CLHEP::mm;
       z = track->GetStep()->GetPostStepPoint()->GetPosition().z()/CLHEP::mm;
@@ -367,6 +404,7 @@ void IO::Write(G4Track *track, int isadetector, int isentry)
     creatorprocess = track->GetCreatorProcess()->GetProcessName();
   else
     creatorprocess = "None";
+
   startx = track->GetVertexPosition().x()/CLHEP::mm;
   starty = track->GetVertexPosition().y()/CLHEP::mm;
   startz = track->GetVertexPosition().z()/CLHEP::mm;
@@ -412,18 +450,46 @@ void IO::Write(G4Track *track, int isadetector, int isentry)
   else
     nuclearPID = nuclearx = nucleary = nuclearz = 0;
 
-
   fTree->Fill();
   
 } //Io::Write
 
+void IO::WriteNuclear(G4Track *track)
+{
+  //PID = track->GetDefinition()->GetPDGEncoding();;
+   if(track->GetUserInformation())
+    {
+      T01TrackInformation* info = (T01TrackInformation*)(track->GetUserInformation());
+      nuclearPID = info->GetOriginalParticle()->GetPDGEncoding();
+    }
+  else
+    nuclearPID = 0;
+
+  PID = track->GetDefinition()->GetPDGEncoding();  
+  creatorprocess = track->GetCreatorProcess()->GetProcessName();  
+  material = track->GetLogicalVolumeAtVertex()->GetMaterial()->GetName();
+  x = track->GetPosition().x();
+  y = track->GetPosition().y();
+  z = track->GetPosition().z();
+  tracknumber = track->GetTrackID();
+  muonpx = G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetPx()/CLHEP::keV;
+  muonpy = G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetPy()/CLHEP::keV;
+  muonpz = G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetPz()/CLHEP::keV;
+
+  nuclearTree->Fill();
+}
 
 void IO::Close()
 {
-
+  fFile->cd();
   fTree->Write();
   fFile->Close();
-  G4cout << "Output file written and closed." << G4endl;
+  nuclearFile->cd();
+  nuclearTree->Write();
+  nuclearFile->Close();
+
+
+  G4cout << "Output files written and closed." << G4endl;
   
 }
 
@@ -469,41 +535,31 @@ public:
   //--------
      
   // Constructor and destructor
-  TrackingAction(): G4UserTrackingAction(){};
+  TrackingAction(IO *io=0) : G4UserTrackingAction(), fio(io){};
+  TrackingAction() : G4UserTrackingAction(){};
   ~TrackingAction(){};
-
+  
     //Member functions
+  IO *fio;
   void UserTrackingAction();
   void PreUserTrackingAction(const G4Track* aTrack)
   {
-
-    if(aTrack->GetDefinition()->GetPDGEncoding()>10000000)
+        if(aTrack->GetDefinition()->GetPDGEncoding()>10000000)
       {//Particle is a nucleus, its secondaries should be tagged
 
-	/*if(aTrack->GetUserInformation())
-	  {	 
-	    G4cout <<"Daughter nuclei found!"<< G4endl;
-	    T01TrackInformation* orinfo = (T01TrackInformation*)(aTrack->GetUserInformation());
-	    G4cout << orinfo->GetOriginalParticle()->GetPDGEncoding() << G4endl << G4endl;
-	    G4cout << aTrack->GetDefinition()->GetPDGEncoding() << G4endl;
-	    }*/
-	
-	T01TrackInformation* anInfo = new T01TrackInformation(aTrack);
+	//if(aTrack->GetUserInformation())
+	//{	 
+	//  G4cout <<"Daughter nuclei found!"<< G4endl;
+	//  T01TrackInformation* orinfo = (T01TrackInformation*)(aTrack->GetUserInformation());
+	//  G4cout << orinfo->GetOriginalParticle()->GetPDGEncoding() << G4endl << G4endl;
+	//  G4cout << aTrack->GetDefinition()->GetPDGEncoding() << G4endl;
+	//  }
 	G4Track* theTrack = (G4Track*)aTrack;
+	fio->WriteNuclear(theTrack);	
+	T01TrackInformation* anInfo = new T01TrackInformation(aTrack);
 	theTrack->SetUserInformation(anInfo);
-	
-      }
-
-    
-
+	}
   }
-    /*    if(aTrack->GetParentID()>0 || aTrack->GetUserInformation()==0)
-      {
-	T01TrackInformation* anInfo = new T01TrackInformation(aTrack);
-	G4Track* theTrack = (G4Track*)aTrack;
-	theTrack->SetUserInformation(anInfo);
-      }
-      }*/
 
   void PostUserTrackingAction(const G4Track* aTrack)
   {
@@ -526,6 +582,8 @@ public:
 	  }//if(secondaries
       }//if(aTrack->GetUser
   }//PostUser
+
+
 
 };//TrackingAction
        
@@ -573,6 +631,7 @@ public:
 
 void SteppingAction::UserSteppingAction(const G4Step* step)
 {
+  
   int PID =step->GetTrack()->GetDefinition()->GetPDGEncoding(); 
   G4String material;
   if(PID!=13)
@@ -589,12 +648,12 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
       const G4String fillgasname = "phy_FillGas"; //LAr surrounding detector
       const G4String liquidargon = "phy_liquidArgon";
       
-      /*if(material!="G4_AIR"&&material!="Rock")
-	{
-	  T01TrackInformation* info = (T01TrackInformation*)(step->GetTrack()->GetUserInformation());
-	  if(info)
-	    G4cout << material << G4endl << PID << G4endl << info->GetOriginalParticle()->GetPDGEncoding() << G4endl << G4endl;
-	    }//Material*/
+      //if(material!="G4_AIR"&&material!="Rock")
+      //{
+	  //T01TrackInformation* info = (T01TrackInformation*)(step->GetTrack()->GetUserInformation());
+	  //if(info)
+	    //G4cout << material << G4endl << PID << G4endl << info->GetOriginalParticle()->GetPDGEncoding() << G4endl << G4endl;
+	    //}//Material
 
       if(strstr(whatgeometry.c_str(),detectornames.c_str())) //if pre step point originates in a detector
 	{
@@ -606,11 +665,11 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
   //if(currentsteps>=maxsteps)
   //  {
-  //    G4cout << G4endl << "I NEED AN ADULT" << G4endl;
+  //    G4cout << G4endl << "Simulation is too large. Force exit." << G4endl;
   //    return;
   //  }
 	    
-
+  
 }	     //void SteppingAction
 
 //////////////////////////////////////////////////
@@ -650,10 +709,9 @@ int main(int argc,char** argv)
 
   //Custom implemented classes
   IO *io = new IO;
-
   runManager->SetUserAction(new RunAction(io, inputseed));
   runManager->SetUserAction(new EventAction());  
-  runManager->SetUserAction(new TrackingAction());  
+  runManager->SetUserAction(new TrackingAction(io));  
   runManager->SetUserAction(new SteppingAction(io));
 
   
