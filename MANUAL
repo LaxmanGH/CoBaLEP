@@ -11,7 +11,7 @@ simulation's random number generator. An example set of commands to
 make this happen would be:
 
 1a. >) make
-2a. >) ./CoBaLEP muons.mac 309841 //user defined input seed
+2a. >) ./CoBaLEP mac/muons.mac 309841 //user defined input seed
 
 muons.mac generates high energy but monoenergetic muons, and Co60.mac
 generates stationary Cobalt 60 nuclei. weighted.mac (the recommended
@@ -23,19 +23,20 @@ yourself. To better understand what's in the simulation, you can read
 the .cc file.
 
 
-I made a script, simulationbatch1_.qsub, to use the qsub batch
+I made a script, runsims.sh, to use the slurm environment's batch
 submission protocols for running multiple simulations at a time. This
 script also randomizes the input number for the simulation. If your
 institution uses a different job submission protocol, you'll have to
 create your own script, keeping in mind that the script should feed a
 macro name and a random number into the CoBaLEP executable as
 indicated on step 2a up above. I also made a quick root script, called
-jobsubmit, which will use simulationbatch1_.qsub to submit 100
-simulations jobs at a time through qsub. So in reality, my first few
+jobsubmit, which will use the runsims.sh slurm script to submit 100
+simulations jobs at a time through USD HPC. So in reality, my first few
 commands are:
 
 1b. >)make
-2b. >)qsub simulationbatch1_.qsub //single job, random input seed
+(switch to production directory)
+2b. >)sbatch runsims.sh //single job, random input seed
 
 OR
 
@@ -44,7 +45,6 @@ OR
 
 This will get 100 batches of 100 muons each (10,000 total) to start
 simulating using the weighted.mac parameters. Pretty simple, huh?
-
 
 
 After the main CoBaLEP executable is ran, it should output a .root
@@ -72,9 +72,9 @@ phase: event building.
 3a. >)root -x hitbuilder.C //No longer works
 
 VERY IMPORTANT UPDATE: hit building usually takes about 5 minutes
-for a single simulation file, but can take as long as a day or
-more. As such, it's not advisable to process all files in the current
-directory at a time. As you may recall, simulation files are all
+for a single simulation file, but can overflow a node's memory.
+As such, it's not advisable to process all files in the current
+directory at one time. As you may recall, simulation files are all
 tagged with a unique number in their name, e.g. output#####.root. To
 work around the processing time issue, I now require hitbuilder.C
 to take a numerical input. Then, only simulation files whose unique
@@ -90,9 +90,9 @@ unique ID match the numerical input. output1654436.root would not be
 processed, because while it does contain '544' in its unique ID, it is
 not the first sequence of digits.
 
-3b. >)root -x hitbuilder.C(anynumber) //Recommend anynumber be 3 digits
+3b. >)root -x hitbuilder.C(anynumber) //Recommend anynumber be 2 digits
 
-I made another batch submission script, manysub.qsub, and another
+I made another batch submission script, runbuilder.sh, and another
 accompanying root file to submit it many times, manysubmit.C. I would
 highly recommend using these to do any hit building, or to build
 your own batch submission script. manysubmit.C submits every possible
@@ -100,7 +100,7 @@ combination of starting digits for the simulation files' unique IDs,
 so every file gets processed, but now the labor is split across many
 machines.
 
-3c. >) root -x manysubmit.C //Highly recommended over 3b
+3c. >) root -x manysubmit.C //Highly recommended over 3b.
 
 
 The event building  program is called eventbuilder.C It takes
@@ -112,93 +112,96 @@ again the number carries over from the original simulation file's
 unique ID. eventbuilder.C takes very little time to process any number of
 files.
 
+
 As a final step, to make high statistics analysis easier, the user may
-use the program chaining.C. This simply uses a TChain to merge all
-sumtree files into a single file, which is then titled
-allsums.root. Simple analysis can then be done easily on
-allsums.root. For details on parameter names for analysis, please read
-eventbuilder.C's source code. Analysis macros are in development.
+use the program chainingtwo.C. This simply uses a TChain to merge all
+sumtree files into a single file, which is then titled allsums.root.
+Simple analysis can then be done easily on allsums.root. For details on
+parameter names for analysis, please read eventbuilder.C's source code.
+chainingone.C chains unprocessed files e.g. raw simulation data.
 
 
 
 Below are exactly the commands I would run to complete the simulations
 and processing from start to finish for 10,000 muons. First, you
-will need to copy a folder from my home directory. I've listed the
-path below this paragraph in step 0. This folder, mac, contains some
-files referenced by other parts of this module which are too large to
-store on github, as well as the .mac files the simulation takes as an
-argument.
+will need a directory with the above scripts. I've listed the
+path below this paragraph in step 0. This folder is called scripts.
+
+Another folder, mac, contains the file used (for now) to sample the
+angular distribution of the muons, as well as some other analysis
+scripts which are either deprecated or for specific uses only.
 
 
+//All commands assume you are located in the directory containing
+//CoBaLEP.cc
 
-//Change to the directory containing the CoBaLEP.cc file, make sure
-cmake has been used to set it up initially
+//Use cmake (if necessary) and make
 
-//Copy a necessary folder with the following command :
+//Copy the scripts folder and rename it
 
-0a. >)cp -f /home/CJ.Barton/CoBaLEP/Truon_GUORE/mac .
-
-//Copy the Copy folder and rename it
-
-0b. >)cp -f /home/CJ.Barton/CoBaLEP/Truon_GUORE/simfiles/Copy .
+1. >)cp -f scripts /wherever/you/want/
 
 //This should be the directory from which you run steps 2. to 5.
-
 
 
 The following locations have file paths that will need to be changed
 to reflect your setup:
 
 src/ShowerGenerator.cc has a path you can find by searching for
-'Truon_GUORE' in a text editor. You will need to change this to point
-to your own 'mac' directory.
+'$WORKINGDIR' in a text editor. You will need to change this to point
+to your own 'mac' directory. You can also set up your own $WORKINGDIR
+environment variable to point to the directory containing CoBaLEP.cc
 
-The very last line of Copy/simulationbatch1_.qsub needs to be changed
+The very last line of scripts/runsims.sh needs to be changed
 twice: the first path should point to the directory your CoBaLEP
 executable is in. The second path should point to your 'mac' folder.
 
 
-
-1. >)make //Builds the CoBaLEP executable out of the source codes
-
-//Change to the renamed instance of the Copy directory
+//Change to the renamed instance of the scripts directory
 
 2. >)root -x jobsubmit.C //takes 100 seconds to run
 
-//Dependencies of step 2: simulationbatch1_.qsub,
+//Dependencies of step 2: runsims.sh,
 //CoBaLEP (the executable), weighted.mac
 
-//Simulations can take up to 24 hours, depending on whether or not the
+
+Simulations can take up to 24 hours, depending on whether or not the
 rock has been removed from the simulation geometry. This is an
 advanced setting and beyond the scope of this manual. By default the
 rock is included.
 
+
 //After all simulations finish in 24 or so hours...
+//3a is optional, but moves all the slurm output files to one new file
+3a. >)chainingone.C
+3b. >)root -x manysubmit.C //takes 100 seconds to run
 
-3. >)root -x manysubmit.C //takes 900 seconds to run
-
-//Dependencies of step 3: manysub.qsub, hitbuilder.C,
+//Dependencies of step 3: runbuilder.sh, hitbuilder.C,
 //simulation output files
 
-//Hit building can also take up to 24 hours. If you're ever worried
-//it's taking too long or stuck processing, try the following command:
 
-3a. >) tail -100 manysub-outto
+Hit building can also take a while. If you're ever worried
+it's taking too long or stuck processing, try reading any of
+the slurm output logs being created in real time.
+emacs -nw slurm-#####.out //(##### is jobID of the slurm job)
+This should show some numbers tracking the progress of the hit
+builder. Read the source file if you wanna know what these numbers
+are. All you need to know right now is that if you run the same
+command a few minutes later and the numbers have changed at all,
+the hit builder is still advancing.
 
-//This should show some numbers tracking the progress of the hit
-//builder. Read the source file if you wanna know what these numbers
-//are. All you need to know right now is that if you run the same
-//command 30 minutes later and the numbers have changed at all, the
-//hit builder is still advancing.
 
 //Once all the hits are built...
 
 4. >)root -x eventbuilder.C
 
 //Dependencies of step 4: having hit builder output files
+//eventbuilder.C automatically cleans up the slurm files
+//into one big file, whether or not you did it before
+//so it's recommended to do it before as well, in 3a
 
 
-
+(no longer true but kept in case the problem returns)
 In my experience, 1-2% of hit builder output files are corrupted.
 This will be VERY obvious when you try to run eventbuilder.C on
 them. Luckily, I set up eventbuilder.C to output the name of each file
@@ -210,19 +213,38 @@ event builder, and simply run it again. This solution is not very
 elegant... but it works for now.
 
 
-
-5. (optional) >)root -x chaining.C
+5. (optional) >)root -x chainingtwo.C
 
 //Dependencies of step 5: having event builder output files
+//After this, production should be all done!
 
-Stay tuned for analysis programs!
+
+
+There is one other set of three analysis scripts in scripts/ worth
+mentioning. The "tracing back" scripts, consisting of traceback.C,
+tracetwo.C, and finaltrace.C, serve a single purpose.
+
+In analysis, it sometimes chances that information contained in the
+fully processed 'event-built' file warrants a closer look at the raw
+simulation data from whence it came. However, there's a reason the
+hitbuilder and eventbuilder scripts are necessary - the raw and final
+event data are incompatible, for reasons beyond the scope of this
+manual. I'd encourage those interested to look up my talk at the
+October 2018 DNP/JPS meeting. Anyway, the tracing back scripts allow
+a user to specify some cuts on the fully built data using traceback.C
+and then call trace2.C and finaltrace.C in order to retrieve the raw
+data associated with those cuts. There will be a new ROOT file called
+cutsoutput.root containing the raw data associated with the cut(s)
+made in traceback.C's runtime. This is a pretty advanced script, so
+it may be that I'm the only one who ends up using it anyway.
 
 
 
 Below are the names and functions of the other programs appearing in
-the mac directory. These programs are either old and nonfunctional,
-specialized, or both, so it's likely anybody reading this but me will
-never have to use them. Even so, extra documentation doesn't hurt.
+the mac directory. Many of these are either old and nonfunctional,
+specialized, or both, so it's unlikely anybody else reading this will
+ever have to use them. Even so, extra documentation doesn't hurt.
+
 
 accessralphmuonfile.C - Pretty descriptive. Just a specialized program
 I made to access the large file of simulated muons Ralph gave me,
@@ -238,26 +260,58 @@ Accesses SmallMuonFile.root, calculates angular distributions of
 the muons, and plots them. You won't get what you want unless you
 mess with the script, though, so this one's also a little busted.
 
-bigsimsnoangle.root - A particularly large simulation file, from
-back in the days when I would run 100,000 muons at a time instead of
-100. This was made with unrealistic parameters and so is not an
-accurate simulation, but I saved it because it might be useful for
-testing out runtime of programs.
+Co60.mac - As explained elsewhere, use this instead of
+'weighted.mac' if you wanna simulate Co60 decays instead of muons.
+
+CoBaLEP_neutrons.cc - An alternative version of CoBaLEP.cc
+Used for simulations I did of a muon through solid rock, in which
+I studied the neutron production. May use again one day, who knows.
+
+CoBaLEP_original.cc - An alternative version of CoBaLEP.cc
+A snapshot of the cc file at the time CoBaLEP_neutrons.cc was made.
+
+findAmanually.C - A test file when implementing the Mei Hime
+energy weighting functionality (see changelog for details).
+Was used to determine there was a problem with the energy
+distribution in the original SmallMuonFile, and subsequently
+necessitated the switch to weighting vie branch.
+
+fittingnewmuonfile.C - A test file when implementing the Mei Hime
+energy weighting functionality (see changelog for details).
 
 heatmap.C - Old analysis program I used to use to plot the starting
 z position of shower secondaries that hit the detectors versus the
 name of the process which created them. These plots were pretty and
-informative (pretty informative), so I'll probably reimplement this
+informative (pretty informative), so I just might reimplement this
 at some point during the analysis phase.
 
-Muonbackground_shielding.root - Name of Ralph's muon file, referenced
-heavily elsewhere in this manual.
+muons.mac - A muon sample which uses GEANT4's General Particle
+Source. weighted.mac samples from a file/
 
-nucleardelayinfo.C - Another fledgling analysis program, designed to
-record information about particles produced from delayed nuclear
+neutronsforGe.mac - Macro for sampling neutrons instead of muons.
+Used in a study of neutrons impinging on Ge that I did to satisfy
+the curiosity of some colleagues.
+
+neutronMultiplicitySource.mac - Muon sampling macro used in the
+neutron production in rock study mentioned in CoBaLEP_neutrons.cc.
+
+nucleardelayinfo.C - Another fledgling analysis program, designed
+to record information about particles produced from delayed nuclear
 decays which find their way to a sensitive detector mass.
+This has since been incorporated into the main program in a much
+more sophisticated way.
 
 specificcreatorprocess.C - An analysis program which allows me to
 search for specific creator processes in the simulation outputs. In
 its early stages as well, but at least functional. Probably not
 necessary now that I know more than one thing about using TCut.
+
+validationforangularcut.C - A trigonometric cut was implemented in
+the ShowerGenerator.cc file, to prevent simulation of muons that
+never even come within 5m of the detector shielding. This saves a
+lot of runtime. This script was used to validate it, but needs to
+be updated and run again for many reasons.
+
+weighted.mac - As mentioned before, the 'standard' sampling macro
+for production. At this point, the only thing it samples from
+the SmallMuonFile is angular distribution at SURF.

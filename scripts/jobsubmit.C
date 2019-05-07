@@ -7,7 +7,7 @@ void jobsubmit()
   
   for(int i=1;i<101;i++)
     {
-      gSystem->Exec("qsub simulationbatch1_.qsub");
+      gSystem->Exec("sbatch runsims.sh");
       sleep(1);
     }
 }
