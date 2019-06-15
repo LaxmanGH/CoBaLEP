@@ -20,9 +20,9 @@
 #/vis/filtering/trajectories/particleFilter-0/add gamma
 #/vis/filtering/trajectories/particleFilter-0/add mu-
 #/vis/filtering/trajectories/particleFilter-0/active true
-/vis/scene/add/hits
+#/vis/scene/add/hits
 /vis/scene/endOfEventAction accumulate
 
 
-/run/beamOn 1
+/run/beamOn 10
 

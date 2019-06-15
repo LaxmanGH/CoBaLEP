@@ -159,7 +159,7 @@ executable is in. The second path should point to your 'mac' folder.
 
 //Change to the renamed instance of the scripts directory
 
-2. >)root -x jobsubmit.C //takes 100 seconds to run
+2. >)root -x -q jobsubmit.C //takes 100 seconds to run
 
 //Dependencies of step 2: runsims.sh,
 //CoBaLEP (the executable), weighted.mac
@@ -174,7 +174,8 @@ rock is included.
 //After all simulations finish in 24 or so hours...
 //3a is optional, but moves all the slurm output files to one new file
 3a. >)chainingone.C
-3b. >)root -x manysubmit.C //takes 100 seconds to run
+3b. >)root -x -q meihimeweighting.C
+3c. >)root -x -q manysubmit.C //takes 100 seconds to run
 
 //Dependencies of step 3: runbuilder.sh, hitbuilder.C,
 //simulation output files

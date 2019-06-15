@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include<time.h>
 
-void hitbuilder(int startnumber)
+void hitbuilder()
 {
 
   //Take a time-sorted output file (with G4events together also
@@ -108,6 +108,7 @@ void hitbuilder(int startnumber)
       fTree->SetBranchStatus("y",1);
       fTree->SetBranchStatus("z",1);
       fTree->SetBranchStatus("stepnumber",1);
+      fTree->SetBranchStatus("weight",1);
 
       fTree->SetBranchAddress("time", &time);
       fTree->SetBranchAddress("eventnumber", &eventnumber);
@@ -454,7 +455,7 @@ void hitbuilder(int startnumber)
     }//iterates on each file
 
   t1 = (double(clock())-t1);
-  cout <<"Total time taken for startnumber " << startnumber << ": " << t1/1000000 << endl;
+  cout <<"Total time taken: " << t1/1000000 << endl;
   
 }//EOF
 

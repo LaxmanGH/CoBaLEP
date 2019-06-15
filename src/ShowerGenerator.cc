@@ -2,7 +2,7 @@
 // This code implementation is the intellectual property of the
 // LEGEND collaboration. It is based on Geant4, an
 // intellectual property of the RD44 GEANT4 collaboration.
-//
+// 
 // *********************
 //
 // Neither the authors of this software system, nor their employing
@@ -65,6 +65,283 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+//A more careful reimplementation of the trig cut
+
+bool passcuts2(double x, double y, double px, double py, double pz, double assemblyheight, double assemblyradius)
+{//Calculate if this muon will pass within 5m of
+ //the detector assembly. Return true or false.
+  //Within 5m of the assembly is the target volume
+
+  //There are two discrete possibilities:
+  //1. The muon is directly above the target volume
+  //2. It is not
+
+  //In case 1, theoretically the muon can have
+  //any azimuth angle phi, but the range of
+  //zenith angles theta it can have is limited
+  //and is also dependent on the phi value as
+  //well as its relative position above the
+  //target volume.
+
+  //In case 2, the range of acceptable phi values
+  //is limited, and the range of zenith values
+  //is also slightly dependent on the muon's
+  //trajectory relative to the center of the
+  //target volume. More on this later.
+
+  //First, assign variables
+
+  double polarradius = TMath::Sqrt(x*x+y*y);
+  //e.g. the horizontal component of a line conn-
+  //ecting the center of the target volume with
+  //the position of the particle
+
+  double targetvolumeradius = assemblyradius+5;
+  double targetvolumeheight = assemblyheight+10;
+
+  double minimumheight = 13;//Hardcoded... Bad
+  //The height difference between the particle
+  //sampling plane and the top of the target volume
+  //Right now, sampling plane is at 18*m
+  //Target volume top is at 0+5*m
+  double maximumheight = minimumheight+targetvolumeheight;
+
+  double z = (minimumheight+maximumheight)/2;
+
+  //We should already be able to determine whether
+  //the particle is directly above the target
+  //volume or not.
+
+  bool isabove = false;
+  if(polarradius < targetvolumeradius)
+    isabove = true;
+  //You can define the particle's angles in two ways
+
+  //First, its theta and phi for its momentum
+  //e.g. what direction it's heading
+  //Second the theta and phi relative to the
+  //center of the target volume, the latter of which
+  //is much more useful e.g. its 'position angles'
+
+  //I'm going to be converting radians to degrees so
+  //I can do sanity checks, so I'll just define that
+  //constant now.
+  const double RtoD = 180/TMath::Pi();
+
+  double momentumphi = TMath::ATan2(py,px);
+  double momentumtheta = TMath::ACos(pz/TMath::Sqrt(px*px+py*py+pz*pz));
+  double positionphi = TMath::ATan2(y,x);
+  double positiontheta = TMath::ACos(z/TMath::Sqrt(x*x+y*y+z*z));
+
+  //The reason positionphi is so useful is because
+  //if we subtract it from every other phi angle
+  //we use, we can effectively align the particle
+  //to be along the x axis w.r.t. the taget volume
+  //Similarly, we generally subtract the zenith
+  //angle from 90 degrees to get the zenith angle
+  //with respect to the PARTICLE, not the origin.
+  //But notice we used ACos, not ASin, when
+  //calculating theta, so only momentumtheta needs
+  //to be corrected since pz is negative
+
+  momentumtheta = TMath::Pi() - momentumtheta;
+
+  if(positionphi<0)
+    positionphi = positionphi + (TMath::Pi()*2);
+
+  momentumphi = momentumphi - positionphi;
+  if(momentumphi<0)
+    momentumphi = momentumphi+(2*TMath::Pi());
+  else if(momentumphi>(2*TMath::Pi()))
+    momentumphi = momentumphi-(2*TMath::Pi());
+  if(momentumphi<0)
+    momentumphi = momentumphi+(2*TMath::Pi());
+
+
+  //G4cout << G4endl << "Sanity check!" << G4endl << G4endl << "Position (x y z): " << x << " " << y << " " << z << G4endl << "Momentum (px py pz): " << px << " " << py << " " << pz << G4endl << "Momentum (phi theta): " << momentumphi*RtoD << " " << momentumtheta*RtoD << G4endl << "Position (phi theta): " << positionphi*RtoD << " " << positiontheta*RtoD << G4endl << G4endl << G4endl;
+
+  //At this point, I think it's finally time to start calculations. Declare calculation variables:
+
+  double realpath = 0;
+  //realpath is the solvable. How far horizontally
+  //can the particle travel before no longer being
+  //"above" the target volume?
+  //If we know this calculating the critical zenith
+  //angle is trivial. Speaking of which...
+
+  double maximumtheta = 0;
+  //If the particle's momentumzenith exceeds this
+  //value, it misses. If it's under, it hits.
+
+  double epsilon = 0;
+  double psi = 0;
+  double phistar = 0;
+
+  if(momentumphi<TMath::Pi())
+    phistar = TMath::Pi() - momentumphi;//Complementary
+  else
+    phistar = momentumphi - TMath::Pi();
+
+  //Trig calculations have to be done in radians
+
+  
+  //Let me paint you a picture with words.
+  //Forget the z axis exists.
+  //From above, the target volume is a circle.
+  //After our offset corrections, we can say
+  //polarradius is a line along the x axis
+  //(e.g. on phi=0) starting at the origin.
+  //realpath is an imaginary line, with one end
+  //on polarradius (the non-origin endpoint)
+  //and the other end on the edge of the circle.
+  //momentumphi determines which edge of the
+  //circle the other end of realpath is on.
+  //Draw a line connecting the origin with the
+  //end of realpath that lies on the edge of the
+  //circle. A line from the center to the edge
+  //is, of course, the radius. So we know the
+  //length of two sides immediately: polarradius
+  //and targetvolumeradius.
+  
+  //phistar is a complementary angle to phi
+  //It is the angle between polarradius and
+  //realpath
+
+  //epsilon is the angle between realpath and the
+  //targetvolumeradius
+
+  //psi is the final angle, between polarradius
+  //and targetvolumeradius, across from realpath
+
+      //Use the side side angle trig method
+  
+      //Law of sines: sin(a)/A = sin(b)/B e.g.
+      //a = arcsin(A*sin(b)/B)
+      //We know targetvolumeradius and polarradius already
+      epsilon = TMath::ASin(polarradius*TMath::Sin(phistar)/targetvolumeradius);
+      
+      psi = (TMath::Pi()) - epsilon - phistar;
+      
+      //Use law of sines again
+      //sin(psi)/realpath = sin(phistar)/t.v.radius
+      realpath = targetvolumeradius*TMath::Sin(psi)/TMath::Sin(phistar);
+
+  
+  //Time for another sanity check!
+  //G4cout << G4endl << "Sanity check 2!" << G4endl << G4endl << "Radius: " << targetvolumeradius << G4endl << "Distance to particle along x axis: " << polarradius << G4endl << "Phistar: " << phistar*RtoD << G4endl << "Epsilon: " << epsilon*RtoD << G4endl << "psi: "<< psi*RtoD << G4endl << "Realpath: " << realpath << G4endl;
+
+  //The previous calculations of parameters
+  //are independent of whether the particle starts
+  //directly above the target volume. However, the
+  //actual limitations on the azimuth and zenith
+  //angles will change. For a particle directly
+  //above (r<R), there is no minimum zenith angle
+  //but there is a maximum one.
+
+  if(isabove)
+    {
+      //With the maximum allowable path
+      //length in hand, we can calculate maximum
+      //allowable zenith angle for r < R
+      maximumtheta = TMath::ASin(realpath/TMath::Sqrt(realpath*realpath+minimumheight*minimumheight));
+      
+      //G4cout <<"INNER maximum allowable zenith: " << maximumtheta*RtoD << G4endl << "Calculated zenith: " << momentumtheta*RtoD << G4endl;
+
+      if(momentumtheta<maximumtheta)
+	{
+	  //G4cout << "1" << G4endl;
+	  return true;
+	}      
+      else
+	{
+	  //G4cout << "2" << G4endl;
+	  return false;
+	}
+    }//if(isabove)
+
+  else
+    {//Particle is not directly above the assembly
+
+      //This case is a bit trickier so I saved it
+      //for last. In the previous situation, there
+      //was no minimum or maximum phi, and no
+      //minimum theta. However, all four of those
+      //parameters are needed for this case.
+
+      //Let's start with the phi's - we've already
+      //calculated the parameters we need for that.
+
+      double rho = TMath::ASin(targetvolumeradius/polarradius);
+      //Draw a line, from the particle, tangent to
+      //the circle. rho is the angle between the
+      //polar radius and this line. You can draw
+      //a second such line. Any phi between these
+      //two lines is valid.
+      double minimumphi = (TMath::Pi())-rho;
+      double maximumphi = (TMath::Pi())+rho;
+
+      //G4cout << "OUTER Minimum allowable azimuth: " << minimumphi*RtoD << G4endl << "Maximum allowable azimuth: " << maximumphi*RtoD << G4endl << "Calculated azimuth: " << momentumphi*RtoD << G4endl;
+
+      if( momentumphi < minimumphi || momentumphi > maximumphi )
+	{
+	  //G4cout << "2" << G4endl;
+	  return false;
+	}
+
+      else
+	{//Easy azimuth cut - now zenith cut time
+
+
+	  //The minimum allowable zenith angle is
+	  //for a particle hitting the bottom cor-
+	  //ner of the target volume on the near
+	  //side. This is a maximum height,
+	  //minimum horizontal distance scenario.
+	  //We already calculated the maximum
+	  //horizontal distance (realpath), the 
+	  //minimum hieght and the maximum height.
+
+	  //To calculate minimum path length we
+	  //need to calculate the chord that the
+	  //particle would hypothetically carve out
+	  //if it passed fully through the detector
+	  //on its current trajectory.
+
+	  //For maximum theta, do the opposite
+	  //i.e. minimum height, maximum horizontal
+	  //We know minimum height (hardcoded...)
+
+	  double chord=2*targetvolumeradius*TMath::Sin((TMath::Pi()/2)-epsilon);
+	  //chord's argument has already been converted and halved
+	  //G4cout << "Chord: " << chord << G4endl << "Epsilon: " << epsilon*RtoD << G4endl << "psi: " << psi*RtoD << G4endl << "phistar: " << phistar*RtoD << G4endl << G4endl;
+	  //And subtract this from realpath
+	  	  
+	  double minimumtheta = TMath::ATan((realpath-chord)/maximumheight);
+
+	  maximumtheta = TMath::ATan(realpath/minimumheight);
+	  
+	  //G4cout << "Minimum allowable zenith: " << minimumtheta*RtoD << G4endl << "Maximum allowable zenith: " << maximumtheta*RtoD << G4endl << "Calculated zenith: " << momentumtheta*RtoD << G4endl << G4endl;
+	  
+	  if(momentumtheta < minimumtheta || momentumtheta > maximumtheta)
+	    {
+	      //G4cout << "2" << G4endl;
+	      return false;
+	    }
+	  else
+	    {//It actually passed
+	      //G4cout << "1" << G4endl;
+	      return true;
+	    }
+	}//zenith cut
+
+    }//is not above
+
+}//passcuts
+
+
+
+
+
 bool passcuts(double x, double y, double px, double py, double pz, double assemblyheight, double assemblyradius)
 {//Calculate if this muon will pass within 5m of
  //the detector assembly. Return true or false.
@@ -72,7 +349,7 @@ bool passcuts(double x, double y, double px, double py, double pz, double assemb
   double r = TMath::Sqrt(x*x+y*y);//polar radius
   double R = assemblyradius+5;//Diameter will be +10
   double H = assemblyheight+10;
-  double samplingheight = 18;//hardcoded...Bad
+  double samplingheight = 13;//hardcoded...Bad
   double L = 0;
   double m = 0; //R + m = r
   
@@ -200,18 +477,12 @@ bool passcuts(double x, double y, double px, double py, double pz, double assemb
   //If none of the if statements above returned false
   return true;
 
-
-
-  
-
-
-  
 }
 
 
 ShowerGenerator::ShowerGenerator()
 {
-  const char* muon_path = "/home/usd.local/cj.barton/CoBaLEP/Truon_GUORE/mac";
+  const char* muon_path = "$WORKINGDIR/mac";
   inputfile = new TFile(Form("%s/SmallMuonFile.root", muon_path) ,"READ");
   datatree = (TTree*)inputfile->Get("muontree");
 
@@ -253,96 +524,99 @@ void ShowerGenerator::GeneratePrimaryVertex(G4Event* anEvent)
   bool validmuon = false;
   double xx = 0;
   double yy = 0;
-  double zz = 17.999;
+  double zz = 17.999999;
   double comparator = 0;
   double comparee = 0;
   int counter = 0;
-  int justforfun = 0;
+  int attemptsatmuon = 0;
   double energynorm = 0;
+
   while(!validmuon)
     {
-  // Select random entry within file
-  //Flat version (stable:) int ev_ID = (int)(G4UniformRand()*max_entries);
-  comparator = G4UniformRand(); //should be between 0 and 1
-  comparee = 0;
-  counter = 0;
-  justforfun++;
-  //  G4cout << "Comparator: " << std::setprecision(20) << comparator << G4endl;
-  while(comparee<comparator)
-    {
-
-      datatree->GetEntry(counter);
-
-      comparee += weight; //weight is normalized so that total sum is 1.0 to high precision
-      if(counter>=max_entries)
-	G4cout << G4endl << "Sampling method error" << G4endl; //should never happen
-      counter++;
-    }
-
-  //use the initial parameters of whichever muon was selected using comparator
+      // Select random entry within file
+      //Flat version (stable:) 
+      //int ev_ID = (int)(G4UniformRand()*max_entries);
+      comparator = G4UniformRand(); //should be between 0 and 1
+      comparee = 0;
+      counter = 0;
+      
+      //  G4cout << "Comparator: " << std::setprecision(20) << comparator << G4endl;
+      while(comparee<comparator)
+	{
+	  
+	  datatree->GetEntry(counter);
+	  
+	  comparee += weight; //weight is normalized so that total sum is 1.0 to high precision
+	  if(counter>max_entries)
+	    G4cout << G4endl << "Sampling method error" << G4endl; //should never happen
+	  counter++;
+	}
+      
+      //use the initial parameters of whichever muon was selected using comparator
+      
+      datatree->GetEntry(counter-1);
+      //datatree->GetEntry(ev_ID);
+      
+      xx = (G4UniformRand()-0.5)*99.9;//from -49.95m to 49.95m
+      yy = (G4UniformRand()-0.5)*99.9;
+      
+      attemptsatmuon++;
+      
+      validmuon = passcuts2(xx,yy,particle_momentumX,particle_momentumY,particle_momentumZ,13,6.5);
+    }//while !validmuon
   
-  datatree->GetEntry(counter-1);
+  G4cout <<"It took " << attemptsatmuon << " attempts to sample a valid muon." << G4endl;
+ 
   //for all shower particles
   particle_time = 0.0*s;
 
-
-  xx = (G4UniformRand()-0.5)*99;//from -49.5m to 49.5m
-  yy = (G4UniformRand()-0.5)*99;
-
-
-
-  validmuon = passcuts(xx,yy,particle_momentumX,particle_momentumY,particle_momentumZ,13,6.5);
-  
-    }//while !validmuon
-
-  G4cout <<"It took " << justforfun << " attempts to sample a valid muon." << G4endl;
   particle_position.setX(xx*m);
   particle_position.setY(yy*m);
   particle_position.setZ(zz*m);
-
-	G4PrimaryVertex* vertex = new G4PrimaryVertex(particle_position,particle_time);
-
-	G4ParticleDefinition* particle_definition = 0;
-	particle_definition = G4MuonMinus::MuonMinusDefinition();
-
+  
+  G4PrimaryVertex* vertex = new G4PrimaryVertex(particle_position,particle_time);
+  
+  G4ParticleDefinition* particle_definition = 0;
+  particle_definition = G4MuonMinus::MuonMinusDefinition();
+  
   // Set momenta, no rotations done here (unlike in MaGe)
-       double px_MJD = particle_momentumX;
-       double py_MJD = particle_momentumY;
-       double pz_MJD = particle_momentumZ;
-       //       double pEnergy = particle_energy;
-       //G4cout << "Counter: " << counter << G4endl;
-       //G4cout << G4endl << "MUON MOMENTUM: " << px_MJD << " " << py_MJD << " " << pz_MJD << " " << G4endl;
-
-       //Temporarily implemented as of March 2019
-       //Retroactively make the energy a flat distribution from 0 to 20 TeV
-       //First normalize the momenta so the particle thinks it's at 1 GeV
-
-       energynorm = TMath::Sqrt(px_MJD*px_MJD+py_MJD*py_MJD+pz_MJD*pz_MJD);
-       px_MJD = px_MJD/energynorm;
-       py_MJD = py_MJD/energynorm;
-       pz_MJD = pz_MJD/energynorm;
-       //Now multiple by a random number between 0 and 20000
-       //Should technically be 200000, but I want statistics!dammit!
-       energynorm = G4UniformRand()*20000;
-       px_MJD = px_MJD*energynorm;//G4RandExponential::shoot(20000);
-       py_MJD = py_MJD*energynorm;//G4RandExponential::shoot(20000);
-       pz_MJD = pz_MJD*energynorm;//G4RandExponential::shoot(20000);
-       energynorm = TMath::Sqrt(px_MJD*px_MJD+py_MJD*py_MJD+pz_MJD*pz_MJD);
-       //G4cout <<"Particle energy (in GeV): " << energynorm << G4endl;
-       //G4cout <<"Px: "<< px_MJD << "Py: " <<py_MJD << "Pz: " << pz_MJD<< G4endl;
+  double px_MJD = particle_momentumX;
+  double py_MJD = particle_momentumY;
+  double pz_MJD = particle_momentumZ;
+  //       double pEnergy = particle_energy;
+  //G4cout << "Counter: " << counter << G4endl;
+  //G4cout << G4endl << "MUON MOMENTUM: " << px_MJD << " " << py_MJD << " " << pz_MJD << " " << G4endl;
+  
+  //Temporarily implemented as of March 2019
+  //Retroactively make the energy a flat distribution from 0 to 20 TeV
+  //First normalize the momenta so the particle thinks it's at 1 GeV
+  
+  energynorm = TMath::Sqrt(px_MJD*px_MJD+py_MJD*py_MJD+pz_MJD*pz_MJD);
+  px_MJD = px_MJD/energynorm;
+  py_MJD = py_MJD/energynorm;
+  pz_MJD = pz_MJD/energynorm;
+  //Now multiple by a random number between 0 and 20000
+  //Should technically be 200000, but I want statistics!dammit!
+  energynorm = G4UniformRand()*20000;
+  px_MJD = px_MJD*energynorm;//G4RandExponential::shoot(20000);
+  py_MJD = py_MJD*energynorm;//G4RandExponential::shoot(20000);
+  pz_MJD = pz_MJD*energynorm;//G4RandExponential::shoot(20000);
+  energynorm = TMath::Sqrt(px_MJD*px_MJD+py_MJD*py_MJD+pz_MJD*pz_MJD);
+  //G4cout <<"Particle energy (in GeV): " << energynorm << G4endl;
+  //G4cout <<"Px: "<< px_MJD << "Py: " <<py_MJD << "Pz: " << pz_MJD<< G4endl;
   G4ThreeVector momentum(px_MJD*GeV,py_MJD*GeV,pz_MJD*GeV);
-
-	G4PrimaryParticle* thePrimaryParticle =
+  
+  G4PrimaryParticle* thePrimaryParticle =
     new G4PrimaryParticle(particle_definition,
-						  px_MJD*GeV,
-						  py_MJD*GeV,
-						  pz_MJD*GeV);
-	vertex->SetPrimary(thePrimaryParticle);
+			  px_MJD*GeV,
+			  py_MJD*GeV,
+			  pz_MJD*GeV);
+  vertex->SetPrimary(thePrimaryParticle);
   // vertex->SetWeight(Distribution(start_energy,start_costheta));  // Implemented elsewhere
-
+  
   anEvent->AddPrimaryVertex(vertex);
-
-
+  
+  
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

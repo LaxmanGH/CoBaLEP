@@ -9,13 +9,18 @@ G4SubtractionSolid *solid_Rock3;//Detector space cut out
 G4LogicalVolume* logical_Rock;
 G4VPhysicalVolume* physical_Rock;
 
-
+//Trig testing variables
+G4Tubs* innerer_CutOut;
+G4Tubs* innerer_Rock;
 //Original rock with range cuts variables
+
 G4Tubs* inner_CutOut; //Space for detectors and inner rock region
 G4SubtractionSolid *outer_Rock; //Outer rock with inner cutout removed
 G4SubtractionSolid *outer_Rock2;//Inner cutout AND lab space removed
 G4LogicalVolume* logical_outerRock;
 G4VPhysicalVolume* physical_outerRock;
+G4LogicalVolume* logical_solidRock;
+G4VPhysicalVolume* physical_solidRock;
 G4Tubs* inner_Rock;//Inner rock
 G4SubtractionSolid* inner_Rock2;//Inner rock with lab space removed
 G4LogicalVolume* logical_innerRock;
@@ -93,8 +98,8 @@ if(RockOption == "OriginalWithRock")//Original rock definition
      //September 2018 geometry changes implemented
     G4cout << G4endl << "September2018WithCuts: using rock at SURF with range cuts and September2018 geometry..." << G4endl << G4endl;
 
-    assemblyzoffset = -6.5*m;
-    
+        assemblyzoffset = -6.5*m;
+
      solid_Rock = new G4Box("sol_Rock",32.5*m,15*m,18*m);
      solid_Lab = new G4Box("sol_Lab",30*m,10*m,4*m);
 
@@ -143,6 +148,48 @@ G4LogicalVolume *logicalGe = new G4LogicalVolume(GeColumn,mat_Detector,"log_Ge")
 logicalGe->SetVisAttributes ( new G4VisAttributes(G4Colour(0.1,0.9,0.1)));
 G4PVPlacement *physicalGe = new G4PVPlacement(0,G4ThreeVector(0,0,-10*m),logicalGe,"phyGe",logical_World,false,0,checkOverlaps);
      return physical_World;
+}
+
+ else if(RockOption == "TrigStudy")
+{
+G4cout << "Trig study" << G4endl;
+
+        assemblyzoffset = -6.5*m;
+
+     solid_Rock = new G4Box("sol_Rock",32.5*m,15*m,18*m);
+     solid_Lab = new G4Box("sol_Lab",30*m,10*m,4*m);
+
+     //Separate the rock into two regions
+     //The region closer to the detector will have better position res.
+
+    //inner_CutOut = new G4Tubs("inn_CutOut",0*m, 11.5*m, 11.5*m,0, 2*M_PI);
+innerer_CutOut = new G4Tubs("inn_CutOut",0*m, 11.50001*m, 11.50001*m,0, 2*M_PI);//G4Box("inn_CutOut",11.5*m, 11.5*m, 11.5*m);
+    outer_Rock = new G4SubtractionSolid("out_Rock", solid_Rock, solid_Lab ,0 , G4ThreeVector(-2.5*m,0,4*m));//cut out lab
+    
+//~change innerer to inner below
+    outer_Rock2 = new G4SubtractionSolid("out_Rock2", outer_Rock, innerer_CutOut ,0 , G4ThreeVector(17.5*m,0,-6.5*m));//cut out inner rock and assembly
+    
+    //inner_Rock = new G4Tubs("inn_Rock",0*m, 11.49999*m, 11.49999*m, 0, 2*M_PI); //assembly already cut out
+
+innerer_Rock = new G4Tubs("inn_CutOut",0*m, 11.5*m, 11.5*m,0, 2*M_PI);//G4Box("inn_Rock", 11.49999*m, 11.49999*m, 11.49999*m);    
+
+    inner_Rock2 = new G4SubtractionSolid("inn_Rock2", inner_Rock, solid_Lab ,0 , G4ThreeVector(-20*m,0,10.5*m));//cut out lab
+    
+    logical_outerRock = new G4LogicalVolume(outer_Rock2,mat_Rock,"log_outRock");
+    
+    logical_outerRock->SetVisAttributes ( new G4VisAttributes(G4Colour(0.7, 0.7, 0.7, 0.5) )); //grey 50% transparent
+    
+    physical_outerRock = new G4PVPlacement(0,G4ThreeVector(-17.5*m,0,0),logical_outerRock,"phy_outerRock",logical_World,false,0,checkOverlaps);
+    
+    logical_innerRock = new G4LogicalVolume(innerer_Rock,mat_Rock,"log_innRock");
+    
+    logical_innerRock->SetVisAttributes ( new G4VisAttributes(G4Colour(0.7, 0.7, 0.7, 0.5) )); //grey 50% transparent
+    
+    physical_innerRock = new G4PVPlacement(0,G4ThreeVector(0,0,-6.5*m),logical_innerRock,"phy_innerRock",logical_World,false,0,checkOverlaps);
+
+
+return physical_World;
+
 }
 
  else if(RockOption == "March2019WithCuts")

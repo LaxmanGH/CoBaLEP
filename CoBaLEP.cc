@@ -1,55 +1,3 @@
-///////////////////////////////////////////////////////////////////////////
-// This code implementation is the intellectual property of the
-// LEGEND collaboration. It is based on Geant4, an
-// intellectual property of the RD44 GEANT4 collaboration.
-//
-// ********************
-// ********************************************************************
-// * License and Disclaimer                                           *
-// *                                                                  *
-// * The  Geant4 software  is  copyright of the Copyright Holders  of *
-// * the Geant4 Collaboration.  It is provided  under  the terms  and *
-// * conditions of the Geant4 Software License,  included in the file *
-// * LICENSE and available at  http://cern.ch/geant4/license .  These *
-// * include a list of copyright holders.                             *
-// *                                                                  *
-// * Neither the authors of this software system, nor their employing *
-// * institutes,nor the agencies providing financial support for this *
-// * work  make  any representation or  warranty, express or implied, *
-// * regarding  this  software system or assume any liability for its *
-// * use.  Please see the license in the file  LICENSE  and URL above *
-// * for the full disclaimer and the limitation of liability.         *
-// *                                                                  *
-// * This  code  implementation is the result of  the  scientific and *
-// * technical work of the GEANT4 collaboration.                      *
-// * By using,  copying,  modifying or  distributing the software (or *
-// * any work based  on the software)  you  agree  to acknowledge its *
-// * use  in  resulting  scientific  publications,  and indicate your *
-// * acceptance of all terms of the Geant4 Software license.          *
-// ********************************************************************
-//
-// Neither the authors of this software system, nor their employing
-// institutes, nor the agencies providing financial support for this
-// work make any representation or warranty, express or implied,
-// regarding this software system or assume any liability for its use.
-// By copying, distributing or modifying the Program (or any work based
-// on the Program) you indicate your acceptance of this statement,
-// and all its terms.
-//
-//
-//The initial geometry based on Muon_GOURE
-//https://github.com/massarczyk/Muon_GUORE
-//
-//Primary author of this simulation package: Clay Barton
-//For inquiries please email CJ.Barton@coyotes.usd.edu
-//
-//This material is based upon work supported by the National Science
-//Foundation under Grant No. 1812356. Any opinions, findings, and 
-//conclusions or recommendations expressed in this material are those
-//of the author(s) and do not necessarily reflect the views of the
-//National Science Foundation.
-//
-///////////////////////////////////////////////////////////////////////////
 /// \file CoBaLEP.cc
 /// \brief Main program of the  example
 
@@ -104,6 +52,7 @@
 const int maxsteps=100000000;
 int currentsteps=0; //global ints just to keep track of file size limits
 int savedsteps = 0;
+
 //////////////////////////////////////////////////
 
 //Class used to store and retrieve user-defined information from the track of the particle.
@@ -603,11 +552,17 @@ public:
   ~EventAction(){};
 
   //Member functions
-  void UserEventAction();
+  //void EndOfEventAction(const G4Event*)
+  //{
+  //  G4cout <<"WRINKLY BEANS 9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"<<G4endl <<G4endl << G4endl << G4endl;
+  //}
 };
        
 
-void EventAction::UserEventAction(){}
+//void EventAction::UserEventAction(const G4Event *event)
+//{
+//  G4cout << "Wrinkly toes 9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999" << G4endl << G4endl << G4endl;
+//}
 //maybe changing event number should go here? May be extraneous
 
 //////////////////////////////////////////////////

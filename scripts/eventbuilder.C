@@ -10,7 +10,7 @@ void eventbuilder(void)
   gSystem->Exec("cat slurm*.out > batch2.out");
   sleep(5);
   gSystem->Exec("rm slurm*.out");
-
+  
 
   //BLOCK 1: ITERATING ON EACH FILE
   //1111111111111111111111111111111111111111111111
@@ -90,6 +90,8 @@ void eventbuilder(void)
 
     //Output tree info
     double energysum = 0;
+    double weight = 0;
+    double fillweight = 0;
     vector<double> energyvector;
     vector<int> detectorvector;
     vector<int> hitvector;
@@ -102,7 +104,8 @@ void eventbuilder(void)
     sumtree->Branch("detector",&detectorvector);
     sumtree->Branch("filenumber", &truenum);
     sumtree->Branch("hitnumber",&hitvector);
-    
+    sumtree->Branch("weight",&fillweight);    
+
     while ((key=(TKey*)nexto()))
       {
 	if (strcmp(key->GetClassName(),"TTree")) continue; //do not use keys that are not trees
@@ -127,6 +130,7 @@ void eventbuilder(void)
 	currenttree->SetBranchAddress("detectornumber", &detectornumber);
 	currenttree->SetBranchAddress("eventnumber", &eventnumber);
 	currenttree->SetBranchAddress("hitnumber",&hitnumber);
+	currenttree->SetBranchAddress("weight",&weight);
 
 	currenttree->GetEntry(0);
 	double lowesttime = time;
@@ -154,6 +158,7 @@ void eventbuilder(void)
 	    timeoriginal = lowesttime;
 	    timeeventual = highesttime;
 	    G4event = eventnumber;
+	    fillweight = weight;
 	    hitcounter = 1; //all only need one entry
 	    first=false;
 
@@ -184,7 +189,7 @@ void eventbuilder(void)
 	    timeoriginal=lowesttime;
 	    timeeventual=highesttime;
 	    G4event = eventnumber;
-
+	    fillweight = weight;
 	    for(int j = 0;j<entries;j++)
 	      {
 		currenttree->GetEntry(j);
@@ -222,7 +227,7 @@ void eventbuilder(void)
     cout <<"New file created" << endl;
     sumtree->Fill();//Not 100% sure this is necessary
 
-    TFile *output = new TFile(Form("sumtree%i.root",truenum),"recreate");
+    TFile *output = new TFile(Form("swumtree%i.root",truenum),"recreate");
     sumtree->Write();
     output->Close();
     
@@ -236,7 +241,7 @@ void eventbuilder(void)
 
 //Store garbage methods down here
   /*  TChain *chain1 = new TChain();
-  chain1->Add("/home/CJ.Barton/CoBaLEP/Truon_GUORE/simfiles/fakefiles/output*.root");
+  chain1->Add("/home/CJ.Barton/Muon_GUORE/Truon_GUORE/simfiles/fakefiles/output*.root");
   cout << chain1->GetEntries() << endl;
   while(chain1->GetFile())
     {
