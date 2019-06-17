@@ -1,56 +1,5 @@
-///////////////////////////////////////////////////////////////////////////
-// This code implementation is the intellectual property of the
-// LEGEND collaboration. It is based on Geant4, an
-// intellectual property of the RD44 GEANT4 collaboration.
-// 
-// *********************
-//
-// Neither the authors of this software system, nor their employing
-// institutes, nor the agencies providing financial support for this
-// work make any representation or warranty, express or implied,
-// regarding this software system or assume any liability for its use.
-// By copying, distributing or modifying the Program (or any work based
-// on the Program) you indicate your acceptance of this statement,
-// and all its terms.
-//////////////////////////////////////////////////////////////////////////////
-/// \file ShowerGenerator.cc
-/// \brief Implementation of the ShowerGenerator class
-
-#include "ShowerGenerator.hh"
-
-
-#include "G4LogicalVolumeStore.hh"
-#include "G4LogicalVolume.hh"
-#include "G4Box.hh"
-#include "G4RunManager.hh"
-#include "G4ParticleTable.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4PhysicalConstants.hh"
 #include "Randomize.hh"
 #include <math.h>
-
-#include "G4MuonMinus.hh"
-#include "G4MuonPlus.hh"
-#include "G4Neutron.hh"
-#include "G4Alpha.hh"
-#include "G4Gamma.hh"
-#include "G4Electron.hh"
-#include "G4Positron.hh"
-#include "G4Geantino.hh"
-
-#include "G4NeutrinoE.hh"
-#include "G4NeutrinoMu.hh"
-#include "G4AntiNeutrinoE.hh"
-#include "G4AntiNeutrinoMu.hh"
-#include "G4KaonZeroLong.hh"
-#include "G4KaonMinus.hh"
-#include "G4KaonPlus.hh"
-#include "G4PionMinus.hh"
-#include "G4PionPlus.hh"
-#include "G4AntiNeutron.hh"
-#include "G4Deuteron.hh"
-
 #include "TFile.h"
 #include "TStyle.h"
 #include "TTree.h"
@@ -59,19 +8,20 @@
 #include "TMath.h"
 #include <vector>
 #include <string>
-
 #include <iostream>
 #include <iomanip>
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-//A more careful reimplementation of the trig cut
 
 bool passcuts(double x, double y, double px, double py, double pz, double assemblyheight, double assemblyradius, double minimumheight)
 {//Calculate if this muon will pass within 5m of
  //the detector assembly. Return true or false.
   //Within 5m of the assembly is the target volume.
-  //Assumed to be cylindrical target.
+  
+  //This script makes the following assumptions:
+  //1. The target volume is cylindrical
+  //2. The target volume is centered at x=0,y=0
+  //3. The sampling plane is above target volume
+  //Other than requirement 3, z is arbitrary
+  //so long as minimumheight is accurate.
 
   //There are two discrete possibilities:
   //1. The muon is directly above the target volume
@@ -424,7 +374,7 @@ void ShowerGenerator::GeneratePrimaryVertex(G4Event* anEvent)
       
       attemptsatmuon++;
       
-      validmuon = passcuts(xx,yy,particle_momentumX,particle_momentumY,particle_momentumZ,13,6.5,13);
+      validmuon = passcuts(xx,yy,particle_momentumX,particle_momentumY,particle_momentumZ,13,6.5);
     }//while !validmuon
   
   G4cout <<"It took " << attemptsatmuon << " attempts to sample a valid muon." << G4endl;

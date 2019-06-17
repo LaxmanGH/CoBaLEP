@@ -161,10 +161,12 @@ This branch needs to be carried over in the hitbuilder and eventbuilder as well.
 
 Renamed the simulation module from "Muon_GUORE" to "CoBaLEP", and updated the licensing info accordingly, all with Ralph's blessing.
 
+
 06/05/2019
 
 Started work on a new script, neutroncounting.C, to get the neutron energy spectrum from existing data.
 There are two plots of interest: the neutron kinetic energy at every step (very much double counted) and the neutron energy at capture. The first plot is incredibly easy to obtain. The problem with the second plot is that I don't know how to distinguish captured neutrons from neutrons which simply left the detector volume and stopped having their information recorded. So for now, the second plot is just going to contain information about both. Save for the well-known "double counting inelastically scattered neutrons" issue, the second plot should not be double counted. I have no idea how large the effect of the inelastic thingy is though.
+
 
 06/15/2019
 
@@ -183,3 +185,11 @@ Finally, I wrote a simple script to do the above automatically so I could simula
 As it turned out, my trig cut was 5-10% wrong. Fixing it was a bitch and a half. I didn't give up until 20,000 particles in a row reported only 1's followed by 3's.
 
 Once I was certain the trig cut was at least 99.99% accurate, I stopped simulating particles which failed the cut so I could count how many attempts it took to sample a successful particle. I ran 100,000 particles for high statistics, and it took about 10 hours on a single operating node. The result for this geometery (September2018WithCuts) and this sampling plane size (99m*99m square) was an efficiency of 1/11.99. Now that the scripts are all written, it should be a matter of manpower to do an identical study for any new geometries or efficiencies implemented.
+
+
+06/17/2019
+
+Exported all geometries in src/Detector_CJStyle.cc to GDML files. Now, instead of building the geometry in GEANT4 every time I run a simulation, I can just import the geometry file I want. This has the advantage of making version control safer and easier, as well as a slight boost to runtime, but most importantly it makes any geometries I create portable and therefore shareable.
+
+To import a different geometry, just change the input filename in src/DetectorConstruction.cc like we used to change the RockOption string.
+To create a new geometry file, just uncomment the GDML lines in the main() function of CoBaLEP.cc and change the output filename to whatever you want.

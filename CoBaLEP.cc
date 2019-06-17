@@ -39,7 +39,7 @@
 #include "G4Allocator.hh"
 #include "G4VUserTrackInformation.hh"
 #include "G4ios.hh"
-
+#include "G4GDMLParser.hh"
 
 //This module requires a random seed to be input after the first macro argument
 //It uses C++'s class system to safely pass variables between different methods
@@ -673,6 +673,11 @@ int main(int argc,char** argv)
   // Initialize G4 kernel
   //
   runManager->Initialize();
+
+  //Comment out when not actively building geometries
+  //G4VPhysicalVolume* W = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking()->GetWorldVolume();
+  //G4GDMLParser parser;
+  //parser.Write("geom/DefaultName.gdml", W, false);
 
 #ifdef G4VIS_USE
   // Initialize visualization
