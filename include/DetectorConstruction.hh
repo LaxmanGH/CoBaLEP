@@ -21,6 +21,7 @@
 #include "G4PhysicalConstants.hh"
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
+#include "G4GDMLParser.hh"
 
 class G4VPhysicalVolume;
 class DetectorMessenger;
@@ -48,6 +49,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 		G4bool checkOverlaps;
 		G4String detector_type;
 		G4String innerVessel_FillMaterial;
+                G4GDMLParser inputparser;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
