@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include<time.h>
 
-void hitbuilder()
+void hitbuilder(int startnumber)
 {
 
   //Take a time-sorted output file (with G4events together also
@@ -455,7 +455,7 @@ void hitbuilder()
     }//iterates on each file
 
   t1 = (double(clock())-t1);
-  cout <<"Total time taken: " << t1/1000000 << endl;
+  cout <<"Total time taken for startnumber " << startnumber << ": " << t1/1000000 << endl;
   
 }//EOF
 

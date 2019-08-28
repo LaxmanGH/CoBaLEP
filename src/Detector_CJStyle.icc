@@ -28,6 +28,15 @@ G4VPhysicalVolume* physical_innerRock;
 G4Region *OuterRockRegion;//For range cuts
 G4Region *InnerRockRegion;//For range cuts
 
+G4Tubs *inner_Argon;
+G4Tubs *outer_Copper;
+G4LogicalVolume *logical_Argon;
+G4LogicalVolume *logical_Copper;
+G4VPhysicalVolume *physical_Argon;
+G4VPhysicalVolume *physical_Copper;
+
+
+
 G4Box* solid_Rock; //= new G4Box("sol_Rock",50*m,50*m,30*m);
 G4Box* solid_Lab; //= new G4Box("sol_Lab",35*m,10*m,4*m);
 
@@ -91,6 +100,7 @@ if(RockOption == "OriginalWithRock")//Original rock definition
     OuterRockRegion-> AddRootLogicalVolume(logical_outerRock);
     InnerRockRegion = new G4Region("InnerRockRegion");
     InnerRockRegion-> AddRootLogicalVolume(logical_innerRock);
+
   }//NewRock
 
  else if(RockOption == "September2018WithCuts")
@@ -134,7 +144,6 @@ if(RockOption == "OriginalWithRock")//Original rock definition
     OuterRockRegion-> AddRootLogicalVolume(logical_outerRock);
     InnerRockRegion = new G4Region("InnerRockRegion");
     InnerRockRegion-> AddRootLogicalVolume(logical_innerRock);
-     
    }
 
 else if(RockOption == "GeOnly")
@@ -146,7 +155,7 @@ G4Tubs *GeColumn = new G4Tubs("Ge_column",0*m, 10*m, 10*m,0, 2*M_PI);
 //Should be overkill, but including extra Ge doesn't affect runtime
 G4LogicalVolume *logicalGe = new G4LogicalVolume(GeColumn,mat_Detector,"log_Ge");
 logicalGe->SetVisAttributes ( new G4VisAttributes(G4Colour(0.1,0.9,0.1)));
-G4PVPlacement *physicalGe = new G4PVPlacement(0,G4ThreeVector(0,0,-10*m),logicalGe,"phyGe",logical_World,false,0,checkOverlaps);
+G4PVPlacement *physicalGe = new G4PVPlacement(0,G4ThreeVector(0,0,0),logicalGe,"phyGe",logical_World,false,0,checkOverlaps);
      return physical_World;
 }
 
@@ -191,6 +200,24 @@ innerer_Rock = new G4Tubs("inn_CutOut",0*m, 11.5*m, 11.5*m,0, 2*M_PI);//G4Box("i
 return physical_World;
 
 }
+
+else if (RockOption = "LArStudy")
+  {//Study of muon products in liquid argon (especially neutrons)
+    G4cout << "LAr studies" << G4endl;
+    assemblyzoffset = -6.5*m;
+
+inner_Argon= new G4Tubs("inn_Argon",0*m, 3.95*m, 3.95*m,0, 2*M_PI);
+outer_Copper = new G4Tubs("inn_Argon",0*m, 4*m, 4*m,0, 2*M_PI);
+logical_Argon = new G4LogicalVolume(inner_Argon,mat_ArLiq,"log_Argon");
+logical_Argon->SetVisAttributes ( new G4VisAttributes(G4Colour(0.8, 0.0, 0.8,0.1) ));
+logical_Copper = new G4LogicalVolume(outer_Copper,mat_Cu,"log_Copper");
+logical_Copper->SetVisAttributes ( new G4VisAttributes(G4Colour(0.62, 0.3, 0.2,0.7) ));
+physical_Copper = new G4PVPlacement(0,G4ThreeVector(0,0,assemblyzoffset),logical_Copper,"phy_Copper",logical_World,false,0,checkOverlaps);
+physical_Argon = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_Argon,"phy_Argon",logical_Copper,false,0,checkOverlaps);
+
+return physical_World;
+
+  }		 
 
  else if(RockOption == "March2019WithCuts")
    {

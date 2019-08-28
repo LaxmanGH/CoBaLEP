@@ -33,12 +33,12 @@
 PrimaryGeneratorMessenger::PrimaryGeneratorMessenger(PrimaryGeneratorAction* generator)
 : fPrimaryGenerator(generator)
 {
-  genDir = new G4UIdirectory("/GUORE/generator/");
+  genDir = new G4UIdirectory("/CoBaLEP/generator/");
   genDir->SetGuidance("Primary generator selection");
-  genDir->SetGuidance("/GUORE/generator/select: Select generator.");
+  genDir->SetGuidance("/CoBaLEP/generator/select: Select generator.");
 
-  // /GUORE/generator/select command
-  fSelectCmd = new G4UIcmdWithAString("/GUORE/generator/select", this);
+  // /CoBaLEP/generator/select command
+  fSelectCmd = new G4UIcmdWithAString("/CoBaLEP/generator/select", this);
   fSelectCmd->SetGuidance("Selects generator for events.");
   fSelectCmd->SetGuidance("Options are:");
   fSelectCmd->SetGuidance("Muon");

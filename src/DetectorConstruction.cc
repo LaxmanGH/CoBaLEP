@@ -83,7 +83,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //TrigStudy (for trig efficiency calculations)
 
   //If possible, import an existing geometry using GDML
-  G4String inputgeometry = "geom/September2018WithCuts.gdml";
+  G4String inputgeometry = "/home/usd.local/cj.barton/workingfolder/geom/September2018WithCuts.gdml";
   inputparser.Read(inputgeometry, false);
   G4VPhysicalVolume* W = inputparser.GetWorldVolume();
   W->GetLogicalVolume()->SetVisAttributes(G4VisAttributes::Invisible);
@@ -91,9 +91,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   return W;
 
 
-  /*
-  //Otherwise, build one manually
   
+  //Otherwise, build one manually
+  /*
   #include "Detector_Materials.icc"
   
 

@@ -193,3 +193,12 @@ Exported all geometries in src/Detector_CJStyle.cc to GDML files. Now, instead o
 
 To import a different geometry, just change the input filename in src/DetectorConstruction.cc like we used to change the RockOption string.
 To create a new geometry file, just uncomment the GDML lines in the main() function of CoBaLEP.cc and change the output filename to whatever you want.
+
+
+07/10/2019
+
+Performed a study of path length for muons which enter the LAr tank. In the current geometry the tank is 8m in height, 8m in diameter, and cylindrical. Surprisingly, the average path length was significantly lower than 8, ringing in at 5.18 m.
+
+Running a new batch of 500,000 muons, same "standard" setup but energies from 0-2 TeV, flat. After re-investigating the problems with Ralph's sufrace-to-lab simulations, it's again apparent these can't be used for any meaningful discussions of physics results. Ralph is working on new surface-to-lab simulations at this time.
+
+Changed meihimweighting.C to make it a part of standard production. Just one more command to call when processing...

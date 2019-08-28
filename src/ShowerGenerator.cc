@@ -423,8 +423,8 @@ void ShowerGenerator::GeneratePrimaryVertex(G4Event* anEvent)
       yy = (G4UniformRand()-0.5)*99.9;
       
       attemptsatmuon++;
-      
       validmuon = passcuts(xx,yy,particle_momentumX,particle_momentumY,particle_momentumZ,13,6.5,13);
+
     }//while !validmuon
   
   G4cout <<"It took " << attemptsatmuon << " attempts to sample a valid muon." << G4endl;
@@ -445,26 +445,23 @@ void ShowerGenerator::GeneratePrimaryVertex(G4Event* anEvent)
   double px_MJD = particle_momentumX;
   double py_MJD = particle_momentumY;
   double pz_MJD = particle_momentumZ;
-  //       double pEnergy = particle_energy;
-  //G4cout << "Counter: " << counter << G4endl;
-  //G4cout << G4endl << "MUON MOMENTUM: " << px_MJD << " " << py_MJD << " " << pz_MJD << " " << G4endl;
   
   //Temporarily implemented as of March 2019
+
   //Retroactively make the energy a flat distribution from 0 to 20 TeV
-  //First normalize the momenta so the particle thinks it's at 1 GeV
-  
+  //First normalize the momenta so the particle thinks it's at 1 GeV  
   energynorm = TMath::Sqrt(px_MJD*px_MJD+py_MJD*py_MJD+pz_MJD*pz_MJD);
   px_MJD = px_MJD/energynorm;
   py_MJD = py_MJD/energynorm;
   pz_MJD = pz_MJD/energynorm;
-  //Now multiple by a random number between 0 and 20000
+  //Now multiple by a random number between 0 and 2000
   //Should technically be 200000, but I want statistics!dammit!
-  energynorm = G4UniformRand()*20000;
-  px_MJD = px_MJD*energynorm;//G4RandExponential::shoot(20000);
-  py_MJD = py_MJD*energynorm;//G4RandExponential::shoot(20000);
-  pz_MJD = pz_MJD*energynorm;//G4RandExponential::shoot(20000);
+  energynorm = G4UniformRand()*2000;
+  px_MJD = px_MJD*energynorm;
+  py_MJD = py_MJD*energynorm;
+  pz_MJD = pz_MJD*energynorm;
   energynorm = TMath::Sqrt(px_MJD*px_MJD+py_MJD*py_MJD+pz_MJD*pz_MJD);
-  //G4cout <<"Particle energy (in GeV): " << energynorm << G4endl;
+  G4cout <<"Particle energy (in GeV): " << energynorm << G4endl;
   //G4cout <<"Px: "<< px_MJD << "Py: " <<py_MJD << "Pz: " << pz_MJD<< G4endl;
   G4ThreeVector momentum(px_MJD*GeV,py_MJD*GeV,pz_MJD*GeV);
   
@@ -645,7 +642,7 @@ bool oldpasscuts(double x, double y, double px, double py, double pz, double ass
 
 WeightedGenerator::WeightedGenerator()
 {
-  const char* muon_path = "/home/CJ.Barton/CoBaLEP/Truon_GUORE/mac";
+  const char* muon_path = "$WORKINGDIR/mac";
   inputfile = new TFile(Form("%s/SmallMuonFile.root", muon_path) ,"READ");
   datatree = (TTree*)inputfile->Get("muontree");
 
