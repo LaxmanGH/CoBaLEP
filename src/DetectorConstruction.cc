@@ -81,26 +81,28 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //and NeutronMultiplicityValidation (for neutron study only)
   //March2019WithCuts (not currently used)
   //TrigStudy (for trig efficiency calculations)
+  //LArColumn (for LAr showering studies) and LArStudy (for pathlength studies)
+  //pCDR for the most up-to-date version of the pCDR geometry
 
   //If possible, import an existing geometry using GDML
-  G4String inputgeometry = "/home/usd.local/cj.barton/workingfolder/geom/September2018WithCuts.gdml";
-  inputparser.Read(inputgeometry, false);
-  G4VPhysicalVolume* W = inputparser.GetWorldVolume();
-  W->GetLogicalVolume()->SetVisAttributes(G4VisAttributes::Invisible);
+  //G4String inputgeometry = "/home/usd.local/cj.barton/workingfolder/geom/September2018WithCuts.gdml";
+  //inputparser.Read(inputgeometry, false);
+  //G4VPhysicalVolume* W = inputparser.GetWorldVolume();
+  //W->GetLogicalVolume()->SetVisAttributes(G4VisAttributes::Invisible);
 
-  return W;
+  //return W;
 
 
   
   //Otherwise, build one manually
-  /*
+  
   #include "Detector_Materials.icc"
   
 
   // World
 
   G4Box* solid_World = new G4Box("sol_World",50*m,50*m,18*m);
-  G4LogicalVolume* logical_World = new G4LogicalVolume(solid_World,mat_air,"log_World");
+  G4LogicalVolume* logical_World = new G4LogicalVolume(solid_World,mat_vacuum,"log_World");
   logical_World->SetVisAttributes (G4VisAttributes::Invisible);
   G4VPhysicalVolume* physical_World = new G4PVPlacement(0,G4ThreeVector(),logical_World,"phy_World",0,false,0,checkOverlaps);
 
@@ -216,7 +218,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   G4VPhysicalVolume* physical_innerVessel_3 = new G4PVPlacement(0,G4ThreeVector(0,0,assemblyzoffset-.975*m),logical_innerVessel_2,"phy_innerVessel_3",logical_World,false,0,checkOverlaps);
 
-
+  double materialmass = 0;
 
   if (detector_type.contains("GERDA"))
     {
@@ -226,8 +228,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     {
 #include "Detector_MJDStyle.icc"
     }
- 
-    return physical_World;*/
+
+  double detectorvolume = 1080*solid_DetGeCrystal->GetCubicVolume()/CLHEP::cm3;
+  double detectormassremoved = .005323*detectorvolume/CLHEP::kg;
+
+  materialmass-=detectormassremoved;
+  G4cout << G4endl << G4endl << "Mass of liquid argon in this setup: " << materialmass << G4endl <<G4endl;
+    return physical_World;
 }//Construct
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

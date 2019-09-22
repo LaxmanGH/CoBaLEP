@@ -20,7 +20,7 @@ void BinLogX(TH1*h)
 void angulardistributionsofsmallmuonfile(void)
 {
 
-  const char* muon_path = "/home/CJ.Barton/CoBaLEP/Truon_GUORE/mac";
+  const char* muon_path = "$WORKINGDIR/mac";
   inputfile = new TFile(Form("%s/newSmallMuonFile.root", muon_path) ,"READ");
   datatree = (TTree*)inputfile->Get("muontree");
 
@@ -55,7 +55,7 @@ void angulardistributionsofsmallmuonfile(void)
   
   TH1D *realphi = new TH1D("realphi","Azimuthal angular distribution;Angle (degrees);Normalized probability",36,0,360);
 
-  //TH1D *realtheta = new TH1D("realtheta","Zenith angular distribution (cut muon file);Angle (degrees);Normalized probability",75,0,75);
+  TH1D *realtheta = new TH1D("realtheta","Zenith angular distribution (cut muon file);Angle (degrees);Normalized probability",75,0,75);
 
   TF1 *dednfit = new TF1("dednfit","[4]*TMath::Exp(-([0]*[3]*([2]-1)))*TMath::Power((x+[1]*(1-TMath::Exp(-([0]*[3])))),-[2])",1,2500);
 
@@ -77,7 +77,9 @@ void angulardistributionsofsmallmuonfile(void)
       
       thetacalc = -1*TMath::ACos(pz/TMath::Sqrt(px*px+py*py+pz*pz))*180/TMath::Pi()+180;
       //thetacalc = TMath::Cos(thetacalc*TMath::Pi()/180);
-      //realtheta->Fill(thetacalc, weight);
+      if(i%1000==0)
+	cout << thetacalc << endl;
+      realtheta->Fill(thetacalc, weight);
 
       
       //if(thetacalc>60&&thetacalc<70)
@@ -87,12 +89,12 @@ void angulardistributionsofsmallmuonfile(void)
 
     }
 
-  //realtheta->SetDirectory(gROOT);
+  realtheta->SetDirectory(gROOT);
   TH1::AddDirectory(kFALSE);
   cout << "WEIGHT " << weightcheck << endl;
   //cout << "bintegral " << energyhisto->Integral() << endl;
   realphi->Draw();
-  //realtheta->Draw();
+  realtheta->Draw();
   //energyhisto->Draw();
   //energyhisto->Fit("dednfit","","",10,1000);
   //dednfit->Draw("same");

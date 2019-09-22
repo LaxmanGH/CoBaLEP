@@ -1,11 +1,11 @@
-/GUORE/generator/select Muon
+/CoBaLEP/generator/select Muon
 
-/run/setCutForRegion OuterRockRegion 10 m
-/run/setCutForRegion InnerRockRegion 10 mm
-/run/setCutForRegion WaterRegion_1 10 m
-/run/setCutForRegion LArRegion_1 10 m
-/run/setCutForRegion WaterRegion_2 10 m
-/run/setCutForRegion LArRegion_2 10 m
+/run/setCutForRegion OuterRockRegion 1 m
+/run/setCutForRegion InnerRockRegion 10 cm
+/run/setCutForRegion WaterRegion_1 1 cm
+/run/setCutForRegion LArRegion_1 1 mm
+/run/setCutForRegion WaterRegion_2 1 cm
+/run/setCutForRegion LArRegion_2 1 mm
 
 #/vis/open HepRepFile
 #/vis/drawVolume
@@ -19,4 +19,4 @@
 #/vis/scene/endOfEventAction accumulate
 
 
-/run/beamOn 100000
+/run/beamOn 1000

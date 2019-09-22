@@ -1,14 +1,14 @@
 #generates monoenergetic muons for the neutron multiplicity study
 
 
-/GUORE/generator/select GPS
+/CoBaLEP/generator/select GPS
 
 /gps/particle neutron
 /gps/pos/type Point
-/gps/position 0 0 0.0001 m
+/gps/position 0 0 0
 
 /gps/direction 0 0 -1
-/gps/ene/mono 1.0 keV
+/gps/ene/mono 1.0 MeV
 
 #/vis/open HepRepFile
 #/vis/drawVolume
@@ -22,4 +22,4 @@
 #/vis/scene/endOfEventAction accumulate
 
 
-/run/beamOn 100000
+/run/beamOn 10000

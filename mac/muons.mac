@@ -1,7 +1,7 @@
 #generates monoenergetic muons with 300GeV kinetic energy, aimed straight downward at the detectors
 
 
-/GUORE/generator/select GPS
+/CoBaLEP/generator/select GPS
 
 /gps/particle mu-
 /gps/pos/type Plane
@@ -20,9 +20,9 @@
 #/vis/filtering/trajectories/particleFilter-0/add gamma
 #/vis/filtering/trajectories/particleFilter-0/add mu-
 #/vis/filtering/trajectories/particleFilter-0/active true
-#/vis/scene/add/hits
+/vis/scene/add/hits
 /vis/scene/endOfEventAction accumulate
 
 
-/run/beamOn 10
+/run/beamOn 1
 

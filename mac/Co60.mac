@@ -1,6 +1,6 @@
 #generates cobalt 60 nuclei, seeded randomly throughout the inner liquid argon volume
 
-/GUORE/generator/select GPS
+/CoBaLEP/generator/select GPS
 
 /gps/ion 27 60 27
 /gps/pos/type Volume

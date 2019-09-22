@@ -172,10 +172,11 @@ public:
 
   //variables to write to output files
   int         PID;
-  int         ParentID;
+  int         primaryPID;//Track info only: the PID of the original nucleus in this decay chain. Is 0 for a primary nucleus
+  int parentnucleusPID;//Step info only: the PID of the nucleus this particle originated from. Is 0 if the particle didn't originate from a nucleus. Is persistent across multiple secondaries. e.g. if a nucleus creates a positron which creates two photons, the positron and the photons will all have the same parentnucleusPID
+  int         ParentTrackID;
   double      energy;
   double      kineticenergy;
-  double      deltaenergy;
   double      time;
   double      x;
   double      y;
@@ -202,10 +203,10 @@ public:
   double      starty;
   double      startz;
   int         randomseed;
-  int         nuclearPID;
   double      nuclearx;  
   double      nucleary;  
   double      nuclearz;  
+  double startenergy;
 
   //variables specifically to parse detector number from detector name (used in the Write method)
   G4String    name;
@@ -252,10 +253,9 @@ void IO::Open(char* inputseed)
   //Branches to be filled
   fTree->Branch("PID",&PID,"PID/I");
   //PDG encoding particle ID
-  fTree->Branch("ParentID",&ParentID,"ParentID/I");
+  fTree->Branch("ParentTrackID",&ParentTrackID,"ParentTrackID/I");
   fTree->Branch("energy",&energy,"energy/D");
   fTree->Branch("kineticenergy", &kineticenergy, "kineticenergy/D");
-  //fTree->Branch("deltaenergy",&deltaenergy,"deltaenergy/D");
   fTree->Branch("time",&time,"time/D");
   fTree->Branch("x",&x,"x/D");
   fTree->Branch("y",&y,"y/D");
@@ -281,7 +281,7 @@ void IO::Open(char* inputseed)
   fTree->Branch("starty",&starty,"starty/D");
   fTree->Branch("startz",&startz,"startz/D");
   fTree->Branch("randomseed",&randomseed,"randomseed/I");
-  fTree->Branch("nuclearPID",&nuclearPID,"nuclearPID/I");
+  fTree->Branch("parentnucleusPID",&parentnucleusPID,"parentnucleusPID/I");
   fTree->Branch("nuclearx",&nuclearx,"nuclearx/D");
   fTree->Branch("nucleary",&nucleary,"nucleary/D");
   fTree->Branch("nuclearz",&nuclearz,"nuclearz/D");
@@ -297,9 +297,9 @@ void IO::Open(char* inputseed)
   nuclearTree->Branch("muonpz",&muonpz,"muonpz/D");
   nuclearTree->Branch("tracknumber",&tracknumber,"tracknumber/I");
   nuclearTree->Branch("randomseed",&randomseed,"randomseed/I");
-  nuclearTree->Branch("nuclearPID",&nuclearPID,"nuclearPID/I");
+  nuclearTree->Branch("primaryPID",&primaryPID,"primaryPID/I");
   //nuclearTree->Branch("creatorprocess",&creatorprocess);
-
+  nuclearTree->Branch("startenergy",&startenergy,"startenergy/D");
   G4cout << "Output files opened." << G4endl;
 
 }
@@ -309,10 +309,9 @@ void IO::Write(G4Track *track, int isadetector, int isentry)
 {
   
   PID = track->GetDefinition()->GetPDGEncoding();
-  ParentID = track->GetParentID();
+  ParentTrackID = track->GetParentID();
   energy = track->GetStep()->GetTotalEnergyDeposit()/CLHEP::keV;
   kineticenergy = track->GetDynamicParticle()->GetKineticEnergy()/CLHEP::keV;
-  deltaenergy = track->GetStep()->GetDeltaEnergy()/CLHEP::keV;
   time = track->GetGlobalTime()/CLHEP::ns;
 
   if(isentry==0) //Step did NOT start in LAr and end up in Ge
@@ -389,15 +388,15 @@ void IO::Write(G4Track *track, int isadetector, int isentry)
     }//if(isadetector==0
 
   if(track->GetUserInformation())
-    {
+    {//If this particle originated from a nucleus
       T01TrackInformation* info = (T01TrackInformation*)(track->GetUserInformation());
-      nuclearPID = info->GetOriginalParticle()->GetPDGEncoding();
+      parentnucleusPID = info->GetOriginalParticle()->GetPDGEncoding();
       nuclearx = info->GetOriginalPosition().x();
       nucleary = info->GetOriginalPosition().y();
       nuclearz = info->GetOriginalPosition().z();
   }
   else
-    nuclearPID = nuclearx = nucleary = nuclearz = 0;
+    parentnucleusPID = nuclearx = nucleary = nuclearz = 0;
 
   fTree->Fill();
   
@@ -407,12 +406,12 @@ void IO::WriteNuclear(G4Track *track)
 {
   //PID = track->GetDefinition()->GetPDGEncoding();;
    if(track->GetUserInformation())
-    {
+     {//If particle is a nuclear DAUGHTER of a nucleus
       T01TrackInformation* info = (T01TrackInformation*)(track->GetUserInformation());
-      nuclearPID = info->GetOriginalParticle()->GetPDGEncoding();
+      primaryPID = info->GetOriginalParticle()->GetPDGEncoding();//Only tracks back one isotope
     }
-  else
-    nuclearPID = 0;
+   else//Is a primary nucleus
+    primaryPID = 0;
 
   PID = track->GetDefinition()->GetPDGEncoding();  
   //creatorprocess = track->GetCreatorProcess()->GetProcessName();  
@@ -424,6 +423,7 @@ void IO::WriteNuclear(G4Track *track)
   muonpx = G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetPx()/CLHEP::keV;
   muonpy = G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetPy()/CLHEP::keV;
   muonpz = G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetPz()/CLHEP::keV;
+  startenergy = track->GetKineticEnergy();
 
   nuclearTree->Fill();
 }
@@ -504,8 +504,9 @@ public:
 	//  G4cout << aTrack->GetDefinition()->GetPDGEncoding() << G4endl;
 	//  }
 	G4Track* theTrack = (G4Track*)aTrack;
-	fio->WriteNuclear(theTrack);	
-	T01TrackInformation* anInfo = new T01TrackInformation(aTrack);
+	fio->WriteNuclear(theTrack);//Done BEFORE TrackInformation is assigned	
+	T01TrackInformation* anInfo = new T01TrackInformation(aTrack);//When declaring from a TRACK, original particle information is overwritten
+	//This means that in a long nuclear decay chain, the information about which nucleus started it is lost...
 	theTrack->SetUserInformation(anInfo);
 	}
   }

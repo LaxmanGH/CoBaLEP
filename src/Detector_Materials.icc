@@ -34,8 +34,8 @@
   G4Isotope* iso_Ge76 = new G4Isotope("Germanium76", 32, 76, 75.9214 * g / mole);
 
   G4Element* ele_Ge = new G4Element("Germanium", "Ge", 2);
-  ele_Ge->AddIsotope(iso_Ge74, 0.14);
-	ele_Ge->AddIsotope(iso_Ge76, 0.86);
+  ele_Ge->AddIsotope(iso_Ge74, 0.12);
+	ele_Ge->AddIsotope(iso_Ge76, 0.88);
 
   G4Material* mat_GeEnr = new G4Material("GermaniumEnriched", 5.323*g/cm3, 1);
   mat_GeEnr->AddElement(ele_Ge, 1);
