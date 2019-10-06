@@ -42,10 +42,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/usd.local/cj.barton/Muon_GUORE/Truon_GUORE
+CMAKE_SOURCE_DIR = /home/usd.local/cj.barton/workingfolder
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/usd.local/cj.barton/Muon_GUORE/Truon_GUORE
+CMAKE_BINARY_DIR = /home/usd.local/cj.barton/workingfolder
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -82,16 +82,6 @@ install/local: preinstall
 install/local/fast: install/local
 .PHONY : install/local/fast
 
-# Special rule for the target install/strip
-install/strip: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
-	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
-.PHONY : install/strip
-
-# Special rule for the target install/strip
-install/strip/fast: install/strip
-.PHONY : install/strip/fast
-
 # Special rule for the target list_install_components
 list_install_components:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
@@ -113,9 +103,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/usd.local/cj.barton/Muon_GUORE/Truon_GUORE/CMakeFiles /home/usd.local/cj.barton/Muon_GUORE/Truon_GUORE/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/usd.local/cj.barton/workingfolder/CMakeFiles /home/usd.local/cj.barton/workingfolder/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/usd.local/cj.barton/Muon_GUORE/Truon_GUORE/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/usd.local/cj.barton/workingfolder/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -143,48 +133,53 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named Muon_GUORE
+# Target rules for targets named CoBaLEP
 
 # Build rule for target.
-Muon_GUORE: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 Muon_GUORE
-.PHONY : Muon_GUORE
+CoBaLEP: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 CoBaLEP
+.PHONY : CoBaLEP
 
 # fast build rule for target.
-Muon_GUORE/fast:
-	$(MAKE) -f CMakeFiles/Muon_GUORE.dir/build.make CMakeFiles/Muon_GUORE.dir/build
-.PHONY : Muon_GUORE/fast
+CoBaLEP/fast:
+	$(MAKE) -f CMakeFiles/CoBaLEP.dir/build.make CMakeFiles/CoBaLEP.dir/build
+.PHONY : CoBaLEP/fast
 
-Muon_GUORE.o: Muon_GUORE.cc.o
-.PHONY : Muon_GUORE.o
+# Manual pre-install relink rule for target.
+CoBaLEP/preinstall:
+	$(MAKE) -f CMakeFiles/CoBaLEP.dir/build.make CMakeFiles/CoBaLEP.dir/preinstall
+.PHONY : CoBaLEP/preinstall
+
+CoBaLEP.o: CoBaLEP.cc.o
+.PHONY : CoBaLEP.o
 
 # target to build an object file
-Muon_GUORE.cc.o:
-	$(MAKE) -f CMakeFiles/Muon_GUORE.dir/build.make CMakeFiles/Muon_GUORE.dir/Muon_GUORE.cc.o
-.PHONY : Muon_GUORE.cc.o
+CoBaLEP.cc.o:
+	$(MAKE) -f CMakeFiles/CoBaLEP.dir/build.make CMakeFiles/CoBaLEP.dir/CoBaLEP.cc.o
+.PHONY : CoBaLEP.cc.o
 
-Muon_GUORE.i: Muon_GUORE.cc.i
-.PHONY : Muon_GUORE.i
+CoBaLEP.i: CoBaLEP.cc.i
+.PHONY : CoBaLEP.i
 
 # target to preprocess a source file
-Muon_GUORE.cc.i:
-	$(MAKE) -f CMakeFiles/Muon_GUORE.dir/build.make CMakeFiles/Muon_GUORE.dir/Muon_GUORE.cc.i
-.PHONY : Muon_GUORE.cc.i
+CoBaLEP.cc.i:
+	$(MAKE) -f CMakeFiles/CoBaLEP.dir/build.make CMakeFiles/CoBaLEP.dir/CoBaLEP.cc.i
+.PHONY : CoBaLEP.cc.i
 
-Muon_GUORE.s: Muon_GUORE.cc.s
-.PHONY : Muon_GUORE.s
+CoBaLEP.s: CoBaLEP.cc.s
+.PHONY : CoBaLEP.s
 
 # target to generate assembly for a file
-Muon_GUORE.cc.s:
-	$(MAKE) -f CMakeFiles/Muon_GUORE.dir/build.make CMakeFiles/Muon_GUORE.dir/Muon_GUORE.cc.s
-.PHONY : Muon_GUORE.cc.s
+CoBaLEP.cc.s:
+	$(MAKE) -f CMakeFiles/CoBaLEP.dir/build.make CMakeFiles/CoBaLEP.dir/CoBaLEP.cc.s
+.PHONY : CoBaLEP.cc.s
 
 src/DetectorConstruction.o: src/DetectorConstruction.cc.o
 .PHONY : src/DetectorConstruction.o
 
 # target to build an object file
 src/DetectorConstruction.cc.o:
-	$(MAKE) -f CMakeFiles/Muon_GUORE.dir/build.make CMakeFiles/Muon_GUORE.dir/src/DetectorConstruction.cc.o
+	$(MAKE) -f CMakeFiles/CoBaLEP.dir/build.make CMakeFiles/CoBaLEP.dir/src/DetectorConstruction.cc.o
 .PHONY : src/DetectorConstruction.cc.o
 
 src/DetectorConstruction.i: src/DetectorConstruction.cc.i
@@ -192,7 +187,7 @@ src/DetectorConstruction.i: src/DetectorConstruction.cc.i
 
 # target to preprocess a source file
 src/DetectorConstruction.cc.i:
-	$(MAKE) -f CMakeFiles/Muon_GUORE.dir/build.make CMakeFiles/Muon_GUORE.dir/src/DetectorConstruction.cc.i
+	$(MAKE) -f CMakeFiles/CoBaLEP.dir/build.make CMakeFiles/CoBaLEP.dir/src/DetectorConstruction.cc.i
 .PHONY : src/DetectorConstruction.cc.i
 
 src/DetectorConstruction.s: src/DetectorConstruction.cc.s
@@ -200,7 +195,7 @@ src/DetectorConstruction.s: src/DetectorConstruction.cc.s
 
 # target to generate assembly for a file
 src/DetectorConstruction.cc.s:
-	$(MAKE) -f CMakeFiles/Muon_GUORE.dir/build.make CMakeFiles/Muon_GUORE.dir/src/DetectorConstruction.cc.s
+	$(MAKE) -f CMakeFiles/CoBaLEP.dir/build.make CMakeFiles/CoBaLEP.dir/src/DetectorConstruction.cc.s
 .PHONY : src/DetectorConstruction.cc.s
 
 src/DetectorMessenger.o: src/DetectorMessenger.cc.o
@@ -208,7 +203,7 @@ src/DetectorMessenger.o: src/DetectorMessenger.cc.o
 
 # target to build an object file
 src/DetectorMessenger.cc.o:
-	$(MAKE) -f CMakeFiles/Muon_GUORE.dir/build.make CMakeFiles/Muon_GUORE.dir/src/DetectorMessenger.cc.o
+	$(MAKE) -f CMakeFiles/CoBaLEP.dir/build.make CMakeFiles/CoBaLEP.dir/src/DetectorMessenger.cc.o
 .PHONY : src/DetectorMessenger.cc.o
 
 src/DetectorMessenger.i: src/DetectorMessenger.cc.i
@@ -216,7 +211,7 @@ src/DetectorMessenger.i: src/DetectorMessenger.cc.i
 
 # target to preprocess a source file
 src/DetectorMessenger.cc.i:
-	$(MAKE) -f CMakeFiles/Muon_GUORE.dir/build.make CMakeFiles/Muon_GUORE.dir/src/DetectorMessenger.cc.i
+	$(MAKE) -f CMakeFiles/CoBaLEP.dir/build.make CMakeFiles/CoBaLEP.dir/src/DetectorMessenger.cc.i
 .PHONY : src/DetectorMessenger.cc.i
 
 src/DetectorMessenger.s: src/DetectorMessenger.cc.s
@@ -224,7 +219,7 @@ src/DetectorMessenger.s: src/DetectorMessenger.cc.s
 
 # target to generate assembly for a file
 src/DetectorMessenger.cc.s:
-	$(MAKE) -f CMakeFiles/Muon_GUORE.dir/build.make CMakeFiles/Muon_GUORE.dir/src/DetectorMessenger.cc.s
+	$(MAKE) -f CMakeFiles/CoBaLEP.dir/build.make CMakeFiles/CoBaLEP.dir/src/DetectorMessenger.cc.s
 .PHONY : src/DetectorMessenger.cc.s
 
 src/PrimaryGeneratorAction.o: src/PrimaryGeneratorAction.cc.o
@@ -232,7 +227,7 @@ src/PrimaryGeneratorAction.o: src/PrimaryGeneratorAction.cc.o
 
 # target to build an object file
 src/PrimaryGeneratorAction.cc.o:
-	$(MAKE) -f CMakeFiles/Muon_GUORE.dir/build.make CMakeFiles/Muon_GUORE.dir/src/PrimaryGeneratorAction.cc.o
+	$(MAKE) -f CMakeFiles/CoBaLEP.dir/build.make CMakeFiles/CoBaLEP.dir/src/PrimaryGeneratorAction.cc.o
 .PHONY : src/PrimaryGeneratorAction.cc.o
 
 src/PrimaryGeneratorAction.i: src/PrimaryGeneratorAction.cc.i
@@ -240,7 +235,7 @@ src/PrimaryGeneratorAction.i: src/PrimaryGeneratorAction.cc.i
 
 # target to preprocess a source file
 src/PrimaryGeneratorAction.cc.i:
-	$(MAKE) -f CMakeFiles/Muon_GUORE.dir/build.make CMakeFiles/Muon_GUORE.dir/src/PrimaryGeneratorAction.cc.i
+	$(MAKE) -f CMakeFiles/CoBaLEP.dir/build.make CMakeFiles/CoBaLEP.dir/src/PrimaryGeneratorAction.cc.i
 .PHONY : src/PrimaryGeneratorAction.cc.i
 
 src/PrimaryGeneratorAction.s: src/PrimaryGeneratorAction.cc.s
@@ -248,7 +243,7 @@ src/PrimaryGeneratorAction.s: src/PrimaryGeneratorAction.cc.s
 
 # target to generate assembly for a file
 src/PrimaryGeneratorAction.cc.s:
-	$(MAKE) -f CMakeFiles/Muon_GUORE.dir/build.make CMakeFiles/Muon_GUORE.dir/src/PrimaryGeneratorAction.cc.s
+	$(MAKE) -f CMakeFiles/CoBaLEP.dir/build.make CMakeFiles/CoBaLEP.dir/src/PrimaryGeneratorAction.cc.s
 .PHONY : src/PrimaryGeneratorAction.cc.s
 
 src/PrimaryGeneratorMessenger.o: src/PrimaryGeneratorMessenger.cc.o
@@ -256,7 +251,7 @@ src/PrimaryGeneratorMessenger.o: src/PrimaryGeneratorMessenger.cc.o
 
 # target to build an object file
 src/PrimaryGeneratorMessenger.cc.o:
-	$(MAKE) -f CMakeFiles/Muon_GUORE.dir/build.make CMakeFiles/Muon_GUORE.dir/src/PrimaryGeneratorMessenger.cc.o
+	$(MAKE) -f CMakeFiles/CoBaLEP.dir/build.make CMakeFiles/CoBaLEP.dir/src/PrimaryGeneratorMessenger.cc.o
 .PHONY : src/PrimaryGeneratorMessenger.cc.o
 
 src/PrimaryGeneratorMessenger.i: src/PrimaryGeneratorMessenger.cc.i
@@ -264,7 +259,7 @@ src/PrimaryGeneratorMessenger.i: src/PrimaryGeneratorMessenger.cc.i
 
 # target to preprocess a source file
 src/PrimaryGeneratorMessenger.cc.i:
-	$(MAKE) -f CMakeFiles/Muon_GUORE.dir/build.make CMakeFiles/Muon_GUORE.dir/src/PrimaryGeneratorMessenger.cc.i
+	$(MAKE) -f CMakeFiles/CoBaLEP.dir/build.make CMakeFiles/CoBaLEP.dir/src/PrimaryGeneratorMessenger.cc.i
 .PHONY : src/PrimaryGeneratorMessenger.cc.i
 
 src/PrimaryGeneratorMessenger.s: src/PrimaryGeneratorMessenger.cc.s
@@ -272,7 +267,7 @@ src/PrimaryGeneratorMessenger.s: src/PrimaryGeneratorMessenger.cc.s
 
 # target to generate assembly for a file
 src/PrimaryGeneratorMessenger.cc.s:
-	$(MAKE) -f CMakeFiles/Muon_GUORE.dir/build.make CMakeFiles/Muon_GUORE.dir/src/PrimaryGeneratorMessenger.cc.s
+	$(MAKE) -f CMakeFiles/CoBaLEP.dir/build.make CMakeFiles/CoBaLEP.dir/src/PrimaryGeneratorMessenger.cc.s
 .PHONY : src/PrimaryGeneratorMessenger.cc.s
 
 src/ShowerGenerator.o: src/ShowerGenerator.cc.o
@@ -280,7 +275,7 @@ src/ShowerGenerator.o: src/ShowerGenerator.cc.o
 
 # target to build an object file
 src/ShowerGenerator.cc.o:
-	$(MAKE) -f CMakeFiles/Muon_GUORE.dir/build.make CMakeFiles/Muon_GUORE.dir/src/ShowerGenerator.cc.o
+	$(MAKE) -f CMakeFiles/CoBaLEP.dir/build.make CMakeFiles/CoBaLEP.dir/src/ShowerGenerator.cc.o
 .PHONY : src/ShowerGenerator.cc.o
 
 src/ShowerGenerator.i: src/ShowerGenerator.cc.i
@@ -288,7 +283,7 @@ src/ShowerGenerator.i: src/ShowerGenerator.cc.i
 
 # target to preprocess a source file
 src/ShowerGenerator.cc.i:
-	$(MAKE) -f CMakeFiles/Muon_GUORE.dir/build.make CMakeFiles/Muon_GUORE.dir/src/ShowerGenerator.cc.i
+	$(MAKE) -f CMakeFiles/CoBaLEP.dir/build.make CMakeFiles/CoBaLEP.dir/src/ShowerGenerator.cc.i
 .PHONY : src/ShowerGenerator.cc.i
 
 src/ShowerGenerator.s: src/ShowerGenerator.cc.s
@@ -296,7 +291,7 @@ src/ShowerGenerator.s: src/ShowerGenerator.cc.s
 
 # target to generate assembly for a file
 src/ShowerGenerator.cc.s:
-	$(MAKE) -f CMakeFiles/Muon_GUORE.dir/build.make CMakeFiles/Muon_GUORE.dir/src/ShowerGenerator.cc.s
+	$(MAKE) -f CMakeFiles/CoBaLEP.dir/build.make CMakeFiles/CoBaLEP.dir/src/ShowerGenerator.cc.s
 .PHONY : src/ShowerGenerator.cc.s
 
 # Help Target
@@ -305,16 +300,15 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... Muon_GUORE"
+	@echo "... CoBaLEP"
 	@echo "... edit_cache"
 	@echo "... install"
 	@echo "... install/local"
-	@echo "... install/strip"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
-	@echo "... Muon_GUORE.o"
-	@echo "... Muon_GUORE.i"
-	@echo "... Muon_GUORE.s"
+	@echo "... CoBaLEP.o"
+	@echo "... CoBaLEP.i"
+	@echo "... CoBaLEP.s"
 	@echo "... src/DetectorConstruction.o"
 	@echo "... src/DetectorConstruction.i"
 	@echo "... src/DetectorConstruction.s"
