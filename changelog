@@ -206,3 +206,7 @@ Changed meihimweighting.C to make it a part of standard production. Just one mor
 09/19/2019
 
 Since previous update, have done another LAr study (of neutron showering), increased statistics in the 0-2 TeV setup described in the previous update, realized GDML geometries don't allow for range cuts, made new geometries (for the LAr neutron study, for a small LAr volume study, and for a "new" geometry based on the pCDR). Updated some branch names for clarity, added a "startenergy" branch for nuclear information. Ran statistics in the small LAr volume study.
+
+10/9/2019
+
+Changed the names of some branches in the nuclearoutput file. Re-enabled creatorprocess (why was it even disabled in the first place?) for nuclearoutputs. Ran some more simulations in the OG geometry, same results on the Ar41 production suppression. 

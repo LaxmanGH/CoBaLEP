@@ -1,6 +1,7 @@
 A brief description of each of the macros, input file
 names, and how they interact
 
+LAST UPDATED: 10/9/2019
 
 
 After using 'make' to compile CoBaLEP.cc into an executable, we can
@@ -25,8 +26,8 @@ the .cc file.
 
 I made a script, runsims.sh, to use the slurm environment's batch
 submission protocols for running multiple simulations at a time. This
-script also randomizes the input number for the simulation. If your
-institution uses a different job submission protocol, you'll have to
+script also randomizes the input number for the simulation. If you
+are used to using a different job submission protocol, you'll have to
 create your own script, keeping in mind that the script should feed a
 macro name and a random number into the CoBaLEP executable as
 indicated on step 2a up above. I also made a quick root script, called
@@ -71,8 +72,8 @@ phase: event building.
 
 3a. >)root -x hitbuilder.C //No longer works
 
-VERY IMPORTANT UPDATE: hit building usually takes about 5 minutes
-for a single simulation file, but can overflow a node's memory.
+VERY IMPORTANT UPDATE: hit building can take a lot of memory
+for a single simulation file, and can overflow a node's memory.
 As such, it's not advisable to process all files in the current
 directory at one time. As you may recall, simulation files are all
 tagged with a unique number in their name, e.g. output#####.root. To
@@ -105,12 +106,12 @@ machines.
 
 The event building  program is called eventbuilder.C It takes
 the hitbuilder.C output as its input. This somewhat simpler
-program builds events as per the MAJORANA definition, and calculates hit
+program builds events as per the MAJORANA definition, calculates hit
 energy (per detector, which can then be added) and multiplicity for
-each event. The output of eventbuilder.C is labeled sumtree#####.C, where
+each event. The eventbuilder.C output is labeled sumtree#####.C, where
 again the number carries over from the original simulation file's
-unique ID. eventbuilder.C takes very little time to process any number of
-files.
+unique ID. eventbuilder.C takes very little time to process any number 
+of files.
 
 
 As a final step, to make high statistics analysis easier, the user may
@@ -154,7 +155,8 @@ environment variable to point to the directory containing CoBaLEP.cc
 
 The very last line of scripts/runsims.sh needs to be changed
 twice: the first path should point to the directory your CoBaLEP
-executable is in. The second path should point to your 'mac' folder.
+executable is in, e.g. $WORKINGDIR.
+The second path should point to your 'mac' folder $WORKINGDIR/mac.
 
 
 //Change to the renamed instance of the scripts directory
@@ -165,15 +167,15 @@ executable is in. The second path should point to your 'mac' folder.
 //CoBaLEP (the executable), weighted.mac
 
 
-Simulations can take up to 24 hours, depending on whether or not the
+Simulations can take several hours, depending on whether or not the
 rock has been removed from the simulation geometry. This is an
 advanced setting and beyond the scope of this manual. By default the
 rock is included.
 
 
-//After all simulations finish in 24 or so hours...
+//After all simulations finish in several hours...
 //3a is optional, but moves all the slurm output files to one new file
-3a. >)chainingone.C
+3a. >)root -x -q chainingone.C
 3b. >)root -x -q meihimeweighting.C
 3c. >)root -x -q manysubmit.C //takes 100 seconds to run
 
@@ -186,7 +188,7 @@ it's taking too long or stuck processing, try reading any of
 the slurm output logs being created in real time.
 emacs -nw slurm-#####.out //(##### is jobID of the slurm job)
 This should show some numbers tracking the progress of the hit
-builder. Read the source file if you wanna know what these numbers
+builder. Read hitbuilder.C if you wanna know what these numbers
 are. All you need to know right now is that if you run the same
 command a few minutes later and the numbers have changed at all,
 the hit builder is still advancing.
@@ -194,14 +196,14 @@ the hit builder is still advancing.
 
 //Once all the hits are built...
 
-4. >)root -x eventbuilder.C
+4. >)root -x -q eventbuilder.C
 
 //Dependencies of step 4: having hit builder output files
 //eventbuilder.C automatically cleans up the slurm files
 //into one big file, whether or not you did it before
 //so it's recommended to do it before as well, in 3a
 
-
+[[
 (no longer true but kept in case the problem returns)
 In my experience, 1-2% of hit builder output files are corrupted.
 This will be VERY obvious when you try to run eventbuilder.C on
@@ -212,7 +214,7 @@ last file that the event builder tried to process. Then, you can move
 or delete this corrupted hit file, delete any output files from the
 event builder, and simply run it again. This solution is not very
 elegant... but it works for now.
-
+]]
 
 5. (optional) >)root -x chainingtwo.C
 
@@ -271,6 +273,9 @@ I studied the neutron production. May use again one day, who knows.
 CoBaLEP_original.cc - An alternative version of CoBaLEP.cc
 A snapshot of the cc file at the time CoBaLEP_neutrons.cc was made.
 
+[[By the way, it's unprofessional to stash alternate versions of your
+program like this. Don't be lazy like me.]]
+
 findAmanually.C - A test file when implementing the Mei Hime
 energy weighting functionality (see changelog for details).
 Was used to determine there was a problem with the energy
@@ -279,6 +284,13 @@ necessitated the switch to weighting vie branch.
 
 fittingnewmuonfile.C - A test file when implementing the Mei Hime
 energy weighting functionality (see changelog for details).
+
+generatesmallmuonfile.C - Ralph's original muon file that the 
+weighted.mac script sampled from included all of the secondaries
+produced by his simulation as well. This information was unnecessary
+and made reading/writing take way too damn long. This script simply
+reads the large file once, slims it down to its necessary components,
+and outputs SmallMuon File, which is what weighted.mac now uses.
 
 heatmap.C - Old analysis program I used to use to plot the starting
 z position of shower secondaries that hit the detectors versus the
@@ -301,6 +313,14 @@ to record information about particles produced from delayed nuclear
 decays which find their way to a sensitive detector mass.
 This has since been incorporated into the main program in a much
 more sophisticated way.
+
+passcuts.C - An encapsulated version of the now famous trigonometric
+cut. Won't run on its own but can be shoehorned back into the
+ShowerGenerator.cc file in src/ if it's ever removed.
+
+ShowerGenerator.cc and ShowerGenerator_trig.cc - A couple stashed
+version of a source file. Be better than me, reader! Don't stash
+like this!
 
 specificcreatorprocess.C - An analysis program which allows me to
 search for specific creator processes in the simulation outputs. In
