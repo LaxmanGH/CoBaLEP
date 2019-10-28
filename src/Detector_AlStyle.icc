@@ -1,0 +1,31 @@
+G4Box *outerSteel = new G4Box("outSteel",7.5*mm,2*m,2*m);
+G4Box *h2oShield = new G4Box("hShield",1.5*m,2*m,2*m);
+G4Box *argonShield = new G4Box("arShield",1.5*m,2*m,2*m);
+G4Box *geTarget = new G4Box("geTar",5*mm,2*m,2*m);
+
+G4LogicalVolume *logicalSteel = new G4LogicalVolume(outerSteel,mat_316Ti,"log_Steel");
+logicalSteel->SetVisAttributes ( new G4VisAttributes(G4Colour(0.7, 0.7, 0.7, 0.5) )); //grey 50% transparent
+
+G4PVPlacement *physicalSteel = new G4PVPlacement(0,G4ThreeVector(7.5*mm,0,0),logicalSteel,"phySteel1",logical_World,false,0,checkOverlaps);
+
+physicalSteel = new G4PVPlacement(0,G4ThreeVector(3022.5*mm,0,0),logicalSteel,"phySteel2",logical_World,false,1,checkOverlaps);
+
+
+G4LogicalVolume *logicalh2o = new G4LogicalVolume(h2oShield,mat_Water,"log_h2o");
+logicalh2o->SetVisAttributes(new G4VisAttributes(G4Colour(0.3, 0.6, 1.0,0.2)));
+
+G4PVPlacement *physicalh2o = new G4PVPlacement(0,G4ThreeVector(1515*mm,0,0),logicalh2o,"phyh2o",logical_World,false,0,checkOverlaps);
+
+
+G4LogicalVolume *logicalAr = new G4LogicalVolume(argonShield,mat_ArLiq,"log_Ar");
+
+logicalAr->SetVisAttributes(new G4VisAttributes(G4Colour(0.1, 0.9, 0.1)));
+
+G4PVPlacement *physicalAr = new G4PVPlacement(0,G4ThreeVector(4530*mm,0,0),logicalAr,"phyAr",logical_World,false,0,checkOverlaps);
+
+G4LogicalVolume *logicalGe = new G4LogicalVolume(geTarget,mat_GeEnr,"log_Ge");
+logicalGe->SetVisAttributes ( new G4VisAttributes(G4Colour(0.6,0.1,0.6)) );//Purple
+
+G4PVPlacement *physicalGe = new G4PVPlacement(0,G4ThreeVector(6035*mm,0,0),logicalGe,"phyGe",logical_World,false,0,checkOverlaps);
+
+return physical_World;

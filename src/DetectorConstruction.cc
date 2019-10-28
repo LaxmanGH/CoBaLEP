@@ -42,6 +42,7 @@
 
 #include "G4String.hh"
 #include "math.h"
+#include "TMath.h"
 
 #include "G4VisAttributes.hh"
 #include "G4Color.hh"
@@ -105,18 +106,19 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4LogicalVolume* logical_World = new G4LogicalVolume(solid_World,mat_vacuum,"log_World");
   logical_World->SetVisAttributes (G4VisAttributes::Invisible);
   G4VPhysicalVolume* physical_World = new G4PVPlacement(0,G4ThreeVector(),logical_World,"phy_World",0,false,0,checkOverlaps);
+  G4String detector_name;
 
   G4double assemblyzoffset = -6.5*m;
   //for displacing the detector assembly from the center of the world
   //May change with different geometry selections
   
-  G4String RockOption = "September2018WithCuts";
+  G4String RockOption = "pCDR";
   G4String LArScintillators = "NotImplementedYet";
   G4String DetectorComposition = "NotImplementedYet";
 	
 	
-#include "Detector_CJStyle.icc"
-
+  #include "Detector_CJStyle.icc"
+  //#include "Detector_AlStyle.icc"
 
   //fill gas
 
@@ -146,7 +148,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double detector_dX;
   G4double detector_dY;
   G4double detector_dZ;
-  G4String detector_name;
+
   int tower_indexX[30] = {-4, 0, 4, -6,-2,2,6, -8,-4,0,4,8, -10,-6,-2,2,6,10, -8,-4, 0, 4, 8, -6,-2, 2, 6,  -4,  0,  4};
   int tower_indexY[30] = {12,12,12,  8, 8,8,8,  4, 4,4,4,4,   0, 0, 0,0,0, 0, -4,-4,-4,-4,-4, -8,-8,-8,-8, -12,-12,-12};
 
@@ -231,7 +233,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   double detectorvolume = 1080*solid_DetGeCrystal->GetCubicVolume()/CLHEP::cm3;
   double detectormassremoved = .005323*detectorvolume/CLHEP::kg;
-
+  materialmass+= (logical_FillGas->GetMass()/CLHEP::kg);
   materialmass-=detectormassremoved;
   G4cout << G4endl << G4endl << "Mass of liquid argon in this setup: " << materialmass << G4endl <<G4endl;
     return physical_World;

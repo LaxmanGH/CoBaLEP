@@ -1,0 +1,29 @@
+#generates monoenergetic muons for the MCNP comparison study
+
+
+/CoBaLEP/generator/select GPS
+
+/gps/particle neutron
+/gps/pos/type Point
+/gps/position -0.001 0 0 mm
+
+/gps/direction 1 0 0
+/gps/ene/type Lin
+/gps/ene/min 0.1 MeV
+/gps/ene/max 10.0 MeV
+/gps/ene/gradient 0
+/gps/ene/intercept 1
+
+#/vis/open HepRepFile
+#/vis/drawVolume
+#/vis/viewer/flush
+#/vis/scene/add/trajectories
+#/vis/filtering/trajectories/create/particleFilter
+#/vis/filtering/trajectories/particleFilter-0/add gamma
+#/vis/filtering/trajectories/particleFilter-0/add mu-
+#/vis/filtering/trajectories/particleFilter-0/active true
+#/vis/scene/add/hits
+#/vis/scene/endOfEventAction accumulate
+
+
+/run/beamOn 10000

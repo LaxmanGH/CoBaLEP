@@ -53,10 +53,16 @@ G4Tubs *upperLarShield;
 G4LogicalVolume *logical_upperLarShield;
 G4VPhysicalVolume *physical_upperLarShield;
 G4Tubs *innerCopperCryostat;
-G4LogicalVolume *logical_innerCopperCryostat;
+G4LogicalVolume *logical_innerCopperCryostat1;
+G4LogicalVolume *logical_innerCopperCryostat2;
+G4LogicalVolume *logical_innerCopperCryostat3;
+G4LogicalVolume *logical_innerCopperCryostat4;
 G4VPhysicalVolume *physical_innerCopperCryostat;
 G4Tubs *innerLarShield;
-G4LogicalVolume *logical_innerLarShield;
+G4LogicalVolume *logical_innerLarShield1;
+G4LogicalVolume *logical_innerLarShield2;
+G4LogicalVolume *logical_innerLarShield3;
+G4LogicalVolume *logical_innerLarShield4;
 G4VPhysicalVolume *physical_innerLarShield;
 G4Tubs *ICPCshell;
 G4Tubs *borehole;
@@ -202,7 +208,6 @@ G4cout << "Trig study" << G4endl;
 innerer_CutOut = new G4Tubs("inn_CutOut",0*m, 11.50001*m, 11.50001*m,0, 2*M_PI);//G4Box("inn_CutOut",11.5*m, 11.5*m, 11.5*m);
     outer_Rock = new G4SubtractionSolid("out_Rock", solid_Rock, solid_Lab ,0 , G4ThreeVector(-2.5*m,0,4*m));//cut out lab
     
-//~change innerer to inner below
     outer_Rock2 = new G4SubtractionSolid("out_Rock2", outer_Rock, innerer_CutOut ,0 , G4ThreeVector(17.5*m,0,-6.5*m));//cut out inner rock and assembly
     
     //inner_Rock = new G4Tubs("inn_Rock",0*m, 11.49999*m, 11.49999*m, 0, 2*M_PI); //assembly already cut out
@@ -354,49 +359,138 @@ logical_waterShield = new G4LogicalVolume(waterShield,mat_Water,"log_waterShield
  logical_waterShield->SetVisAttributes ( new G4VisAttributes(G4Colour(0.3, 0.6, 1.0,0.2) ));//blue hopefully
     physical_waterShield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_waterShield,"phy_waterShield",logical_World,false,0,checkOverlaps);
 
-    outerCopperCryostat = new G4Tubs("sol_outerCu",0*m, 3*m, 3*m, 0, 2*M_PI);
-logical_outerCopperCryostat = new G4LogicalVolume(outerCopperCryostat,mat_Cu,"log_outerCopperCryostat");
- logical_outerCopperCryostat->SetVisAttributes ( new G4VisAttributes(G4Colour(0.62, 0.3, 0.2,0.7) ));//Brown hopefully
-physical_outerCopperCryostat = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_outerCopperCryostat,"phy_outerCopperCryostat",logical_waterShield,false,0,checkOverlaps);
+    outerSSCryostat = new G4Tubs("sol_outerCu",0*m, 3.5*m, 3.5*m, 0, 2*M_PI);
+logical_outerSSCryostat = new G4LogicalVolume(outerSSCryostat,mat_316Ti,"log_outerSSCryostat");
+ logical_outerSSCryostat->SetVisAttributes ( new G4VisAttributes(G4Colour(0.5, 0.5, 0.5,0.9) ));//Grey
+physical_outerSSCryostat = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_outerSSCryostat,"phy_outerSSCryostat",logical_waterShield,false,0,checkOverlaps);
 
-    upperCopperCryostat = new G4Tubs("sol_upperCu",0*m, 1*m, 1.5*m, 0, 2*M_PI);
-    logical_upperCopperCryostat = new G4LogicalVolume(upperCopperCryostat,mat_Cu,"log_upperCopperCryostat");
-    logical_upperCopperCryostat->SetVisAttributes ( new G4VisAttributes(G4Colour(0.62, 0.3, 0.2,0.7) ));//Brown hopefully
-    physical_upperCopperCryostat = new G4PVPlacement(0,G4ThreeVector(0,0,4.52*m),logical_upperCopperCryostat,"phy_upperCopperCryostat",logical_waterShield,false,0,checkOverlaps);
+    upperSSCryostat = new G4Tubs("sol_upperCu",0*m, 1*m, 1.5*m, 0, 2*M_PI);
+    logical_upperSSCryostat = new G4LogicalVolume(upperSSCryostat,mat_316Ti,"log_upperSSCryostat");
+    logical_upperSSCryostat->SetVisAttributes ( new G4VisAttributes(G4Colour(0.5, 0.5, 0.5,0.9) ));//Grey
+    physical_upperSSCryostat = new G4PVPlacement(0,G4ThreeVector(0,0,5.02*m),logical_upperSSCryostat,"phy_upperSSCryostat",logical_waterShield,false,0,checkOverlaps);
 
-    outerLarShield = new G4Tubs("sol_outerLarShield",0*m, 2.99*m, 2.99*m, 0, 2*M_PI);
+    outerLarShield = new G4Tubs("sol_outerLarShield",0*m, 3.488*m, 3.488*m, 0, 2*M_PI);
     logical_outerLarShield = new G4LogicalVolume(outerLarShield,mat_ArLiq,"log_outerLarShield");
     logical_outerLarShield->SetVisAttributes ( new G4VisAttributes(G4Colour(0.1,0.9,0.1)) ); //green
-    physical_outerLarShield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_outerLarShield,"phy_outerLarShield",logical_outerCopperCryostat,false,0,checkOverlaps);    
+    physical_outerLarShield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_outerLarShield,"phy_outerLarShield",logical_outerSSCryostat,false,0,checkOverlaps);    
 
-    upperLarShield = new G4Tubs("sol_upperLarShield",0*m, 0.99*m, 1.49*m, 0, 2*M_PI);
+    upperLarShield = new G4Tubs("sol_upperLarShield",0*m, 0.988*m, 1.488*m, 0, 2*M_PI);
     logical_upperLarShield = new G4LogicalVolume(upperLarShield,mat_ArLiq,"log_upperLarShield");
     logical_upperLarShield->SetVisAttributes ( new G4VisAttributes(G4Colour(0.1,0.9,0.1)) ); //green
-    physical_upperLarShield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_upperLarShield,"phy_upperLarShield",logical_upperCopperCryostat,false,0,checkOverlaps);
+    physical_upperLarShield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_upperLarShield,"phy_upperLarShield",logical_upperSSCryostat,false,0,checkOverlaps);
+
+
+    //4 modules; each needs a unique logical volume, I guess... Otherwise name overlap issues occur
+
 
     innerCopperCryostat = new G4Tubs("sol_innerCu",0*m, 0.5*m, 1*m, 0, 2*M_PI);
-logical_innerCopperCryostat = new G4LogicalVolume(innerCopperCryostat,mat_Cu,"log_innerCopperCryostat");
- logical_innerCopperCryostat->SetVisAttributes ( new G4VisAttributes(G4Colour(0.62, 0.3, 0.2,0.7) ));//Brown
-physical_innerCopperCryostat = new G4PVPlacement(0,G4ThreeVector(1*m,0,0),logical_innerCopperCryostat,"phy_innerCopperCryostat",logical_outerLarShield,false,0,checkOverlaps);
-physical_innerCopperCryostat = new G4PVPlacement(0,G4ThreeVector(-1*m,0,0),logical_innerCopperCryostat,"phy_innerCopperCryostat",logical_outerLarShield,false,1,checkOverlaps);
-physical_innerCopperCryostat = new G4PVPlacement(0,G4ThreeVector(0,1*m,0),logical_innerCopperCryostat,"phy_innerCopperCryostat",logical_outerLarShield,false,2,checkOverlaps);
-physical_innerCopperCryostat = new G4PVPlacement(0,G4ThreeVector(0,-1*m,0),logical_innerCopperCryostat,"phy_innerCopperCryostat",logical_outerLarShield,false,3,checkOverlaps);
-
     innerLarShield = new G4Tubs("sol_innerLarShield",0*m, 0.49*m, 0.99*m, 0, 2*M_PI);
-    logical_innerLarShield = new G4LogicalVolume(innerLarShield,mat_ArLiq,"log_innerLarShield");
-    logical_innerLarShield->SetVisAttributes ( new G4VisAttributes(G4Colour(0.1,0.9,0.1)) ); //green
-    physical_innerLarShield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_innerLarShield,"phy_innerLarShield",logical_innerCopperCryostat,false,0,checkOverlaps);    
+
+
+logical_innerCopperCryostat1 = new G4LogicalVolume(innerCopperCryostat,mat_Cu,"log_innerCopperCryostat1");
+ logical_innerCopperCryostat1->SetVisAttributes ( new G4VisAttributes(G4Colour(0.62, 0.3, 0.2,0.7) ));//Brown
+physical_innerCopperCryostat = new G4PVPlacement(0,G4ThreeVector(1*m,0,0),logical_innerCopperCryostat1,"phy_innerCopperCryostat1",logical_outerLarShield,false,0,checkOverlaps);
+
+logical_innerCopperCryostat2 = new G4LogicalVolume(innerCopperCryostat,mat_Cu,"log_innerCopperCryostat2");
+ logical_innerCopperCryostat2->SetVisAttributes ( new G4VisAttributes(G4Colour(0.62, 0.3, 0.2,0.7) ));//Brown
+physical_innerCopperCryostat = new G4PVPlacement(0,G4ThreeVector(-1*m,0,0),logical_innerCopperCryostat2,"phy_innerCopperCryostat2",logical_outerLarShield,false,0,checkOverlaps);
+
+logical_innerCopperCryostat3 = new G4LogicalVolume(innerCopperCryostat,mat_Cu,"log_innerCopperCryostat3");
+ logical_innerCopperCryostat3->SetVisAttributes ( new G4VisAttributes(G4Colour(0.62, 0.3, 0.2,0.7) ));//Brown
+physical_innerCopperCryostat = new G4PVPlacement(0,G4ThreeVector(0,1*m,0),logical_innerCopperCryostat3,"phy_innerCopperCryostat3",logical_outerLarShield,false,0,checkOverlaps);
+
+logical_innerCopperCryostat4 = new G4LogicalVolume(innerCopperCryostat,mat_Cu,"log_innerCopperCryostat4");
+ logical_innerCopperCryostat4->SetVisAttributes ( new G4VisAttributes(G4Colour(0.62, 0.3, 0.2,0.7) ));//Brown
+physical_innerCopperCryostat = new G4PVPlacement(0,G4ThreeVector(0,-1*m,0),logical_innerCopperCryostat4,"phy_innerCopperCryostat4",logical_outerLarShield,false,0,checkOverlaps);
+
+
+    logical_innerLarShield1 = new G4LogicalVolume(innerLarShield,mat_ArLiq,"log_innerLarShield1");
+    logical_innerLarShield1->SetVisAttributes ( new G4VisAttributes(G4Colour(0.1,0.9,0.1)) ); //green
+    physical_innerLarShield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_innerLarShield1,"phy_innerLarShield1",logical_innerCopperCryostat1,false,0,checkOverlaps);    
+
+    logical_innerLarShield2 = new G4LogicalVolume(innerLarShield,mat_ArLiq,"log_innerLarShield2");
+    logical_innerLarShield2->SetVisAttributes ( new G4VisAttributes(G4Colour(0.1,0.9,0.1)) ); //green
+    physical_innerLarShield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_innerLarShield2,"phy_innerLarShield2",logical_innerCopperCryostat2,false,0,checkOverlaps);    
+
+    logical_innerLarShield3 = new G4LogicalVolume(innerLarShield,mat_ArLiq,"log_innerLarShield3");
+    logical_innerLarShield3->SetVisAttributes ( new G4VisAttributes(G4Colour(0.1,0.9,0.1)) ); //green
+    physical_innerLarShield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_innerLarShield3,"phy_innerLarShield3",logical_innerCopperCryostat3,false,0,checkOverlaps);    
+
+    logical_innerLarShield4 = new G4LogicalVolume(innerLarShield,mat_ArLiq,"log_innerLarShield4");
+    logical_innerLarShield4->SetVisAttributes ( new G4VisAttributes(G4Colour(0.1,0.9,0.1)) ); //green
+    physical_innerLarShield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_innerLarShield4,"phy_innerLarShield4",logical_innerCopperCryostat4,false,0,checkOverlaps);    
+
+
 
     //detector array
     ICPCshell = new G4Tubs("sol_ICPCshell",0*m, 4.5*cm, 3.75*cm, 0, 2*M_PI);
 borehole = new G4Tubs("sol_borehole",0*m, 0.5*cm, 2.5*cm, 0, 2*M_PI);
 ICPCdetector = new G4SubtractionSolid("sol_ICPC", ICPCshell, borehole,0, G4ThreeVector(0,0,1.25*cm));//carve out borehole from ICPC
 logical_ICPCdetector  = new G4LogicalVolume(ICPCdetector,mat_Detector,"log_ICPC");
- logical_ICPCdetector->SetVisAttributes ( new G4VisAttributes(G4Colour(0.6,0.1,0.6)) );//Purple (hopefully)
-physical_ICPCdetector  = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_ICPCdetector,"phy_ICPC",logical_innerLarShield,false,0,checkOverlaps);    
+ logical_ICPCdetector->SetVisAttributes ( new G4VisAttributes(G4Colour(0.6,0.1,0.6)) );//Purple
+
+
+ //physical_ICPCdetector  = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_ICPCdetector,"phy_ICPC",logical_innerLarShield1,false,0,checkOverlaps);    
+
+ //There HAS to be a better way to implement the detector array than what I'm about to do. Gods of programming, please forgive me for this egregious crime against the holy principles of encapsulation and softcoding...
+
+  const int numberofdetectors = 102;
+  const int numberofstrings = 17;
+  const int inscribingradius = 400;//mm
+  const int verticalspacing = 250;//mm
+
+  double azimuth = 0;
+  int zcounter = 0;
+  int longeststring = 0;
+
+  double x = 0;
+  double y = 0;
+  double z = 0;
+
+    longeststring = numberofdetectors/numberofstrings;
+    if(numberofdetectors%numberofstrings)
+      longeststring++;
+    G4cout << longeststring << G4endl << G4endl;
+  
+    z = verticalspacing*(longeststring-1)/2;
+
+  for (int i = 0; i < numberofdetectors; i++)
+    {
+
+      if(!(i%numberofstrings)&&(i))
+	z = z-verticalspacing;
+
+      azimuth = (2*TMath::Pi()*(i%numberofstrings))/numberofstrings;
+    
+      x = TMath::Cos(azimuth)*inscribingradius;
+      y = TMath::Sin(azimuth)*inscribingradius;
+
+      G4cout << i << G4endl << "x: " << x << G4endl<< "y: " << y << G4endl << "z: " << z << G4endl << G4endl;
+
+    detector_name = "phy_DetGeCrystal_";
+    detector_name += G4UIcommand::ConvertToString(i*4);
+physical_ICPCdetector  = new G4PVPlacement(0,G4ThreeVector(x,y,z),logical_ICPCdetector,detector_name,logical_innerLarShield1,false,0,checkOverlaps);    
+
+    detector_name = "phy_DetGeCrystal_";
+    detector_name += G4UIcommand::ConvertToString(i*4+1);
+physical_ICPCdetector  = new G4PVPlacement(0,G4ThreeVector(x,y,z),logical_ICPCdetector,detector_name,logical_innerLarShield2,false,0,checkOverlaps);    
+
+    detector_name = "phy_DetGeCrystal_";
+    detector_name += G4UIcommand::ConvertToString(i*4+2);
+physical_ICPCdetector  = new G4PVPlacement(0,G4ThreeVector(x,y,z),logical_ICPCdetector,detector_name,logical_innerLarShield3,false,0,checkOverlaps);    
+
+    detector_name = "phy_DetGeCrystal_";
+    detector_name += G4UIcommand::ConvertToString(i*4+3);
+physical_ICPCdetector  = new G4PVPlacement(0,G4ThreeVector(x,y,z),logical_ICPCdetector,detector_name,logical_innerLarShield4,false,0,checkOverlaps);    
+
+    }
+
+
 
     return physical_World;
    }
+
+
 
  else//NoRock, or a garbage value, results in rock not being included
    {
