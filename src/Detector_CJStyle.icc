@@ -40,12 +40,12 @@ G4VPhysicalVolume *physical_Copper;
 G4Box *waterShield;
 G4LogicalVolume *logical_waterShield;
 G4VPhysicalVolume *physical_waterShield;
-G4Tubs *outerCopperCryostat;
-G4LogicalVolume *logical_outerCopperCryostat;
-G4VPhysicalVolume *physical_outerCopperCryostat;
-G4Tubs *upperCopperCryostat;
-G4LogicalVolume *logical_upperCopperCryostat;
-G4VPhysicalVolume *physical_upperCopperCryostat;
+G4Tubs *outerSSCryostat;
+G4LogicalVolume *logical_outerSSCryostat;
+G4VPhysicalVolume *physical_outerSSCryostat;
+G4Tubs *upperSSCryostat;
+G4LogicalVolume *logical_upperSSCryostat;
+G4VPhysicalVolume *physical_upperSSCryostat;
 G4Tubs *outerLarShield;
 G4LogicalVolume *logical_outerLarShield;
 G4VPhysicalVolume *physical_outerLarShield;
@@ -359,7 +359,7 @@ logical_waterShield = new G4LogicalVolume(waterShield,mat_Water,"log_waterShield
  logical_waterShield->SetVisAttributes ( new G4VisAttributes(G4Colour(0.3, 0.6, 1.0,0.2) ));//blue hopefully
     physical_waterShield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_waterShield,"phy_waterShield",logical_World,false,0,checkOverlaps);
 
-    outerSSCryostat = new G4Tubs("sol_outerCu",0*m, 3.5*m, 3.5*m, 0, 2*M_PI);
+    outerSSCryostat = new G4Tubs("sol_outerCu",0*m, 3.6*m, 3.6*m, 0, 2*M_PI);
 logical_outerSSCryostat = new G4LogicalVolume(outerSSCryostat,mat_316Ti,"log_outerSSCryostat");
  logical_outerSSCryostat->SetVisAttributes ( new G4VisAttributes(G4Colour(0.5, 0.5, 0.5,0.9) ));//Grey
 physical_outerSSCryostat = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_outerSSCryostat,"phy_outerSSCryostat",logical_waterShield,false,0,checkOverlaps);
@@ -369,7 +369,7 @@ physical_outerSSCryostat = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_oute
     logical_upperSSCryostat->SetVisAttributes ( new G4VisAttributes(G4Colour(0.5, 0.5, 0.5,0.9) ));//Grey
     physical_upperSSCryostat = new G4PVPlacement(0,G4ThreeVector(0,0,5.02*m),logical_upperSSCryostat,"phy_upperSSCryostat",logical_waterShield,false,0,checkOverlaps);
 
-    outerLarShield = new G4Tubs("sol_outerLarShield",0*m, 3.488*m, 3.488*m, 0, 2*M_PI);
+    outerLarShield = new G4Tubs("sol_outerLarShield",0*m, 3.588*m, 3.588*m, 0, 2*M_PI);
     logical_outerLarShield = new G4LogicalVolume(outerLarShield,mat_ArLiq,"log_outerLarShield");
     logical_outerLarShield->SetVisAttributes ( new G4VisAttributes(G4Colour(0.1,0.9,0.1)) ); //green
     physical_outerLarShield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_outerLarShield,"phy_outerLarShield",logical_outerSSCryostat,false,0,checkOverlaps);    
@@ -379,6 +379,8 @@ physical_outerSSCryostat = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_oute
     logical_upperLarShield->SetVisAttributes ( new G4VisAttributes(G4Colour(0.1,0.9,0.1)) ); //green
     physical_upperLarShield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_upperLarShield,"phy_upperLarShield",logical_upperSSCryostat,false,0,checkOverlaps);
 
+G4cout << "Mass of outer LAr shield before stuff is added:: " << logical_outerLarShield->GetMass()/CLHEP::kg << G4endl;
+G4cout << "Mass of upper LAr shield before stuff is added:: " << logical_upperLarShield->GetMass()/CLHEP::kg << G4endl;
 
     //4 modules; each needs a unique logical volume, I guess... Otherwise name overlap issues occur
 
@@ -421,21 +423,20 @@ physical_innerCopperCryostat = new G4PVPlacement(0,G4ThreeVector(0,-1*m,0),logic
     physical_innerLarShield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_innerLarShield4,"phy_innerLarShield4",logical_innerCopperCryostat4,false,0,checkOverlaps);    
 
 
-
     //detector array
     ICPCshell = new G4Tubs("sol_ICPCshell",0*m, 4.5*cm, 3.75*cm, 0, 2*M_PI);
 borehole = new G4Tubs("sol_borehole",0*m, 0.5*cm, 2.5*cm, 0, 2*M_PI);
 ICPCdetector = new G4SubtractionSolid("sol_ICPC", ICPCshell, borehole,0, G4ThreeVector(0,0,1.25*cm));//carve out borehole from ICPC
 logical_ICPCdetector  = new G4LogicalVolume(ICPCdetector,mat_Detector,"log_ICPC");
  logical_ICPCdetector->SetVisAttributes ( new G4VisAttributes(G4Colour(0.6,0.1,0.6)) );//Purple
-
+G4cout << "Mass of a detector: " << logical_ICPCdetector->GetMass()/CLHEP::kg << G4endl;
 
  //physical_ICPCdetector  = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_ICPCdetector,"phy_ICPC",logical_innerLarShield1,false,0,checkOverlaps);    
 
  //There HAS to be a better way to implement the detector array than what I'm about to do. Gods of programming, please forgive me for this egregious crime against the holy principles of encapsulation and softcoding...
 
-  const int numberofdetectors = 102;
-  const int numberofstrings = 17;
+  const int numberofdetectors = 114;
+  const int numberofstrings = 19;//1011 kg Ge76
   const int inscribingradius = 400;//mm
   const int verticalspacing = 250;//mm
 
@@ -465,7 +466,7 @@ logical_ICPCdetector  = new G4LogicalVolume(ICPCdetector,mat_Detector,"log_ICPC"
       x = TMath::Cos(azimuth)*inscribingradius;
       y = TMath::Sin(azimuth)*inscribingradius;
 
-      G4cout << i << G4endl << "x: " << x << G4endl<< "y: " << y << G4endl << "z: " << z << G4endl << G4endl;
+      //G4cout << i << G4endl << "x: " << x << G4endl<< "y: " << y << G4endl << "z: " << z << G4endl << G4endl;
 
     detector_name = "phy_DetGeCrystal_";
     detector_name += G4UIcommand::ConvertToString(i*4);
@@ -485,7 +486,7 @@ physical_ICPCdetector  = new G4PVPlacement(0,G4ThreeVector(x,y,z),logical_ICPCde
 
     }
 
-
+G4cout << "Mass after ICPC: " << logical_innerLarShield4->GetMass()/CLHEP::kg << G4endl;
 
     return physical_World;
    }

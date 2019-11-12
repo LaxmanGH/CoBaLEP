@@ -209,4 +209,10 @@ Since previous update, have done another LAr study (of neutron showering), incre
 
 10/9/2019
 
-Changed the names of some branches in the nuclearoutput file. Re-enabled creatorprocess (why was it even disabled in the first place?) for nuclearoutputs. Ran some more simulations in the OG geometry, same results on the Ar41 production suppression. 
+Changed the names of some branches in the nuclearoutput file. Re-enabled creatorprocess (why was it even disabled in the first place?) for nuclearoutputs. Ran some more simulations in the OG geometry, same results on the Ar41 production suppression.
+
+11/11/2019
+
+Started (and finished?) simulations to compare to some simple geometry results the ORNL group ran for LEGEND in MCNP. The simulations were of few-MeV neutron survivability in bulk shielding materials. The geometry is stored in a separate sub-file, Detector_AlStyle.icc, the particle generator is at mac/neutronAlStyle.mac and finally the main program is at mac/CoBaLEP_AlStyle.cc .
+
+New pCDR geometry is ready to go. High statistics simulations underway.
