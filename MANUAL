@@ -1,6 +1,29 @@
 A brief description of each of the macros, input file
 names, and how they interact
 
+01-23/2020 UPDATE:
+
+
+First of all, you must include the following environmental variable in your .bashrc or other shell setup file:
+
+export WORKINGDIR=/path/to/your/build/of/CoBaLEP
+
+Second of all, in order to use the freshly downloaded CoBaLEP module, you must first perform a cmake. Make sure your version of cmake and your compilers are up-to-date with GEANT4 10.02. If you're working on Lawrence, that means adding the following to your .bashrc file:
+
+module load gcc/6.3.0-gcc@4.8.5
+alias cmake='cmake -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++'
+
+
+And finally, make sure you're sourcing geant4.sh in your .bashrc as well. On Lawrence, you can just add this line:
+
+source /apps/spack/opt/spack/linux-centos7-x86_64/gcc-6.3.0/geant4-10.02.p02-7fapa34mkfth2efqpuh2z3vlwo534acv/bin/geant4.sh
+
+Then you can build the executable in $WORKINGDIR
+
+cmake $WORKINGDIR
+
+
+
 LAST UPDATED: 10/9/2019
 
 
@@ -266,6 +289,10 @@ mess with the script, though, so this one's also a little busted.
 Co60.mac - As explained elsewhere, use this instead of
 'weighted.mac' if you wanna simulate Co60 decays instead of muons.
 
+CoBaLEP_AlStyle.cc - The version of CoBaLEP.cc used for the MCNP
+comparison simulations. Kills all secondaries, and only records
+primaries at boundary crossings.
+
 CoBaLEP_neutrons.cc - An alternative version of CoBaLEP.cc
 Used for simulations I did of a muon through solid rock, in which
 I studied the neutron production. May use again one day, who knows.
@@ -307,6 +334,9 @@ the curiosity of some colleagues.
 
 neutronMultiplicitySource.mac - Muon sampling macro used in the
 neutron production in rock study mentioned in CoBaLEP_neutrons.cc.
+
+neutronAlStyle.mac - The source generator for the MCNP comparison
+simulations. Easy enough - they were just flat sampled neutrons.
 
 nucleardelayinfo.C - Another fledgling analysis program, designed
 to record information about particles produced from delayed nuclear

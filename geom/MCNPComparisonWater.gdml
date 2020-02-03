@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://service-spi.web.cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd">
+
+  <define/>
+
+  <materials>
+    <isotope N="12" Z="6" name="C12">
+      <atom unit="g/mole" value="12"/>
+    </isotope>
+    <isotope N="13" Z="6" name="C13">
+      <atom unit="g/mole" value="13.0034"/>
+    </isotope>
+    <element name="C">
+      <fraction n="0.9893" ref="C12"/>
+      <fraction n="0.0107" ref="C13"/>
+    </element>
+    <isotope N="55" Z="25" name="Mn55">
+      <atom unit="g/mole" value="54.938"/>
+    </isotope>
+    <element name="Mn">
+      <fraction n="1" ref="Mn55"/>
+    </element>
+    <isotope N="28" Z="14" name="Si28">
+      <atom unit="g/mole" value="27.9769"/>
+    </isotope>
+    <isotope N="29" Z="14" name="Si29">
+      <atom unit="g/mole" value="28.9765"/>
+    </isotope>
+    <isotope N="30" Z="14" name="Si30">
+      <atom unit="g/mole" value="29.9738"/>
+    </isotope>
+    <element name="Si">
+      <fraction n="0.922296077703922" ref="Si28"/>
+      <fraction n="0.0468319531680468" ref="Si29"/>
+      <fraction n="0.0308719691280309" ref="Si30"/>
+    </element>
+    <isotope N="50" Z="24" name="Cr50">
+      <atom unit="g/mole" value="49.946"/>
+    </isotope>
+    <isotope N="52" Z="24" name="Cr52">
+      <atom unit="g/mole" value="51.9405"/>
+    </isotope>
+    <isotope N="53" Z="24" name="Cr53">
+      <atom unit="g/mole" value="52.9407"/>
+    </isotope>
+    <isotope N="54" Z="24" name="Cr54">
+      <atom unit="g/mole" value="53.9389"/>
+    </isotope>
+    <element name="Cr">
+      <fraction n="0.04345" ref="Cr50"/>
+      <fraction n="0.83789" ref="Cr52"/>
+      <fraction n="0.09501" ref="Cr53"/>
+      <fraction n="0.02365" ref="Cr54"/>
+    </element>
+    <isotope N="58" Z="28" name="Ni58">
+      <atom unit="g/mole" value="57.9353"/>
+    </isotope>
+    <isotope N="60" Z="28" name="Ni60">
+      <atom unit="g/mole" value="59.9308"/>
+    </isotope>
+    <isotope N="61" Z="28" name="Ni61">
+      <atom unit="g/mole" value="60.9311"/>
+    </isotope>
+    <isotope N="62" Z="28" name="Ni62">
+      <atom unit="g/mole" value="61.9283"/>
+    </isotope>
+    <isotope N="64" Z="28" name="Ni64">
+      <atom unit="g/mole" value="63.928"/>
+    </isotope>
+    <element name="Ni">
+      <fraction n="0.680769" ref="Ni58"/>
+      <fraction n="0.262231" ref="Ni60"/>
+      <fraction n="0.011399" ref="Ni61"/>
+      <fraction n="0.036345" ref="Ni62"/>
+      <fraction n="0.009256" ref="Ni64"/>
+    </element>
+    <isotope N="92" Z="42" name="Mo92">
+      <atom unit="g/mole" value="91.9068"/>
+    </isotope>
+    <isotope N="94" Z="42" name="Mo94">
+      <atom unit="g/mole" value="93.9051"/>
+    </isotope>
+    <isotope N="95" Z="42" name="Mo95">
+      <atom unit="g/mole" value="94.9058"/>
+    </isotope>
+    <isotope N="96" Z="42" name="Mo96">
+      <atom unit="g/mole" value="95.9047"/>
+    </isotope>
+    <isotope N="97" Z="42" name="Mo97">
+      <atom unit="g/mole" value="96.906"/>
+    </isotope>
+    <isotope N="98" Z="42" name="Mo98">
+      <atom unit="g/mole" value="97.9054"/>
+    </isotope>
+    <isotope N="100" Z="42" name="Mo100">
+      <atom unit="g/mole" value="99.9075"/>
+    </isotope>
+    <element name="Mo">
+      <fraction n="0.1484" ref="Mo92"/>
+      <fraction n="0.0925" ref="Mo94"/>
+      <fraction n="0.1592" ref="Mo95"/>
+      <fraction n="0.1668" ref="Mo96"/>
+      <fraction n="0.0955" ref="Mo97"/>
+      <fraction n="0.2413" ref="Mo98"/>
+      <fraction n="0.0963" ref="Mo100"/>
+    </element>
+    <isotope N="46" Z="22" name="Ti46">
+      <atom unit="g/mole" value="45.9526"/>
+    </isotope>
+    <isotope N="47" Z="22" name="Ti47">
+      <atom unit="g/mole" value="46.9518"/>
+    </isotope>
+    <isotope N="48" Z="22" name="Ti48">
+      <atom unit="g/mole" value="47.9479"/>
+    </isotope>
+    <isotope N="49" Z="22" name="Ti49">
+      <atom unit="g/mole" value="48.9479"/>
+    </isotope>
+    <isotope N="50" Z="22" name="Ti50">
+      <atom unit="g/mole" value="49.9448"/>
+    </isotope>
+    <element name="Ti">
+      <fraction n="0.0825" ref="Ti46"/>
+      <fraction n="0.0744" ref="Ti47"/>
+      <fraction n="0.7372" ref="Ti48"/>
+      <fraction n="0.0541" ref="Ti49"/>
+      <fraction n="0.0518" ref="Ti50"/>
+    </element>
+    <isotope N="31" Z="15" name="P31">
+      <atom unit="g/mole" value="30.9738"/>
+    </isotope>
+    <element name="P">
+      <fraction n="1" ref="P31"/>
+    </element>
+    <isotope N="32" Z="16" name="S32">
+      <atom unit="g/mole" value="31.9721"/>
+    </isotope>
+    <isotope N="33" Z="16" name="S33">
+      <atom unit="g/mole" value="32.9715"/>
+    </isotope>
+    <isotope N="34" Z="16" name="S34">
+      <atom unit="g/mole" value="33.9679"/>
+    </isotope>
+    <isotope N="36" Z="16" name="S36">
+      <atom unit="g/mole" value="35.9671"/>
+    </isotope>
+    <element name="S">
+      <fraction n="0.9493" ref="S32"/>
+      <fraction n="0.0076" ref="S33"/>
+      <fraction n="0.0429" ref="S34"/>
+      <fraction n="0.0002" ref="S36"/>
+    </element>
+    <isotope N="63" Z="29" name="Cu63">
+      <atom unit="g/mole" value="62.9296"/>
+    </isotope>
+    <isotope N="65" Z="29" name="Cu65">
+      <atom unit="g/mole" value="64.9278"/>
+    </isotope>
+    <element name="Cu">
+      <fraction n="0.6917" ref="Cu63"/>
+      <fraction n="0.3083" ref="Cu65"/>
+    </element>
+    <isotope N="54" Z="26" name="Fe54">
+      <atom unit="g/mole" value="53.9396"/>
+    </isotope>
+    <isotope N="56" Z="26" name="Fe56">
+      <atom unit="g/mole" value="55.9349"/>
+    </isotope>
+    <isotope N="57" Z="26" name="Fe57">
+      <atom unit="g/mole" value="56.9354"/>
+    </isotope>
+    <isotope N="58" Z="26" name="Fe58">
+      <atom unit="g/mole" value="57.9333"/>
+    </isotope>
+    <element name="Fe">
+      <fraction n="0.05845" ref="Fe54"/>
+      <fraction n="0.91754" ref="Fe56"/>
+      <fraction n="0.02119" ref="Fe57"/>
+      <fraction n="0.00282" ref="Fe58"/>
+    </element>
+    <material name="StainlessSteel" state="solid">
+      <T unit="K" value="293.15"/>
+      <MEE unit="eV" value="285.263086928398"/>
+      <D unit="g/cm3" value="7.99"/>
+      <fraction n="0.0004" ref="C"/>
+      <fraction n="0.01" ref="Mn"/>
+      <fraction n="0.005" ref="Si"/>
+      <fraction n="0.17" ref="Cr"/>
+      <fraction n="0.12" ref="Ni"/>
+      <fraction n="0.025" ref="Mo"/>
+      <fraction n="0.0013" ref="Ti"/>
+      <fraction n="0.0002" ref="P"/>
+      <fraction n="0.00015" ref="S"/>
+      <fraction n="0.000375" ref="Cu"/>
+      <fraction n="0.667575" ref="Fe"/>
+    </material>
+    <isotope N="1" Z="1" name="H1">
+      <atom unit="g/mole" value="1.00782503081372"/>
+    </isotope>
+    <isotope N="2" Z="1" name="H2">
+      <atom unit="g/mole" value="2.01410199966617"/>
+    </isotope>
+    <element name="H">
+      <fraction n="0.999885" ref="H1"/>
+      <fraction n="0.000115" ref="H2"/>
+    </element>
+    <isotope N="16" Z="8" name="O16">
+      <atom unit="g/mole" value="15.9949"/>
+    </isotope>
+    <isotope N="17" Z="8" name="O17">
+      <atom unit="g/mole" value="16.9991"/>
+    </isotope>
+    <isotope N="18" Z="8" name="O18">
+      <atom unit="g/mole" value="17.9992"/>
+    </isotope>
+    <element name="O">
+      <fraction n="0.99757" ref="O16"/>
+      <fraction n="0.00038" ref="O17"/>
+      <fraction n="0.00205" ref="O18"/>
+    </element>
+    <material name="G4_WATER" state="solid">
+      <T unit="K" value="293.15"/>
+      <MEE unit="eV" value="78"/>
+      <D unit="g/cm3" value="1"/>
+      <fraction n="0.111898477841067" ref="H"/>
+      <fraction n="0.888101522158933" ref="O"/>
+    </material>
+    <isotope N="36" Z="18" name="Ar36">
+      <atom unit="g/mole" value="35.9675"/>
+    </isotope>
+    <isotope N="38" Z="18" name="Ar38">
+      <atom unit="g/mole" value="37.9627"/>
+    </isotope>
+    <isotope N="40" Z="18" name="Ar40">
+      <atom unit="g/mole" value="39.9624"/>
+    </isotope>
+    <element name="Ar">
+      <fraction n="0.003365" ref="Ar36"/>
+      <fraction n="0.000632" ref="Ar38"/>
+      <fraction n="0.996003" ref="Ar40"/>
+    </element>
+    <material name="ArgonLiquid" state="liquid">
+      <T unit="K" value="87"/>
+      <P unit="pascal" value="100000"/>
+      <MEE unit="eV" value="188"/>
+      <D unit="g/cm3" value="1.3954"/>
+      <fraction n="1" ref="Ar"/>
+    </material>
+    <isotope N="74" Z="32" name="Germanium74">
+      <atom unit="g/mole" value="73.9212"/>
+    </isotope>
+    <isotope N="76" Z="32" name="Germanium76">
+      <atom unit="g/mole" value="75.9214"/>
+    </isotope>
+    <element name="Germanium">
+      <fraction n="0.117" ref="Germanium74"/>
+      <fraction n="0.883" ref="Germanium76"/>
+    </element>
+    <material name="GermaniumEnriched" state="solid">
+      <T unit="K" value="293.15"/>
+      <MEE unit="eV" value="350"/>
+      <D unit="g/cm3" value="5.323"/>
+      <fraction n="1" ref="Germanium"/>
+    </material>
+    <material name="G4_Galactic" state="gas">
+      <T unit="K" value="2.73"/>
+      <P unit="pascal" value="3e-18"/>
+      <MEE unit="eV" value="21.8"/>
+      <D unit="g/cm3" value="1e-25"/>
+      <fraction n="1" ref="H"/>
+    </material>
+  </materials>
+
+  <solids>
+    <box lunit="mm" name="outSteel" x="15" y="4000" z="4000"/>
+    <box lunit="mm" name="hShield" x="3000" y="4000" z="4000"/>
+    <box lunit="mm" name="geTar" x="10" y="4000" z="4000"/>
+    <box lunit="mm" name="sol_World" x="100000" y="100000" z="36000"/>
+  </solids>
+
+  <structure>
+    <volume name="log_Steel">
+      <materialref ref="StainlessSteel"/>
+      <solidref ref="outSteel"/>
+    </volume>
+    <volume name="log_h2o">
+      <materialref ref="G4_WATER"/>
+      <solidref ref="hShield"/>
+    </volume>
+    <volume name="log_Ar1">
+      <materialref ref="ArgonLiquid"/>
+      <solidref ref="hShield"/>
+    </volume>
+    <volume name="log_Ge">
+      <materialref ref="GermaniumEnriched"/>
+      <solidref ref="geTar"/>
+    </volume>
+    <volume name="log_World">
+      <materialref ref="G4_Galactic"/>
+      <solidref ref="sol_World"/>
+      <physvol name="phySteel1">
+        <volumeref ref="log_Steel"/>
+        <position name="phySteel1_pos" unit="mm" x="7.5" y="0" z="0"/>
+      </physvol>
+      <physvol copynumber="1" name="phySteel2">
+        <volumeref ref="log_Steel"/>
+        <position name="phySteel2_pos" unit="mm" x="3022.5" y="0" z="0"/>
+      </physvol>
+      <physvol name="phyh2o">
+        <volumeref ref="log_h2o"/>
+        <position name="phyh2o_pos" unit="mm" x="1515" y="0" z="0"/>
+      </physvol>
+      <physvol name="phyAr1">
+        <volumeref ref="log_Ar1"/>
+        <position name="phyAr1_pos" unit="mm" x="4530" y="0" z="0"/>
+      </physvol>
+      <physvol name="phyGe">
+        <volumeref ref="log_Ge"/>
+        <position name="phyGe_pos" unit="mm" x="6035" y="0" z="0"/>
+      </physvol>
+    </volume>
+  </structure>
+
+  <setup name="Default" version="1.0">
+    <world ref="log_World"/>
+  </setup>
+
+</gdml>

@@ -172,8 +172,12 @@ public:
 
   //variables to write to output files
   int         PID;
-  int         primaryPID;//Track info only: the PID of the original nucleus in this decay chain. Is 0 for a primary nucleus
-  int parentnucleusPID;//Step info only: the PID of the nucleus this particle originated from. Is 0 if the particle didn't originate from a nucleus. Is persistent across multiple secondaries. e.g. if a nucleus creates a positron which creates two photons, the positron and the photons will all have the same parentnucleusPID
+  int         primaryPID;
+//Track info only: the PID of the nucleus before the current one in this decay chain. Is 0 for a primary nucleus
+
+  int parentnucleusPID;
+//Step info only: the PID of the nucleus this particle originated from. Is 0 if the particle didn't originate from a nucleus. Is persistent across multiple secondaries. e.g. if a nucleus creates a positron which creates two photons, the positron and the photons will all have the same parentnucleusPID
+
   int         ParentTrackID;
   double      energy;
   double      kineticenergy;
@@ -298,8 +302,9 @@ void IO::Open(char* inputseed)
   nuclearTree->Branch("tracknumber",&tracknumber,"tracknumber/I");
   nuclearTree->Branch("randomseed",&randomseed,"randomseed/I");
   nuclearTree->Branch("primaryPID",&primaryPID,"primaryPID/I");
-  //nuclearTree->Branch("creatorprocess",&creatorprocess);
+  nuclearTree->Branch("creatorprocess",&creatorprocess);
   nuclearTree->Branch("startenergy",&startenergy,"startenergy/D");
+  nuclearTree->Branch("time",&time,"time/D");
   G4cout << "Output files opened." << G4endl;
 
 }
@@ -348,7 +353,7 @@ void IO::Write(G4Track *track, int isadetector, int isentry)
   steplength = track->GetStep()->GetStepLength()/CLHEP::mm;
   tracknumber = track->GetTrackID();
   isentryevent = isentry;
-  if(PID!=2112) //~muons have no creator process and cause a seg fault
+  if(PID!=13) //muons have no creator process and cause a seg fault
     creatorprocess = track->GetCreatorProcess()->GetProcessName();
   else
     creatorprocess = "None";
@@ -414,7 +419,8 @@ void IO::WriteNuclear(G4Track *track)
     primaryPID = 0;
 
   PID = track->GetDefinition()->GetPDGEncoding();  
-  //creatorprocess = track->GetCreatorProcess()->GetProcessName();  
+  creatorprocess = track->GetCreatorProcess()->GetProcessName();  
+  //Why did I remove this?
   material = track->GetLogicalVolumeAtVertex()->GetMaterial()->GetName();
   x = track->GetPosition().x();
   y = track->GetPosition().y();
@@ -424,6 +430,8 @@ void IO::WriteNuclear(G4Track *track)
   muonpy = G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetPy()/CLHEP::keV;
   muonpz = G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetPz()/CLHEP::keV;
   startenergy = track->GetKineticEnergy();
+  time = track->GetGlobalTime()/CLHEP::ns;
+
 
   nuclearTree->Fill();
 }
@@ -493,16 +501,17 @@ public:
   void UserTrackingAction();
   void PreUserTrackingAction(const G4Track* aTrack)
   {
-        if(aTrack->GetDefinition()->GetPDGEncoding()>10000000)
-      {//Particle is a nucleus, its secondaries should be tagged
+    if(aTrack->GetDefinition()->GetPDGEncoding()>10000000&&aTrack->GetDefinition()->GetPDGEncoding()!=1000080160&&aTrack->GetDefinition()->GetPDGEncoding()!=1000140280)
+      {//Particle is a nucleus, its secondaries should be tagged (certain nuclei excluded)
 
 	//if(aTrack->GetUserInformation())
-	//{	 
+	//{//The track can only have userinformation if it's originally descended from another nucleus	 
 	//  G4cout <<"Daughter nuclei found!"<< G4endl;
 	//  T01TrackInformation* orinfo = (T01TrackInformation*)(aTrack->GetUserInformation());
 	//  G4cout << orinfo->GetOriginalParticle()->GetPDGEncoding() << G4endl << G4endl;
 	//  G4cout << aTrack->GetDefinition()->GetPDGEncoding() << G4endl;
 	//  }
+
 	G4Track* theTrack = (G4Track*)aTrack;
 	fio->WriteNuclear(theTrack);//Done BEFORE TrackInformation is assigned	
 	T01TrackInformation* anInfo = new T01TrackInformation(aTrack);//When declaring from a TRACK, original particle information is overwritten
@@ -525,7 +534,7 @@ public:
 		for(size_t i=0;i<nSeco;i++)
 		  { 
 		    T01TrackInformation* infoNew = new T01TrackInformation(info);
-
+		    //When declaring from an INFO, original particle information is kept
 		    (*secondaries)[i]->SetUserInformation(infoNew);
 		  }
 	      }
@@ -555,16 +564,16 @@ public:
   //Member functions
   //void EndOfEventAction(const G4Event*)
   //{
-  //  G4cout <<"WRINKLY BEANS 9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"<<G4endl <<G4endl << G4endl << G4endl;
+
   //}
 };
        
 
 //void EventAction::UserEventAction(const G4Event *event)
 //{
-//  G4cout << "Wrinkly toes 9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999" << G4endl << G4endl << G4endl;
+
 //}
-//maybe changing event number should go here? May be extraneous
+//maybe changing event number should go here?
 
 //////////////////////////////////////////////////
 
@@ -590,10 +599,10 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   
   int PID =step->GetTrack()->GetDefinition()->GetPDGEncoding(); 
   G4String material;
-  if(PID!=13)
+  if(step->GetPreStepPoint()->GetMaterial())
     material = step->GetPreStepPoint()->GetMaterial()->GetName();  
   else
-    material = "Butts";
+    material = "Rock";
 //cuts go here
   currentsteps++;
 
@@ -606,13 +615,6 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
       const G4String fillgasname = "phy_FillGas"; //LAr surrounding detector
       const G4String liquidargon = "phy_liquidArgon";
       
-      //if(material!="G4_AIR"&&material!="Rock")
-      //{
-	  //T01TrackInformation* info = (T01TrackInformation*)(step->GetTrack()->GetUserInformation());
-	  //if(info)
-	    //G4cout << material << G4endl << PID << G4endl << info->GetOriginalParticle()->GetPDGEncoding() << G4endl << G4endl;
-	    //}//Material
-
       if(material=="GermaniumEnriched")//~strstr(whatgeometry.c_str(),detectornames.c_str())) //if pre step point originates in a detector
 	{
 	  fio->Write(step->GetTrack(), 1, 0); //non-entry event
@@ -680,7 +682,7 @@ int main(int argc,char** argv)
   //Comment out when not actively building geometries
   //G4VPhysicalVolume* W = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking()->GetWorldVolume();
   //G4GDMLParser parser;
-  //parser.Write("geom/Suspicious2018.gdml", W, false);
+  //parser.Write("geom/NewGeometry.gdml", W, false);
 
 #ifdef G4VIS_USE
   // Initialize visualization

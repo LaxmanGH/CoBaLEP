@@ -1,0 +1,2323 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://service-spi.web.cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd">
+
+  <define/>
+
+  <materials>
+    <isotope N="28" Z="14" name="Si28">
+      <atom unit="g/mole" value="27.9769"/>
+    </isotope>
+    <isotope N="29" Z="14" name="Si29">
+      <atom unit="g/mole" value="28.9765"/>
+    </isotope>
+    <isotope N="30" Z="14" name="Si30">
+      <atom unit="g/mole" value="29.9738"/>
+    </isotope>
+    <element name="Si">
+      <fraction n="0.922296077703922" ref="Si28"/>
+      <fraction n="0.0468319531680468" ref="Si29"/>
+      <fraction n="0.0308719691280309" ref="Si30"/>
+    </element>
+    <isotope N="16" Z="8" name="O16">
+      <atom unit="g/mole" value="15.9949"/>
+    </isotope>
+    <isotope N="17" Z="8" name="O17">
+      <atom unit="g/mole" value="16.9991"/>
+    </isotope>
+    <isotope N="18" Z="8" name="O18">
+      <atom unit="g/mole" value="17.9992"/>
+    </isotope>
+    <element name="O">
+      <fraction n="0.99757" ref="O16"/>
+      <fraction n="0.00038" ref="O17"/>
+      <fraction n="0.00205" ref="O18"/>
+    </element>
+    <material name="Rock" state="solid">
+      <T unit="K" value="293.15"/>
+      <MEE unit="eV" value="115.963033056526"/>
+      <D unit="g/cm3" value="2.86"/>
+      <fraction n="0.333333333333333" ref="Si"/>
+      <fraction n="0.666666666666667" ref="O"/>
+    </material>
+    <isotope N="12" Z="6" name="C12">
+      <atom unit="g/mole" value="12"/>
+    </isotope>
+    <isotope N="13" Z="6" name="C13">
+      <atom unit="g/mole" value="13.0034"/>
+    </isotope>
+    <element name="C">
+      <fraction n="0.9893" ref="C12"/>
+      <fraction n="0.0107" ref="C13"/>
+    </element>
+    <isotope N="1" Z="1" name="H1">
+      <atom unit="g/mole" value="1.00782503081372"/>
+    </isotope>
+    <isotope N="2" Z="1" name="H2">
+      <atom unit="g/mole" value="2.01410199966617"/>
+    </isotope>
+    <element name="H">
+      <fraction n="0.999885" ref="H1"/>
+      <fraction n="0.000115" ref="H2"/>
+    </element>
+    <material name="Polyethylene" state="solid">
+      <T unit="K" value="293.15"/>
+      <MEE unit="eV" value="25.6472720933133"/>
+      <D unit="g/cm3" value="0.92"/>
+      <fraction n="0.333333333333333" ref="C"/>
+      <fraction n="0.666666666666667" ref="H"/>
+    </material>
+    <isotope N="152" Z="64" name="Gd152">
+      <atom unit="g/mole" value="151.92"/>
+    </isotope>
+    <isotope N="154" Z="64" name="Gd154">
+      <atom unit="g/mole" value="153.921"/>
+    </isotope>
+    <isotope N="155" Z="64" name="Gd155">
+      <atom unit="g/mole" value="154.923"/>
+    </isotope>
+    <isotope N="156" Z="64" name="Gd156">
+      <atom unit="g/mole" value="155.922"/>
+    </isotope>
+    <isotope N="157" Z="64" name="Gd157">
+      <atom unit="g/mole" value="156.924"/>
+    </isotope>
+    <isotope N="158" Z="64" name="Gd158">
+      <atom unit="g/mole" value="157.924"/>
+    </isotope>
+    <isotope N="160" Z="64" name="Gd160">
+      <atom unit="g/mole" value="159.927"/>
+    </isotope>
+    <element name="Gd">
+      <fraction n="0.002" ref="Gd152"/>
+      <fraction n="0.0218" ref="Gd154"/>
+      <fraction n="0.148" ref="Gd155"/>
+      <fraction n="0.2047" ref="Gd156"/>
+      <fraction n="0.1565" ref="Gd157"/>
+      <fraction n="0.2484" ref="Gd158"/>
+      <fraction n="0.2186" ref="Gd160"/>
+    </element>
+    <material name="GadoliniumOxide" state="solid">
+      <T unit="K" value="293.15"/>
+      <MEE unit="eV" value="180.705380581853"/>
+      <D unit="g/cm3" value="7.4"/>
+      <fraction n="0.4" ref="Gd"/>
+      <fraction n="0.6" ref="O"/>
+    </material>
+    <isotope N="74" Z="32" name="Germanium74">
+      <atom unit="g/mole" value="73.9212"/>
+    </isotope>
+    <isotope N="76" Z="32" name="Germanium76">
+      <atom unit="g/mole" value="75.9214"/>
+    </isotope>
+    <element name="Germanium">
+      <fraction n="0.12" ref="Germanium74"/>
+      <fraction n="0.88" ref="Germanium76"/>
+    </element>
+    <material name="GermaniumEnriched" state="solid">
+      <T unit="K" value="293.15"/>
+      <MEE unit="eV" value="350"/>
+      <D unit="g/cm3" value="5.323"/>
+      <fraction n="1" ref="Germanium"/>
+    </material>
+    <isotope N="36" Z="18" name="Ar36">
+      <atom unit="g/mole" value="35.9675"/>
+    </isotope>
+    <isotope N="38" Z="18" name="Ar38">
+      <atom unit="g/mole" value="37.9627"/>
+    </isotope>
+    <isotope N="40" Z="18" name="Ar40">
+      <atom unit="g/mole" value="39.9624"/>
+    </isotope>
+    <element name="Ar">
+      <fraction n="0.003365" ref="Ar36"/>
+      <fraction n="0.000632" ref="Ar38"/>
+      <fraction n="0.996003" ref="Ar40"/>
+    </element>
+    <material name="ArgonLiquid" state="liquid">
+      <T unit="K" value="87"/>
+      <P unit="pascal" value="100000"/>
+      <MEE unit="eV" value="188"/>
+      <D unit="g/cm3" value="1.3954"/>
+      <fraction n="1" ref="Ar"/>
+    </material>
+    <isotope N="63" Z="29" name="Cu63">
+      <atom unit="g/mole" value="62.9296"/>
+    </isotope>
+    <isotope N="65" Z="29" name="Cu65">
+      <atom unit="g/mole" value="64.9278"/>
+    </isotope>
+    <element name="Cu">
+      <fraction n="0.6917" ref="Cu63"/>
+      <fraction n="0.3083" ref="Cu65"/>
+    </element>
+    <material name="G4_Cu" state="solid">
+      <T unit="K" value="293.15"/>
+      <MEE unit="eV" value="322"/>
+      <D unit="g/cm3" value="8.96"/>
+      <fraction n="1" ref="Cu"/>
+    </material>
+    <isotope N="55" Z="25" name="Mn55">
+      <atom unit="g/mole" value="54.938"/>
+    </isotope>
+    <element name="Mn">
+      <fraction n="1" ref="Mn55"/>
+    </element>
+    <isotope N="50" Z="24" name="Cr50">
+      <atom unit="g/mole" value="49.946"/>
+    </isotope>
+    <isotope N="52" Z="24" name="Cr52">
+      <atom unit="g/mole" value="51.9405"/>
+    </isotope>
+    <isotope N="53" Z="24" name="Cr53">
+      <atom unit="g/mole" value="52.9407"/>
+    </isotope>
+    <isotope N="54" Z="24" name="Cr54">
+      <atom unit="g/mole" value="53.9389"/>
+    </isotope>
+    <element name="Cr">
+      <fraction n="0.04345" ref="Cr50"/>
+      <fraction n="0.83789" ref="Cr52"/>
+      <fraction n="0.09501" ref="Cr53"/>
+      <fraction n="0.02365" ref="Cr54"/>
+    </element>
+    <isotope N="58" Z="28" name="Ni58">
+      <atom unit="g/mole" value="57.9353"/>
+    </isotope>
+    <isotope N="60" Z="28" name="Ni60">
+      <atom unit="g/mole" value="59.9308"/>
+    </isotope>
+    <isotope N="61" Z="28" name="Ni61">
+      <atom unit="g/mole" value="60.9311"/>
+    </isotope>
+    <isotope N="62" Z="28" name="Ni62">
+      <atom unit="g/mole" value="61.9283"/>
+    </isotope>
+    <isotope N="64" Z="28" name="Ni64">
+      <atom unit="g/mole" value="63.928"/>
+    </isotope>
+    <element name="Ni">
+      <fraction n="0.680769" ref="Ni58"/>
+      <fraction n="0.262231" ref="Ni60"/>
+      <fraction n="0.011399" ref="Ni61"/>
+      <fraction n="0.036345" ref="Ni62"/>
+      <fraction n="0.009256" ref="Ni64"/>
+    </element>
+    <isotope N="92" Z="42" name="Mo92">
+      <atom unit="g/mole" value="91.9068"/>
+    </isotope>
+    <isotope N="94" Z="42" name="Mo94">
+      <atom unit="g/mole" value="93.9051"/>
+    </isotope>
+    <isotope N="95" Z="42" name="Mo95">
+      <atom unit="g/mole" value="94.9058"/>
+    </isotope>
+    <isotope N="96" Z="42" name="Mo96">
+      <atom unit="g/mole" value="95.9047"/>
+    </isotope>
+    <isotope N="97" Z="42" name="Mo97">
+      <atom unit="g/mole" value="96.906"/>
+    </isotope>
+    <isotope N="98" Z="42" name="Mo98">
+      <atom unit="g/mole" value="97.9054"/>
+    </isotope>
+    <isotope N="100" Z="42" name="Mo100">
+      <atom unit="g/mole" value="99.9075"/>
+    </isotope>
+    <element name="Mo">
+      <fraction n="0.1484" ref="Mo92"/>
+      <fraction n="0.0925" ref="Mo94"/>
+      <fraction n="0.1592" ref="Mo95"/>
+      <fraction n="0.1668" ref="Mo96"/>
+      <fraction n="0.0955" ref="Mo97"/>
+      <fraction n="0.2413" ref="Mo98"/>
+      <fraction n="0.0963" ref="Mo100"/>
+    </element>
+    <isotope N="46" Z="22" name="Ti46">
+      <atom unit="g/mole" value="45.9526"/>
+    </isotope>
+    <isotope N="47" Z="22" name="Ti47">
+      <atom unit="g/mole" value="46.9518"/>
+    </isotope>
+    <isotope N="48" Z="22" name="Ti48">
+      <atom unit="g/mole" value="47.9479"/>
+    </isotope>
+    <isotope N="49" Z="22" name="Ti49">
+      <atom unit="g/mole" value="48.9479"/>
+    </isotope>
+    <isotope N="50" Z="22" name="Ti50">
+      <atom unit="g/mole" value="49.9448"/>
+    </isotope>
+    <element name="Ti">
+      <fraction n="0.0825" ref="Ti46"/>
+      <fraction n="0.0744" ref="Ti47"/>
+      <fraction n="0.7372" ref="Ti48"/>
+      <fraction n="0.0541" ref="Ti49"/>
+      <fraction n="0.0518" ref="Ti50"/>
+    </element>
+    <isotope N="31" Z="15" name="P31">
+      <atom unit="g/mole" value="30.9738"/>
+    </isotope>
+    <element name="P">
+      <fraction n="1" ref="P31"/>
+    </element>
+    <isotope N="32" Z="16" name="S32">
+      <atom unit="g/mole" value="31.9721"/>
+    </isotope>
+    <isotope N="33" Z="16" name="S33">
+      <atom unit="g/mole" value="32.9715"/>
+    </isotope>
+    <isotope N="34" Z="16" name="S34">
+      <atom unit="g/mole" value="33.9679"/>
+    </isotope>
+    <isotope N="36" Z="16" name="S36">
+      <atom unit="g/mole" value="35.9671"/>
+    </isotope>
+    <element name="S">
+      <fraction n="0.9493" ref="S32"/>
+      <fraction n="0.0076" ref="S33"/>
+      <fraction n="0.0429" ref="S34"/>
+      <fraction n="0.0002" ref="S36"/>
+    </element>
+    <isotope N="54" Z="26" name="Fe54">
+      <atom unit="g/mole" value="53.9396"/>
+    </isotope>
+    <isotope N="56" Z="26" name="Fe56">
+      <atom unit="g/mole" value="55.9349"/>
+    </isotope>
+    <isotope N="57" Z="26" name="Fe57">
+      <atom unit="g/mole" value="56.9354"/>
+    </isotope>
+    <isotope N="58" Z="26" name="Fe58">
+      <atom unit="g/mole" value="57.9333"/>
+    </isotope>
+    <element name="Fe">
+      <fraction n="0.05845" ref="Fe54"/>
+      <fraction n="0.91754" ref="Fe56"/>
+      <fraction n="0.02119" ref="Fe57"/>
+      <fraction n="0.00282" ref="Fe58"/>
+    </element>
+    <material name="StainlessSteel" state="solid">
+      <T unit="K" value="293.15"/>
+      <MEE unit="eV" value="285.263086928398"/>
+      <D unit="g/cm3" value="7.99"/>
+      <fraction n="0.0004" ref="C"/>
+      <fraction n="0.01" ref="Mn"/>
+      <fraction n="0.005" ref="Si"/>
+      <fraction n="0.17" ref="Cr"/>
+      <fraction n="0.12" ref="Ni"/>
+      <fraction n="0.025" ref="Mo"/>
+      <fraction n="0.0013" ref="Ti"/>
+      <fraction n="0.0002" ref="P"/>
+      <fraction n="0.00015" ref="S"/>
+      <fraction n="0.000375" ref="Cu"/>
+      <fraction n="0.667575" ref="Fe"/>
+    </material>
+    <material name="G4_WATER" state="solid">
+      <T unit="K" value="293.15"/>
+      <MEE unit="eV" value="78"/>
+      <D unit="g/cm3" value="1"/>
+      <fraction n="0.111898477841067" ref="H"/>
+      <fraction n="0.888101522158933" ref="O"/>
+    </material>
+    <material name="G4_Galactic" state="gas">
+      <T unit="K" value="2.73"/>
+      <P unit="pascal" value="3e-18"/>
+      <MEE unit="eV" value="21.8"/>
+      <D unit="g/cm3" value="1e-25"/>
+      <fraction n="1" ref="H"/>
+    </material>
+  </materials>
+
+  <solids>
+    <box lunit="mm" name="sol_Rock" x="22000" y="22000" z="26000"/>
+    <box lunit="mm" name="sol_Lab" x="12000" y="12000" z="16000"/>
+    <subtraction name="out_Rock">
+      <first ref="sol_Rock"/>
+      <second ref="sol_Lab"/>
+    </subtraction>
+    <tube aunit="deg" deltaphi="360" lunit="mm" name="sol_polysolid" rmax="2000" rmin="0" startphi="0" z="4000"/>
+    <tube aunit="deg" deltaphi="360" lunit="mm" name="sol_Gd2O3solid" rmax="1900" rmin="0" startphi="0" z="3800"/>
+    <subtraction name="out_polyshield">
+      <first ref="sol_polysolid"/>
+      <second ref="sol_Gd2O3solid"/>
+    </subtraction>
+    <tube aunit="deg" deltaphi="360" lunit="mm" name="sub_Gd2O3" rmax="1895" rmin="0" startphi="0" z="3790"/>
+    <subtraction name="out_Gd2O3shield">
+      <first ref="sol_Gd2O3solid"/>
+      <second ref="sub_Gd2O3"/>
+    </subtraction>
+    <tube aunit="deg" deltaphi="360" lunit="mm" name="sol_ICPCshell" rmax="45" rmin="0" startphi="0" z="75"/>
+    <tube aunit="deg" deltaphi="360" lunit="mm" name="sol_borehole" rmax="5" rmin="0" startphi="0" z="50"/>
+    <subtraction name="sol_ICPC">
+      <first ref="sol_ICPCshell"/>
+      <second ref="sol_borehole"/>
+      <position name="sol_ICPC_pos" unit="mm" x="0" y="0" z="12.5"/>
+    </subtraction>
+    <tube aunit="deg" deltaphi="360" lunit="mm" name="sol_innerLarShield" rmax="490" rmin="0" startphi="0" z="1980"/>
+    <tube aunit="deg" deltaphi="360" lunit="mm" name="sol_innerCu" rmax="500" rmin="0" startphi="0" z="2000"/>
+    <tube aunit="deg" deltaphi="360" lunit="mm" name="sol_outerLarShield" rmax="3588" rmin="0" startphi="0" z="7176"/>
+    <tube aunit="deg" deltaphi="360" lunit="mm" name="sol_outerSS" rmax="3600" rmin="0" startphi="0" z="7200"/>
+    <tube aunit="deg" deltaphi="360" lunit="mm" name="sol_upperLarShield" rmax="988" rmin="0" startphi="0" z="2976"/>
+    <tube aunit="deg" deltaphi="360" lunit="mm" name="sol_upperSS" rmax="1000" rmin="0" startphi="0" z="3000"/>
+    <box lunit="mm" name="sol_Water" x="12000" y="12000" z="12000"/>
+    <box lunit="mm" name="sol_World" x="100000" y="100000" z="36000"/>
+  </solids>
+
+  <structure>
+    <volume name="log_outRock">
+      <materialref ref="Rock"/>
+      <solidref ref="out_Rock"/>
+    </volume>
+    <volume name="log_polyshield">
+      <materialref ref="Polyethylene"/>
+      <solidref ref="out_polyshield"/>
+    </volume>
+    <volume name="log_Gd2O3shield">
+      <materialref ref="GadoliniumOxide"/>
+      <solidref ref="out_Gd2O3shield"/>
+    </volume>
+    <volume name="log_ICPC">
+      <materialref ref="GermaniumEnriched"/>
+      <solidref ref="sol_ICPC"/>
+    </volume>
+    <volume name="log_innerLarShield1">
+      <materialref ref="ArgonLiquid"/>
+      <solidref ref="sol_innerLarShield"/>
+      <physvol name="phy_DetGeCrystal_0">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_0_pos" unit="mm" x="400" y="0" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_4">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_4_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_8">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_8_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_12">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_12_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_16">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_16_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_20">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_20_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_24">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_24_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_28">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_28_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_32">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_32_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_36">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_36_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_40">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_40_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_44">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_44_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_48">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_48_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_52">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_52_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_56">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_56_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_60">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_60_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_64">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_64_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_68">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_68_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_72">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_72_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_76">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_76_pos" unit="mm" x="400" y="0" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_80">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_80_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_84">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_84_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_88">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_88_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_92">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_92_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_96">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_96_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_100">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_100_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_104">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_104_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_108">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_108_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_112">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_112_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_116">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_116_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_120">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_120_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_124">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_124_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_128">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_128_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_132">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_132_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_136">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_136_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_140">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_140_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_144">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_144_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_148">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_148_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_152">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_152_pos" unit="mm" x="400" y="0" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_156">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_156_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_160">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_160_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_164">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_164_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_168">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_168_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_172">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_172_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_176">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_176_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_180">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_180_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_184">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_184_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_188">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_188_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_192">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_192_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_196">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_196_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_200">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_200_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_204">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_204_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_208">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_208_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_212">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_212_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_216">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_216_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_220">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_220_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_224">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_224_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_228">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_228_pos" unit="mm" x="400" y="0" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_232">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_232_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_236">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_236_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_240">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_240_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_244">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_244_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_248">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_248_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_252">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_252_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_256">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_256_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_260">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_260_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_264">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_264_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_268">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_268_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_272">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_272_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_276">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_276_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_280">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_280_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_284">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_284_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_288">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_288_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_292">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_292_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_296">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_296_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_300">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_300_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_304">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_304_pos" unit="mm" x="400" y="0" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_308">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_308_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_312">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_312_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_316">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_316_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_320">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_320_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_324">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_324_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_328">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_328_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_332">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_332_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_336">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_336_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_340">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_340_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_344">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_344_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_348">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_348_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_352">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_352_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_356">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_356_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_360">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_360_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_364">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_364_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_368">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_368_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_372">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_372_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_376">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_376_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_380">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_380_pos" unit="mm" x="400" y="0" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_384">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_384_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_388">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_388_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_392">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_392_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_396">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_396_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_400">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_400_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_404">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_404_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_408">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_408_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_412">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_412_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_416">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_416_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_420">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_420_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_424">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_424_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_428">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_428_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_432">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_432_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_436">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_436_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_440">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_440_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_444">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_444_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_448">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_448_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_452">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_452_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="-625"/>
+      </physvol>
+    </volume>
+    <volume name="log_innerCopperCryostat1">
+      <materialref ref="G4_Cu"/>
+      <solidref ref="sol_innerCu"/>
+      <physvol name="phy_innerLarShield1">
+        <volumeref ref="log_innerLarShield1"/>
+      </physvol>
+    </volume>
+    <volume name="log_innerLarShield2">
+      <materialref ref="ArgonLiquid"/>
+      <solidref ref="sol_innerLarShield"/>
+      <physvol name="phy_DetGeCrystal_1">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_1_pos" unit="mm" x="400" y="0" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_5">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_5_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_9">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_9_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_13">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_13_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_17">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_17_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_21">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_21_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_25">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_25_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_29">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_29_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_33">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_33_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_37">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_37_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_41">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_41_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_45">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_45_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_49">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_49_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_53">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_53_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_57">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_57_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_61">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_61_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_65">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_65_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_69">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_69_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_73">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_73_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_77">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_77_pos" unit="mm" x="400" y="0" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_81">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_81_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_85">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_85_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_89">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_89_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_93">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_93_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_97">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_97_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_101">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_101_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_105">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_105_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_109">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_109_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_113">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_113_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_117">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_117_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_121">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_121_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_125">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_125_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_129">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_129_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_133">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_133_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_137">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_137_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_141">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_141_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_145">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_145_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_149">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_149_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_153">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_153_pos" unit="mm" x="400" y="0" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_157">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_157_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_161">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_161_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_165">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_165_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_169">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_169_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_173">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_173_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_177">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_177_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_181">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_181_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_185">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_185_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_189">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_189_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_193">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_193_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_197">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_197_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_201">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_201_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_205">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_205_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_209">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_209_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_213">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_213_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_217">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_217_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_221">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_221_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_225">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_225_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_229">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_229_pos" unit="mm" x="400" y="0" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_233">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_233_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_237">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_237_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_241">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_241_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_245">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_245_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_249">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_249_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_253">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_253_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_257">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_257_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_261">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_261_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_265">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_265_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_269">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_269_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_273">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_273_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_277">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_277_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_281">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_281_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_285">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_285_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_289">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_289_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_293">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_293_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_297">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_297_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_301">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_301_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_305">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_305_pos" unit="mm" x="400" y="0" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_309">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_309_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_313">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_313_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_317">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_317_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_321">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_321_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_325">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_325_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_329">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_329_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_333">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_333_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_337">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_337_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_341">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_341_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_345">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_345_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_349">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_349_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_353">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_353_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_357">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_357_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_361">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_361_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_365">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_365_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_369">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_369_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_373">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_373_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_377">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_377_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_381">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_381_pos" unit="mm" x="400" y="0" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_385">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_385_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_389">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_389_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_393">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_393_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_397">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_397_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_401">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_401_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_405">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_405_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_409">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_409_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_413">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_413_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_417">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_417_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_421">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_421_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_425">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_425_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_429">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_429_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_433">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_433_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_437">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_437_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_441">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_441_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_445">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_445_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_449">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_449_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_453">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_453_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="-625"/>
+      </physvol>
+    </volume>
+    <volume name="log_innerCopperCryostat2">
+      <materialref ref="G4_Cu"/>
+      <solidref ref="sol_innerCu"/>
+      <physvol name="phy_innerLarShield2">
+        <volumeref ref="log_innerLarShield2"/>
+      </physvol>
+    </volume>
+    <volume name="log_innerLarShield3">
+      <materialref ref="ArgonLiquid"/>
+      <solidref ref="sol_innerLarShield"/>
+      <physvol name="phy_DetGeCrystal_2">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_2_pos" unit="mm" x="400" y="0" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_6">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_6_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_10">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_10_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_14">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_14_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_18">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_18_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_22">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_22_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_26">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_26_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_30">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_30_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_34">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_34_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_38">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_38_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_42">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_42_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_46">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_46_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_50">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_50_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_54">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_54_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_58">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_58_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_62">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_62_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_66">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_66_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_70">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_70_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_74">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_74_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_78">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_78_pos" unit="mm" x="400" y="0" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_82">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_82_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_86">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_86_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_90">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_90_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_94">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_94_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_98">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_98_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_102">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_102_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_106">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_106_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_110">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_110_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_114">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_114_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_118">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_118_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_122">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_122_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_126">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_126_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_130">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_130_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_134">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_134_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_138">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_138_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_142">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_142_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_146">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_146_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_150">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_150_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_154">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_154_pos" unit="mm" x="400" y="0" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_158">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_158_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_162">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_162_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_166">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_166_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_170">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_170_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_174">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_174_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_178">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_178_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_182">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_182_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_186">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_186_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_190">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_190_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_194">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_194_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_198">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_198_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_202">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_202_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_206">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_206_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_210">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_210_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_214">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_214_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_218">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_218_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_222">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_222_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_226">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_226_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_230">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_230_pos" unit="mm" x="400" y="0" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_234">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_234_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_238">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_238_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_242">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_242_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_246">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_246_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_250">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_250_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_254">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_254_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_258">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_258_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_262">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_262_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_266">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_266_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_270">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_270_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_274">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_274_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_278">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_278_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_282">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_282_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_286">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_286_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_290">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_290_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_294">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_294_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_298">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_298_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_302">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_302_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_306">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_306_pos" unit="mm" x="400" y="0" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_310">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_310_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_314">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_314_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_318">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_318_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_322">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_322_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_326">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_326_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_330">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_330_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_334">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_334_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_338">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_338_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_342">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_342_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_346">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_346_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_350">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_350_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_354">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_354_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_358">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_358_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_362">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_362_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_366">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_366_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_370">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_370_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_374">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_374_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_378">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_378_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_382">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_382_pos" unit="mm" x="400" y="0" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_386">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_386_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_390">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_390_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_394">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_394_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_398">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_398_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_402">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_402_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_406">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_406_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_410">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_410_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_414">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_414_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_418">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_418_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_422">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_422_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_426">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_426_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_430">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_430_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_434">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_434_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_438">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_438_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_442">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_442_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_446">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_446_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_450">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_450_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_454">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_454_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="-625"/>
+      </physvol>
+    </volume>
+    <volume name="log_innerCopperCryostat3">
+      <materialref ref="G4_Cu"/>
+      <solidref ref="sol_innerCu"/>
+      <physvol name="phy_innerLarShield3">
+        <volumeref ref="log_innerLarShield3"/>
+      </physvol>
+    </volume>
+    <volume name="log_innerLarShield4">
+      <materialref ref="ArgonLiquid"/>
+      <solidref ref="sol_innerLarShield"/>
+      <physvol name="phy_DetGeCrystal_3">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_3_pos" unit="mm" x="400" y="0" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_7">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_7_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_11">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_11_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_15">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_15_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_19">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_19_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_23">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_23_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_27">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_27_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_31">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_31_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_35">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_35_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_39">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_39_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_43">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_43_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_47">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_47_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_51">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_51_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_55">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_55_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_59">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_59_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_63">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_63_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_67">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_67_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_71">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_71_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_75">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_75_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_79">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_79_pos" unit="mm" x="400" y="0" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_83">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_83_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_87">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_87_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_91">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_91_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_95">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_95_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_99">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_99_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_103">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_103_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_107">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_107_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_111">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_111_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_115">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_115_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_119">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_119_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_123">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_123_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_127">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_127_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_131">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_131_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_135">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_135_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_139">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_139_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_143">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_143_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_147">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_147_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_151">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_151_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_155">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_155_pos" unit="mm" x="400" y="0" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_159">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_159_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_163">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_163_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_167">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_167_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_171">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_171_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_175">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_175_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_179">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_179_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_183">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_183_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_187">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_187_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_191">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_191_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_195">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_195_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_199">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_199_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_203">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_203_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_207">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_207_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_211">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_211_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_215">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_215_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_219">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_219_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_223">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_223_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_227">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_227_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_231">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_231_pos" unit="mm" x="400" y="0" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_235">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_235_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_239">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_239_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_243">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_243_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_247">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_247_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_251">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_251_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_255">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_255_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_259">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_259_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_263">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_263_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_267">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_267_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_271">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_271_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_275">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_275_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_279">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_279_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_283">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_283_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_287">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_287_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_291">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_291_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_295">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_295_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_299">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_299_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_303">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_303_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="-125"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_307">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_307_pos" unit="mm" x="400" y="0" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_311">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_311_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_315">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_315_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_319">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_319_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_323">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_323_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_327">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_327_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_331">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_331_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_335">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_335_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_339">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_339_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_343">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_343_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_347">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_347_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_351">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_351_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_355">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_355_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_359">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_359_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_363">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_363_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_367">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_367_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_371">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_371_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_375">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_375_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_379">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_379_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="-375"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_383">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_383_pos" unit="mm" x="400" y="0" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_387">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_387_pos" unit="mm" x="378.326896680254" y="129.879787681873" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_391">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_391_pos" unit="mm" x="315.656203758557" y="245.685085075867" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_395">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_395_pos" unit="mm" x="218.779263248971" y="334.866591305011" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_399">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_399_pos" unit="mm" x="98.1941948563197" y="387.760106375732" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_403">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_403_pos" unit="mm" x="-33.0317381889329" y="398.633797202668" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_407">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_407_pos" unit="mm" x="-160.678169861188" y="366.309330662023" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_411">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_411_pos" unit="mm" x="-270.912628650296" y="294.289564269253" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_415">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_415_pos" unit="mm" x="-351.789500482596" y="190.378957214829" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_419">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_419_pos" unit="mm" x="-394.544521361089" y="65.8378361122936" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_423">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_423_pos" unit="mm" x="-394.544521361089" y="-65.8378361122935" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_427">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_427_pos" unit="mm" x="-351.789500482596" y="-190.378957214829" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_431">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_431_pos" unit="mm" x="-270.912628650296" y="-294.289564269253" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_435">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_435_pos" unit="mm" x="-160.678169861188" y="-366.309330662023" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_439">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_439_pos" unit="mm" x="-33.0317381889331" y="-398.633797202668" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_443">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_443_pos" unit="mm" x="98.1941948563195" y="-387.760106375732" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_447">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_447_pos" unit="mm" x="218.779263248971" y="-334.866591305012" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_451">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_451_pos" unit="mm" x="315.656203758558" y="-245.685085075867" z="-625"/>
+      </physvol>
+      <physvol name="phy_DetGeCrystal_455">
+        <volumeref ref="log_ICPC"/>
+        <position name="phy_DetGeCrystal_455_pos" unit="mm" x="378.326896680254" y="-129.879787681873" z="-625"/>
+      </physvol>
+    </volume>
+    <volume name="log_innerCopperCryostat4">
+      <materialref ref="G4_Cu"/>
+      <solidref ref="sol_innerCu"/>
+      <physvol name="phy_innerLarShield4">
+        <volumeref ref="log_innerLarShield4"/>
+      </physvol>
+    </volume>
+    <volume name="log_outerLarShield">
+      <materialref ref="ArgonLiquid"/>
+      <solidref ref="sol_outerLarShield"/>
+      <physvol name="phy_polyshield">
+        <volumeref ref="log_polyshield"/>
+      </physvol>
+      <physvol name="phy_Gd2O3shield">
+        <volumeref ref="log_Gd2O3shield"/>
+      </physvol>
+      <physvol name="phy_innerCopperCryostat1">
+        <volumeref ref="log_innerCopperCryostat1"/>
+        <position name="phy_innerCopperCryostat1_pos" unit="mm" x="1000" y="0" z="0"/>
+      </physvol>
+      <physvol name="phy_innerCopperCryostat2">
+        <volumeref ref="log_innerCopperCryostat2"/>
+        <position name="phy_innerCopperCryostat2_pos" unit="mm" x="-1000" y="0" z="0"/>
+      </physvol>
+      <physvol name="phy_innerCopperCryostat3">
+        <volumeref ref="log_innerCopperCryostat3"/>
+        <position name="phy_innerCopperCryostat3_pos" unit="mm" x="0" y="1000" z="0"/>
+      </physvol>
+      <physvol name="phy_innerCopperCryostat4">
+        <volumeref ref="log_innerCopperCryostat4"/>
+        <position name="phy_innerCopperCryostat4_pos" unit="mm" x="0" y="-1000" z="0"/>
+      </physvol>
+    </volume>
+    <volume name="log_outerSSCryostat">
+      <materialref ref="StainlessSteel"/>
+      <solidref ref="sol_outerSS"/>
+      <physvol name="phy_outerLarShield">
+        <volumeref ref="log_outerLarShield"/>
+      </physvol>
+    </volume>
+    <volume name="log_upperLarShield">
+      <materialref ref="ArgonLiquid"/>
+      <solidref ref="sol_upperLarShield"/>
+    </volume>
+    <volume name="log_upperSSCryostat">
+      <materialref ref="StainlessSteel"/>
+      <solidref ref="sol_upperSS"/>
+      <physvol name="phy_upperLarShield">
+        <volumeref ref="log_upperLarShield"/>
+      </physvol>
+    </volume>
+    <volume name="log_waterShield">
+      <materialref ref="G4_WATER"/>
+      <solidref ref="sol_Water"/>
+      <physvol name="phy_outerSSCryostat">
+        <volumeref ref="log_outerSSCryostat"/>
+      </physvol>
+      <physvol name="phy_upperSSCryostat">
+        <volumeref ref="log_upperSSCryostat"/>
+        <position name="phy_upperSSCryostat_pos" unit="mm" x="0" y="0" z="5020"/>
+      </physvol>
+    </volume>
+    <volume name="log_World">
+      <materialref ref="G4_Galactic"/>
+      <solidref ref="sol_World"/>
+      <physvol name="phy_outerRock">
+        <volumeref ref="log_outRock"/>
+        <position name="phy_outerRock_pos" unit="mm" x="0" y="0" z="2000"/>
+      </physvol>
+      <physvol name="phy_waterShield">
+        <volumeref ref="log_waterShield"/>
+      </physvol>
+    </volume>
+  </structure>
+
+  <setup name="Default" version="1.0">
+    <world ref="log_World"/>
+  </setup>
+
+</gdml>

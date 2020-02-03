@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://service-spi.web.cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd">
+
+  <define/>
+
+  <materials>
+    <isotope N="74" Z="32" name="Germanium74">
+      <atom unit="g/mole" value="73.9212"/>
+    </isotope>
+    <isotope N="76" Z="32" name="Germanium76">
+      <atom unit="g/mole" value="75.9214"/>
+    </isotope>
+    <element name="Germanium">
+      <fraction n="0.117" ref="Germanium74"/>
+      <fraction n="0.883" ref="Germanium76"/>
+    </element>
+    <material name="GermaniumEnriched" state="solid">
+      <T unit="K" value="293.15"/>
+      <MEE unit="eV" value="350"/>
+      <D unit="g/cm3" value="5.323"/>
+      <fraction n="1" ref="Germanium"/>
+    </material>
+    <isotope N="1" Z="1" name="H1">
+      <atom unit="g/mole" value="1.00782503081372"/>
+    </isotope>
+    <isotope N="2" Z="1" name="H2">
+      <atom unit="g/mole" value="2.01410199966617"/>
+    </isotope>
+    <element name="H">
+      <fraction n="0.999885" ref="H1"/>
+      <fraction n="0.000115" ref="H2"/>
+    </element>
+    <material name="G4_Galactic" state="gas">
+      <T unit="K" value="2.73"/>
+      <P unit="pascal" value="3e-18"/>
+      <MEE unit="eV" value="21.8"/>
+      <D unit="g/cm3" value="1e-25"/>
+      <fraction n="1" ref="H"/>
+    </material>
+  </materials>
+
+  <solids>
+    <tube aunit="deg" deltaphi="360" lunit="mm" name="Ge_column" rmax="10000" rmin="0" startphi="0" z="20000"/>
+    <box lunit="mm" name="sol_World" x="100000" y="100000" z="36000"/>
+  </solids>
+
+  <structure>
+    <volume name="log_Ge">
+      <materialref ref="GermaniumEnriched"/>
+      <solidref ref="Ge_column"/>
+    </volume>
+    <volume name="log_World">
+      <materialref ref="G4_Galactic"/>
+      <solidref ref="sol_World"/>
+      <physvol name="phyGe">
+        <volumeref ref="log_Ge"/>
+      </physvol>
+    </volume>
+  </structure>
+
+  <setup name="Default" version="1.0">
+    <world ref="log_World"/>
+  </setup>
+
+</gdml>

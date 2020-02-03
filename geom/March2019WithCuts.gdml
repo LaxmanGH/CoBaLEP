@@ -32,49 +32,12 @@
       <fraction n="0.00038" ref="O17"/>
       <fraction n="0.00205" ref="O18"/>
     </element>
-    <isotope N="234" Z="92" name="U234">
-      <atom unit="g/mole" value="234.041"/>
-    </isotope>
-    <isotope N="235" Z="92" name="U235">
-      <atom unit="g/mole" value="235.044"/>
-    </isotope>
-    <isotope N="238" Z="92" name="U238">
-      <atom unit="g/mole" value="238.051"/>
-    </isotope>
-    <element name="U">
-      <fraction n="5.5e-05" ref="U234"/>
-      <fraction n="0.0072" ref="U235"/>
-      <fraction n="0.992745" ref="U238"/>
-    </element>
-    <isotope N="232" Z="90" name="Th232">
-      <atom unit="g/mole" value="232.038"/>
-    </isotope>
-    <element name="Th">
-      <fraction n="1" ref="Th232"/>
-    </element>
-    <isotope N="39" Z="19" name="K39">
-      <atom unit="g/mole" value="38.9637"/>
-    </isotope>
-    <isotope N="40" Z="19" name="K40">
-      <atom unit="g/mole" value="39.964"/>
-    </isotope>
-    <isotope N="41" Z="19" name="K41">
-      <atom unit="g/mole" value="40.9618"/>
-    </isotope>
-    <element name="K">
-      <fraction n="0.932581" ref="K39"/>
-      <fraction n="0.000117" ref="K40"/>
-      <fraction n="0.067302" ref="K41"/>
-    </element>
     <material name="Rock" state="solid">
       <T unit="K" value="293.15"/>
-      <MEE unit="eV" value="116.499263166754"/>
+      <MEE unit="eV" value="125.630336179847"/>
       <D unit="g/cm3" value="2.86"/>
-      <fraction n="0.33013315" ref="Si"/>
-      <fraction n="0.6602663" ref="O"/>
-      <fraction n="2.2e-07" ref="U"/>
-      <fraction n="3.3e-07" ref="Th"/>
-      <fraction n="0.0096" ref="K"/>
+      <fraction n="0.467" ref="Si"/>
+      <fraction n="0.533" ref="O"/>
     </material>
     <isotope N="74" Z="32" name="Germanium74">
       <atom unit="g/mole" value="73.9212"/>
@@ -83,8 +46,8 @@
       <atom unit="g/mole" value="75.9214"/>
     </isotope>
     <element name="Germanium">
-      <fraction n="0.14" ref="Germanium74"/>
-      <fraction n="0.86" ref="Germanium76"/>
+      <fraction n="0.117" ref="Germanium74"/>
+      <fraction n="0.883" ref="Germanium76"/>
     </element>
     <material name="GermaniumEnriched" state="solid">
       <T unit="K" value="293.15"/>
@@ -146,34 +109,12 @@
       <fraction n="0.111898477841067" ref="H"/>
       <fraction n="0.888101522158933" ref="O"/>
     </material>
-    <isotope N="12" Z="6" name="C12">
-      <atom unit="g/mole" value="12"/>
-    </isotope>
-    <isotope N="13" Z="6" name="C13">
-      <atom unit="g/mole" value="13.0034"/>
-    </isotope>
-    <element name="C">
-      <fraction n="0.9893" ref="C12"/>
-      <fraction n="0.0107" ref="C13"/>
-    </element>
-    <isotope N="14" Z="7" name="N14">
-      <atom unit="g/mole" value="14.0031"/>
-    </isotope>
-    <isotope N="15" Z="7" name="N15">
-      <atom unit="g/mole" value="15.0001"/>
-    </isotope>
-    <element name="N">
-      <fraction n="0.99632" ref="N14"/>
-      <fraction n="0.00368" ref="N15"/>
-    </element>
-    <material name="G4_AIR" state="gas">
-      <T unit="K" value="293.15"/>
-      <MEE unit="eV" value="85.7"/>
-      <D unit="g/cm3" value="0.00120479"/>
-      <fraction n="0.000124000124000124" ref="C"/>
-      <fraction n="0.755267755267755" ref="N"/>
-      <fraction n="0.231781231781232" ref="O"/>
-      <fraction n="0.0128270128270128" ref="Ar"/>
+    <material name="G4_Galactic" state="gas">
+      <T unit="K" value="2.73"/>
+      <P unit="pascal" value="3e-18"/>
+      <MEE unit="eV" value="21.8"/>
+      <D unit="g/cm3" value="1e-25"/>
+      <fraction n="1" ref="H"/>
     </material>
   </materials>
 
@@ -204,7 +145,7 @@
     <tube aunit="deg" deltaphi="360" lunit="mm" name="sol_liquidArgon_1" rmax="3950" rmin="1000" startphi="0" z="7900"/>
     <tube aunit="deg" deltaphi="360" lunit="mm" name="sol_liquidArgon_2" rmax="999.999" rmin="0" startphi="0" z="2950"/>
     <tube aunit="deg" deltaphi="360" lunit="mm" name="sol_outerVessel_1" rmax="3999.999" rmin="3950.001" startphi="0" z="7999.998"/>
-    <tube aunit="deg" deltaphi="360" lunit="mm" name="sol_outerVessel_2" rmax="3950" rmin="0" startphi="0" z="49.9999"/>
+    <tube aunit="deg" deltaphi="360" lunit="mm" name="sol_outerVessel_2" rmax="4000" rmin="0" startphi="0" z="49.9999"/>
     <tube aunit="deg" deltaphi="360" lunit="mm" name="sol_waterShield_1" rmax="6499.999" rmin="4000" startphi="0" z="12999.998"/>
     <tube aunit="deg" deltaphi="360" lunit="mm" name="sol_waterShield_2" rmax="3999.999" rmin="0" startphi="0" z="2500"/>
     <box lunit="mm" name="sol_World" x="100000" y="100000" z="36000"/>
@@ -4580,7 +4521,7 @@
       <solidref ref="sol_waterShield_2"/>
     </volume>
     <volume name="log_World">
-      <materialref ref="G4_AIR"/>
+      <materialref ref="G4_Galactic"/>
       <solidref ref="sol_World"/>
       <physvol name="phy_outerRock">
         <volumeref ref="log_outRock"/>
@@ -4626,9 +4567,9 @@
         <volumeref ref="log_outerVessel_2"/>
         <position name="phy_outerVessel_2_pos" unit="mm" x="0" y="0" z="-25"/>
       </physvol>
-      <physvol name="phy_outerVessel_3">
+      <physvol name="phy_outerVessel_2">
         <volumeref ref="log_outerVessel_2"/>
-        <position name="phy_outerVessel_3_pos" unit="mm" x="0" y="0" z="-7975"/>
+        <position name="phy_outerVessel_2_pos" unit="mm" x="0" y="0" z="-7975"/>
       </physvol>
       <physvol name="phy_waterShield_1">
         <volumeref ref="log_waterShield_1"/>
@@ -4638,9 +4579,9 @@
         <volumeref ref="log_waterShield_2"/>
         <position name="phy_waterShield_2_pos" unit="mm" x="0" y="0" z="1250"/>
       </physvol>
-      <physvol name="phy_waterShield_3">
+      <physvol name="phy_waterShield_2">
         <volumeref ref="log_waterShield_2"/>
-        <position name="phy_waterShield_3_pos" unit="mm" x="0" y="0" z="-9250"/>
+        <position name="phy_waterShield_2_pos" unit="mm" x="0" y="0" z="-9250"/>
       </physvol>
     </volume>
   </structure>

@@ -78,12 +78,13 @@ DetectorConstruction::~DetectorConstruction()
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
 
-  //Geometry options are: September2018WithCuts (default), OriginalWithRock, NewRock, NoRock,
+  //Geometry options are: September2018WithCuts, OriginalWithRock, NewRock, NoRock,
   //and NeutronMultiplicityValidation (for neutron study only)
   //March2019WithCuts (not currently used)
   //TrigStudy (for trig efficiency calculations)
   //LArColumn (for LAr showering studies) and LArStudy (for pathlength studies)
   //pCDR for the most up-to-date version of the pCDR geometry
+  //PolyValidation (for poly shield neutron studies)
 
   //If possible, import an existing geometry using GDML
   //G4String inputgeometry = "/home/usd.local/cj.barton/workingfolder/geom/September2018WithCuts.gdml";
@@ -111,14 +112,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double assemblyzoffset = -6.5*m;
   //for displacing the detector assembly from the center of the world
   //May change with different geometry selections
-  
-  G4String RockOption = "pCDR";
+
+  //For a list of all GeometryOption choices, check the .icc file that you're including. Make sure to include only one .icc file, and make sure it's the correct one!  
+  G4String GeometryOption = "PolyValidation";
   G4String LArScintillators = "NotImplementedYet";
   G4String DetectorComposition = "NotImplementedYet";
 	
-	
-  #include "Detector_CJStyle.icc"
-  //#include "Detector_AlStyle.icc"
+  //#include "FlagshipGeometries.icc"	
+  #include "SideStudyGeometries.icc"
 
   //fill gas
 
@@ -235,8 +236,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   double detectormassremoved = .005323*detectorvolume/CLHEP::kg;
   materialmass+= (logical_FillGas->GetMass()/CLHEP::kg);
   materialmass-=detectormassremoved;
-  G4cout << G4endl << G4endl << "Mass of liquid argon in this setup: " << materialmass << G4endl <<G4endl;
-    return physical_World;
+     return physical_World;
 }//Construct
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

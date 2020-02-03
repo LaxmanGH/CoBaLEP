@@ -25,6 +25,8 @@ G4Material* mat_Ti = nist->FindOrBuildMaterial("G4_Ti");
 G4Material* mat_P = nist->FindOrBuildMaterial("G4_P");
 G4Material* mat_S = nist->FindOrBuildMaterial("G4_S");
 G4Material* mat_Fe = nist->FindOrBuildMaterial("G4_Fe");
+G4Material* mat_H = nist->FindOrBuildMaterial("G4_H");
+G4Material* mat_Gd = nist->FindOrBuildMaterial("G4_Gd");
 
 G4Material* mat_316Ti= new G4Material("StainlessSteel", 7.99 * g / cm3, 11);
 mat_316Ti->AddMaterial(mat_C,0.0004);
@@ -39,15 +41,25 @@ mat_316Ti->AddMaterial(mat_S,0.00015);
 mat_316Ti->AddMaterial(mat_Cu,0.000375);
 mat_316Ti->AddMaterial(mat_Fe,0.667575);
 
+//PE and Gd2O3 upon Bernhard's request
+G4Material* mat_poly = new G4Material("Polyethylene", 0.92 * g / cm3, 2);
+mat_poly->AddMaterial(mat_C,0.856);
+mat_poly->AddMaterial(mat_H,0.144);
+
+//Need to change to mass fraction!!!
+
+G4Material* mat_Gd2O3 = new G4Material("GadoliniumOxide", 7.4 * g / cm3, 2);
+mat_Gd2O3->AddMaterial(mat_Gd,0.868);
+mat_Gd2O3->AddMaterial(mat_Oxygen,0.132);
 
 G4Material* mat_Rock= new G4Material("Rock", 2.86 * g / cm3, 2);
 G4double sum_minors = 0.22/1000000. + 0.33/1000000. + 0.96/100.;
 
-mat_Rock->AddMaterial(mat_Silicon, 1./3.);
-mat_Rock->AddMaterial(mat_Oxygen, 2./3.);
+mat_Rock->AddMaterial(mat_Silicon, 0.467);
+mat_Rock->AddMaterial(mat_Oxygen, 0.533);
 //Uncomment these to add radioactive impurities back in
-//mat_Rock->AddMaterial(mat_Silicon, 1./3.*(1-sum_minors));
-//mat_Rock->AddMaterial(mat_Oxygen, 2./3.*(1-sum_minors));
+//mat_Rock->AddMaterial(mat_Silicon, 0.467*(1-sum_minors));
+//mat_Rock->AddMaterial(mat_Oxygen, 0.533*(1-sum_minors));
 //mat_Rock->AddMaterial(mat_Uranium, 0.22/1000000.);
 //mat_Rock->AddMaterial(mat_Thorium, 0.33/1000000.);
 //mat_Rock->AddMaterial(mat_Potassium, 0.96/100.);
@@ -60,8 +72,8 @@ mat_Rock->AddMaterial(mat_Oxygen, 2./3.);
   G4Isotope* iso_Ge76 = new G4Isotope("Germanium76", 32, 76, 75.9214 * g / mole);
 
   G4Element* ele_Ge = new G4Element("Germanium", "Ge", 2);
-  ele_Ge->AddIsotope(iso_Ge74, 0.12);
-	ele_Ge->AddIsotope(iso_Ge76, 0.88);
+  ele_Ge->AddIsotope(iso_Ge74, 0.117);
+	ele_Ge->AddIsotope(iso_Ge76, 0.883);
 
   G4Material* mat_GeEnr = new G4Material("GermaniumEnriched", 5.323*g/cm3, 1);
   mat_GeEnr->AddElement(ele_Ge, 1);

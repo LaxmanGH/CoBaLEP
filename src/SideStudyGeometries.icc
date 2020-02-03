@@ -1,0 +1,316 @@
+//Options for side studies to implement
+//Below is a list of all options, in the order in which they appear in this document (not sure if the order is also chronological or not). For details on each option, go to that option in this file and read about it.
+
+/*
+  GeOnly
+  TrigStudy
+  LArStudy
+  NeutronMultiplicityValidation
+  LArColumn
+  MCNPComparisonWater
+  MCNPComparisonLAr
+  PolyValidation
+*/
+
+//Must declare all variables outside of the conditional statements
+
+//For Ge only geometry
+G4Tubs *GeColumn;
+
+//Trig study variables
+G4Tubs* innerer_CutOut;
+G4Tubs* innerer_Rock;
+G4SubtractionSolid *outer_Rock; //Outer rock with inner cutout removed
+G4SubtractionSolid *outer_Rock2;//Inner cutout AND lab space removed
+G4LogicalVolume* logical_outerRock;
+G4VPhysicalVolume* physical_outerRock;
+G4Tubs* inner_Rock;//Inner rock
+G4SubtractionSolid* inner_Rock2;//Inner rock with lab space removed
+G4LogicalVolume* logical_innerRock;
+G4VPhysicalVolume* physical_innerRock;
+
+//For LAR pathlength studies
+G4Tubs *inner_Argon;
+G4Tubs *outer_Copper;
+G4LogicalVolume *logical_Argon;
+G4LogicalVolume *logical_Copper;
+G4VPhysicalVolume *physical_Argon;
+G4VPhysicalVolume *physical_Copper;
+
+//For neutron multiplicity study
+G4Box* solid_innerWorld;
+G4LogicalVolume* logical_innerWorld;
+G4VPhysicalVolume* physical_innerWorld;
+G4Box* solid_neutronRock;
+G4LogicalVolume* logical_neutronRock;
+G4VPhysicalVolume* physical_neutronRock;
+G4String rock_name;
+G4ThreeVector rock_position;
+
+//For LArColumn showering study
+G4Box* solid_neutronLAr;
+G4LogicalVolume* logical_neutronLAr;
+G4VPhysicalVolume* physical_neutronLAr;
+G4String LAr_name;
+G4ThreeVector LAr_position;
+
+//For MCNP comparison studies
+G4Box *outerSteel;
+G4Box *h2oShield;
+G4Box *argonShield;
+G4Box *geTarget;
+G4LogicalVolume *logicalSteel;
+G4PVPlacement *physicalSteel;
+G4LogicalVolume *logicalh2o;
+G4PVPlacement *physicalh2o;
+G4LogicalVolume *logicalAr1;
+G4PVPlacement *physicalAr1;
+G4LogicalVolume *logicalAr2;
+G4PVPlacement *physicalAr2;
+G4LogicalVolume *logicalGe;
+G4PVPlacement *physicalGe;
+
+//For poly validation studies
+G4Box *polysquare;
+G4Box *Gd2O3square;
+G4Box *Larquare;
+G4Box *Gesquare;
+G4LogicalVolume *logical_polysquare;
+G4LogicalVolume *logical_Gd2O3square;
+G4LogicalVolume *logical_Larquare;
+G4LogicalVolume *logical_Gesquare;
+G4VPhysicalVolume *physical_polysquare;
+G4VPhysicalVolume *physical_Gd2O3square;
+G4VPhysicalVolume *physical_Larquare;
+G4VPhysicalVolume *physical_Gesquare;
+
+//Used pretty much anywhere
+G4Box* solid_Rock; //= new G4Box("sol_Rock",50*m,50*m,30*m);
+G4Box* solid_Lab; //= new G4Box("sol_Lab",35*m,10*m,4*m);
+
+
+
+if(GeometryOption == "GeOnly")
+  {
+
+
+    G4cout << "It's Germanium all the way down..." << G4endl;
+    //A giant chunk of germanium. Used for a study of neutrons on Ge.
+
+    GeColumn = new G4Tubs("Ge_column",0*m, 10*m, 10*m,0, 2*M_PI);
+    //Create a cylinder of Ge 20m tall, 20m in diameter of detector-grade Ge
+    //Should be overkill, but including extra Ge doesn't affect runtime for neutron studies
+    logicalGe = new G4LogicalVolume(GeColumn,mat_Detector,"log_Ge");
+    logicalGe->SetVisAttributes ( new G4VisAttributes(G4Colour(0.1,0.9,0.1)));
+    physicalGe = new G4PVPlacement(0,G4ThreeVector(0,0,0),logicalGe,"phyGe",logical_World,false,0,checkOverlaps);
+
+    return physical_World;
+
+  }//GeOnly
+
+
+
+ else if(GeometryOption == "TrigStudy")
+   {
+     //Calculation of the 'trigonometric cut efficiency', which is a little too complicated to discuss in detail here. See the first function in src/ShowerGenerator.cc to learn more.
+     G4cout << "Trig study" << G4endl;
+
+     assemblyzoffset = -6.5*m;
+
+     solid_Rock = new G4Box("sol_Rock",32.5*m,15*m,18*m);
+     solid_Lab = new G4Box("sol_Lab",30*m,10*m,4*m);
+
+
+     innerer_CutOut = new G4Tubs("inn_CutOut",0*m, 11.50001*m, 11.50001*m,0, 2*M_PI);//G4Box("inn_CutOut",11.5*m, 11.5*m, 11.5*m);
+     outer_Rock = new G4SubtractionSolid("out_Rock", solid_Rock, solid_Lab ,0 , G4ThreeVector(-2.5*m,0,4*m));//cut out lab
+ 
+     outer_Rock2 = new G4SubtractionSolid("out_Rock2", outer_Rock, innerer_CutOut ,0 , G4ThreeVector(17.5*m,0,-6.5*m));//cut out inner rock and assembly
+ 
+     innerer_Rock = new G4Tubs("inn_CutOut",0*m, 11.5*m, 11.5*m,0, 2*M_PI);//G4Box("inn_Rock", 11.49999*m, 11.49999*m, 11.49999*m);    
+ 
+     inner_Rock2 = new G4SubtractionSolid("inn_Rock2", inner_Rock, solid_Lab ,0 , G4ThreeVector(-20*m,0,10.5*m));//cut out lab
+ 
+     logical_outerRock = new G4LogicalVolume(outer_Rock2,mat_Rock,"log_outRock");
+    
+     logical_outerRock->SetVisAttributes ( new G4VisAttributes(G4Colour(0.7, 0.7, 0.7, 0.5) )); //grey 50% transparent
+ 
+     physical_outerRock = new G4PVPlacement(0,G4ThreeVector(-17.5*m,0,0),logical_outerRock,"phy_outerRock",logical_World,false,0,checkOverlaps);
+ 
+     logical_innerRock = new G4LogicalVolume(innerer_Rock,mat_Rock,"log_innRock");
+ 
+     logical_innerRock->SetVisAttributes ( new G4VisAttributes(G4Colour(0.7, 0.7, 0.7, 0.5) )); //grey 50% transparent
+ 
+     physical_innerRock = new G4PVPlacement(0,G4ThreeVector(0,0,-6.5*m),logical_innerRock,"phy_innerRock",logical_World,false,0,checkOverlaps);
+  
+     return physical_World;
+ 
+   }//TrigStudy
+
+
+
+ else if(GeometryOption == "LArStudy")
+   {
+     //Study of muon products in liquid argon (especially neutrons). Also used to find average muon path lengths in liquid argon.
+
+     G4cout << "LAr pathlength studies" << G4endl;
+     assemblyzoffset = -6.5*m;
+
+     inner_Argon= new G4Tubs("inn_Argon",0*m, 3.95*m, 3.95*m,0, 2*M_PI);
+     outer_Copper = new G4Tubs("inn_Copper",0*m, 4*m, 4*m,0, 2*M_PI);
+     logical_Argon = new G4LogicalVolume(inner_Argon,mat_ArLiq,"log_Argon");
+     logical_Argon->SetVisAttributes ( new G4VisAttributes(G4Colour(0.8, 0.0, 0.8,0.1) ));
+     logical_Copper = new G4LogicalVolume(outer_Copper,mat_Cu,"log_Copper");
+     logical_Copper->SetVisAttributes ( new G4VisAttributes(G4Colour(0.62, 0.3, 0.2,0.7) ));
+     physical_Copper = new G4PVPlacement(0,G4ThreeVector(0,0,assemblyzoffset),logical_Copper,"phy_Copper",logical_World,false,0,checkOverlaps);
+     physical_Argon = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_Argon,"phy_Argon",logical_Copper,false,0,checkOverlaps);
+
+     return physical_World;
+
+   }//LArStudy
+
+
+
+ else if(GeometryOption == "NeutronMultiplicityValidation")
+   {
+     //For validating the multiplicity of neutron showers without module setup. Very messy... Kind of embarrassing, but I'll keep it anyway. It's good to remember how much you've improved sometimes, don't you think?
+
+     G4cout << G4endl << "NeutronMultiplicityValidation: Running a neutron multiplicity study geometry, with pure rock..." << G4endl << G4endl;
+     solid_innerWorld = new G4Box("sol_innerWorld",30*m,30*m,12*m);	  
+     logical_innerWorld = new G4LogicalVolume(solid_innerWorld,mat_vacuum,"log_innerWorld");
+     logical_innerWorld->SetVisAttributes (G4VisAttributes::Invisible);
+     physical_innerWorld  = new G4PVPlacement(0,G4ThreeVector(),logical_innerWorld,"phy_innerWorld",logical_World,false,0,checkOverlaps);
+
+     solid_neutronRock = new G4Box("sol_neutronRock",.5*cm,10*m,10*m);
+     logical_neutronRock = new G4LogicalVolume(solid_neutronRock,mat_Rock,"log_neutronRock");
+     logical_neutronRock->SetVisAttributes ( new G4VisAttributes(G4Colour(0.7, 0.7, 0.7, 0.5) )); //grey 50% transparent
+     
+     for(int j = 1;j<2001;j++)
+       {
+	 rock_name = "phy_neutronRock";
+	 rock_name+=G4UIcommand::ConvertToString(j);
+	 rock_position = G4ThreeVector(j*cm,0,0);
+	 new G4PVPlacement(0,rock_position,logical_neutronRock,rock_name,logical_innerWorld,false,j,checkOverlaps);
+       }
+
+     return physical_World;
+
+   }//NeutronMultiplicityValidation
+
+
+
+ else if(GeometryOption=="LArColumn")
+   {
+     //Simple column of LAr separated into slabs, for showering study.
+     G4cout << "LAr showering study" << G4endl << G4endl;
+     solid_neutronLAr = new G4Box("sol_neutronLAr",.5*cm,10*m,10*m);
+     logical_neutronLAr = new G4LogicalVolume(solid_neutronLAr,mat_ArLiq,"log_neutronLAr");
+     logical_neutronLAr->SetVisAttributes ( new G4VisAttributes(G4Colour(0.1,0.9,0.1) )); //green
+     
+     for(int j = 1;j<2001;j++)
+       {
+	 LAr_name = "phy_neutronLAr";
+	 LAr_name+=G4UIcommand::ConvertToString(j);
+	 LAr_position = G4ThreeVector(j*cm,0,0);
+	 new G4PVPlacement(0,LAr_position,logical_neutronLAr,LAr_name,logical_World,false,j,checkOverlaps);
+       } 
+
+     return physical_World;
+
+   }//LArColumn
+
+
+
+ else if(GeometryOption=="MCNPComparisonWater")
+   {
+     //Studies designed to compare MCNP simulations carried out by the research group at ORNL with the results from CoBaLEP in an identical setup. As of February 2020, these investigations are ongoing but low priority... This is the more important configuration, with water, stainless steel, and liquid argon
+
+     G4cout << G4endl << "Geometry chosen is used for MCNP comparison studies in the 'standard' comparison format." << G4endl << G4endl;
+
+     outerSteel = new G4Box("outSteel",7.5*mm,2*m,2*m);
+     h2oShield = new G4Box("hShield",1.5*m,2*m,2*m);
+     argonShield = new G4Box("arShield",1.5*m,2*m,2*m);
+     geTarget = new G4Box("geTar",5*mm,2*m,2*m);
+
+
+     logicalSteel = new G4LogicalVolume(outerSteel,mat_316Ti,"log_Steel");
+     logicalSteel->SetVisAttributes ( new G4VisAttributes(G4Colour(0.7, 0.7, 0.7, 0.5) )); //grey 50% transparent
+     physicalSteel = new G4PVPlacement(0,G4ThreeVector(7.5*mm,0,0),logicalSteel,"phySteel1",logical_World,false,0,checkOverlaps);
+     physicalSteel = new G4PVPlacement(0,G4ThreeVector(3022.5*mm,0,0),logicalSteel,"phySteel2",logical_World,false,1,checkOverlaps);
+
+     logicalh2o = new G4LogicalVolume(h2oShield,mat_Water,"log_h2o");
+     logicalh2o->SetVisAttributes(new G4VisAttributes(G4Colour(0.3, 0.6, 1.0,0.2)));
+     physicalh2o = new G4PVPlacement(0,G4ThreeVector(1515*mm,0,0),logicalh2o,"phyh2o",logical_World,false,0,checkOverlaps);
+
+     logicalAr1 = new G4LogicalVolume(h2oShield,mat_ArLiq,"log_Ar1");
+     logicalAr1->SetVisAttributes(new G4VisAttributes(G4Colour(0.1, 0.4, 0.1)));
+     physicalAr1 = new G4PVPlacement(0,G4ThreeVector(4530*mm,0,0),logicalAr1,"phyAr1",logical_World,false,0,checkOverlaps);
+
+     logicalGe = new G4LogicalVolume(geTarget,mat_GeEnr,"log_Ge");
+     logicalGe->SetVisAttributes ( new G4VisAttributes(G4Colour(0.6,0.1,0.6)) );//Purple
+     physicalGe = new G4PVPlacement(0,G4ThreeVector(6035*mm,0,0),logicalGe,"phyGe",logical_World,false,0,checkOverlaps);
+
+     return physical_World;
+
+   }//MCNPComparisonWater
+
+
+
+ else if(GeometryOption=="MCNPComparisonLAr")
+   {
+     //Studies designed to compare MCNP simulations carried out by the research group at ORNL with the results from CoBaLEP in an identical setup. As of February 2020, these investigations are ongoing but low priority... This is the less important configuration, with two distinct volumes of liquid argon
+
+     G4cout << G4endl << "Geometry chosen is used for MCNP comparison studies in the 'liquid argon only' comparison format." << G4endl << G4endl;
+
+     argonShield = new G4Box("arShield",1.5*m,2*m,2*m);
+     logicalAr1 = new G4LogicalVolume(argonShield,mat_ArLiq,"log_Ar1");
+     logicalAr1->SetVisAttributes(new G4VisAttributes(G4Colour(0.1, 0.4, 0.1)));//Green
+     physicalAr1 = new G4PVPlacement(0,G4ThreeVector(1500*mm,0,0),logicalAr1,"phyAr1",logical_World,false,0,checkOverlaps);
+     logicalAr2 = new G4LogicalVolume(argonShield,mat_ArLiq,"log_Ar2");
+     logicalAr2->SetVisAttributes(new G4VisAttributes(G4Colour(0.1, 0.4, 0.1)));//Green
+     physicalAr2 = new G4PVPlacement(0,G4ThreeVector(4500*mm,0,0),logicalAr2,"phyAr2",logical_World,false,0,checkOverlaps);
+
+     logicalGe = new G4LogicalVolume(geTarget,mat_GeEnr,"log_Ge");
+     logicalGe->SetVisAttributes ( new G4VisAttributes(G4Colour(0.6,0.1,0.6)) );//Purple
+     physicalGe = new G4PVPlacement(0,G4ThreeVector(6005*mm,0,0),logicalGe,"phyGe",logical_World,false,0,checkOverlaps);
+
+     return physical_World;
+
+   }//MCNPComparisonLAr
+
+
+
+ else if(GeometryOption=="PolyValidation")
+   {
+
+     //Used for validation studies of the polyethylene shielding material with gadolinium backing, requested by Bernhard in December 2019. This study proved essential in uncovering an error in my materials definitions.
+
+     G4cout << G4endl << G4endl << "Neutron survival studies for the poly shield" << G4endl;
+     G4cout << "As of Jan 2020, the poly shield is 10 cm thick, with an outer radius of 2m, and a 5mm inner lining of gadolinium oxide" << G4endl;
+     G4cout << "Total thickness of liquid argon shielding: 0 m" << G4endl << G4endl << G4endl;
+
+     polysquare = new G4Box("polysq",0.05*m,5.0*m,5.0*m);
+     Gd2O3square = new G4Box("Gd2O3sq",0.0025*m,5.0*m,5.0*m);
+     Gesquare = new G4Box("Gesq",0.0025*m,5.0*m,5.0*m);
+     logical_polysquare = new G4LogicalVolume(polysquare,mat_poly,"log_polysquare");
+     logical_polysquare->SetVisAttributes ( new G4VisAttributes(G4Colour(0.9,0.9,0.1)) ); //yellow
+     logical_Gd2O3square = new G4LogicalVolume(Gd2O3square,mat_Gd2O3,"log_Gd2O3square");
+     logical_Gd2O3square->SetVisAttributes ( new G4VisAttributes(G4Colour(0.9,0.9,0.9)) ); //white
+     logical_Gesquare = new G4LogicalVolume(Gesquare,mat_Detector,"log_Gesquare");
+     logical_Gesquare->SetVisAttributes ( new G4VisAttributes(G4Colour(0.6,0.1,0.6)) );//Purple
+     physical_polysquare = new G4PVPlacement(0,G4ThreeVector(0.05*m,0,0),logical_polysquare,"phy_polysquare",logical_World,false,0,checkOverlaps);
+     physical_Gd2O3square = new G4PVPlacement(0,G4ThreeVector(0.1025*m,0,0),logical_Gd2O3square,"phy_Gd2O3square",logical_World,false,0,checkOverlaps);
+     physical_Gesquare = new G4PVPlacement(0,G4ThreeVector(0.1075*m,0,0),logical_Gesquare,"phy_Gesquare",logical_World,false,0,checkOverlaps);
+
+     return physical_World;
+
+   }//PolyValidation
+
+
+
+ else
+   {//No valid option selected - this clown doesn't deserve a simulation!
+
+     G4cout << G4endl << "INVALID geometry option selected. Are you sure you have the right spelling in GeometryOption, as well as the right #include uncommented, in src/DetectorConstruction.cc ? Simulations will be performed in an empty world!" << G4endl << G4endl;
+
+     return physical_World;
+   }

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://service-spi.web.cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd">
+
+  <define/>
+
+  <materials>
+    <isotope N="12" Z="6" name="C12">
+      <atom unit="g/mole" value="12"/>
+    </isotope>
+    <isotope N="13" Z="6" name="C13">
+      <atom unit="g/mole" value="13.0034"/>
+    </isotope>
+    <element name="C">
+      <fraction n="0.9893" ref="C12"/>
+      <fraction n="0.0107" ref="C13"/>
+    </element>
+    <isotope N="1" Z="1" name="H1">
+      <atom unit="g/mole" value="1.00782503081372"/>
+    </isotope>
+    <isotope N="2" Z="1" name="H2">
+      <atom unit="g/mole" value="2.01410199966617"/>
+    </isotope>
+    <element name="H">
+      <fraction n="0.999885" ref="H1"/>
+      <fraction n="0.000115" ref="H2"/>
+    </element>
+    <material name="Polyethylene" state="solid">
+      <T unit="K" value="293.15"/>
+      <MEE unit="eV" value="56.4833954722025"/>
+      <D unit="g/cm3" value="0.92"/>
+      <fraction n="0.856" ref="C"/>
+      <fraction n="0.144" ref="H"/>
+    </material>
+    <isotope N="152" Z="64" name="Gd152">
+      <atom unit="g/mole" value="151.92"/>
+    </isotope>
+    <isotope N="154" Z="64" name="Gd154">
+      <atom unit="g/mole" value="153.921"/>
+    </isotope>
+    <isotope N="155" Z="64" name="Gd155">
+      <atom unit="g/mole" value="154.923"/>
+    </isotope>
+    <isotope N="156" Z="64" name="Gd156">
+      <atom unit="g/mole" value="155.922"/>
+    </isotope>
+    <isotope N="157" Z="64" name="Gd157">
+      <atom unit="g/mole" value="156.924"/>
+    </isotope>
+    <isotope N="158" Z="64" name="Gd158">
+      <atom unit="g/mole" value="157.924"/>
+    </isotope>
+    <isotope N="160" Z="64" name="Gd160">
+      <atom unit="g/mole" value="159.927"/>
+    </isotope>
+    <element name="Gd">
+      <fraction n="0.002" ref="Gd152"/>
+      <fraction n="0.0218" ref="Gd154"/>
+      <fraction n="0.148" ref="Gd155"/>
+      <fraction n="0.2047" ref="Gd156"/>
+      <fraction n="0.1565" ref="Gd157"/>
+      <fraction n="0.2484" ref="Gd158"/>
+      <fraction n="0.2186" ref="Gd160"/>
+    </element>
+    <isotope N="16" Z="8" name="O16">
+      <atom unit="g/mole" value="15.9949"/>
+    </isotope>
+    <isotope N="17" Z="8" name="O17">
+      <atom unit="g/mole" value="16.9991"/>
+    </isotope>
+    <isotope N="18" Z="8" name="O18">
+      <atom unit="g/mole" value="17.9992"/>
+    </isotope>
+    <element name="O">
+      <fraction n="0.99757" ref="O16"/>
+      <fraction n="0.00038" ref="O17"/>
+      <fraction n="0.00205" ref="O18"/>
+    </element>
+    <material name="GadoliniumOxide" state="solid">
+      <T unit="K" value="293.15"/>
+      <MEE unit="eV" value="443.215926585137"/>
+      <D unit="g/cm3" value="7.4"/>
+      <fraction n="0.868" ref="Gd"/>
+      <fraction n="0.132" ref="O"/>
+    </material>
+    <isotope N="74" Z="32" name="Germanium74">
+      <atom unit="g/mole" value="73.9212"/>
+    </isotope>
+    <isotope N="76" Z="32" name="Germanium76">
+      <atom unit="g/mole" value="75.9214"/>
+    </isotope>
+    <element name="Germanium">
+      <fraction n="0.117" ref="Germanium74"/>
+      <fraction n="0.883" ref="Germanium76"/>
+    </element>
+    <material name="GermaniumEnriched" state="solid">
+      <T unit="K" value="293.15"/>
+      <MEE unit="eV" value="350"/>
+      <D unit="g/cm3" value="5.323"/>
+      <fraction n="1" ref="Germanium"/>
+    </material>
+    <material name="G4_Galactic" state="gas">
+      <T unit="K" value="2.73"/>
+      <P unit="pascal" value="3e-18"/>
+      <MEE unit="eV" value="21.8"/>
+      <D unit="g/cm3" value="1e-25"/>
+      <fraction n="1" ref="H"/>
+    </material>
+  </materials>
+
+  <solids>
+    <box lunit="mm" name="polysq" x="100" y="10000" z="10000"/>
+    <box lunit="mm" name="Gd2O3sq" x="5" y="10000" z="10000"/>
+    <box lunit="mm" name="Gesq" x="5" y="10000" z="10000"/>
+    <box lunit="mm" name="sol_World" x="100000" y="100000" z="36000"/>
+  </solids>
+
+  <structure>
+    <volume name="log_polysquare">
+      <materialref ref="Polyethylene"/>
+      <solidref ref="polysq"/>
+    </volume>
+    <volume name="log_Gd2O3square">
+      <materialref ref="GadoliniumOxide"/>
+      <solidref ref="Gd2O3sq"/>
+    </volume>
+    <volume name="log_Gesquare">
+      <materialref ref="GermaniumEnriched"/>
+      <solidref ref="Gesq"/>
+    </volume>
+    <volume name="log_World">
+      <materialref ref="G4_Galactic"/>
+      <solidref ref="sol_World"/>
+      <physvol name="phy_polysquare">
+        <volumeref ref="log_polysquare"/>
+        <position name="phy_polysquare_pos" unit="mm" x="50" y="0" z="0"/>
+      </physvol>
+      <physvol name="phy_Gd2O3square">
+        <volumeref ref="log_Gd2O3square"/>
+        <position name="phy_Gd2O3square_pos" unit="mm" x="102.5" y="0" z="0"/>
+      </physvol>
+      <physvol name="phy_Gesquare">
+        <volumeref ref="log_Gesquare"/>
+        <position name="phy_Gesquare_pos" unit="mm" x="107.5" y="0" z="0"/>
+      </physvol>
+    </volume>
+  </structure>
+
+  <setup name="Default" version="1.0">
+    <world ref="log_World"/>
+  </setup>
+
+</gdml>
