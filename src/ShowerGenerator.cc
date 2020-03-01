@@ -59,6 +59,7 @@
 #include "TMath.h"
 #include <vector>
 #include <string>
+#include "TF1.h"
 
 #include <iostream>
 #include <iomanip>
@@ -345,31 +346,8 @@ bool passcuts(double x, double y, double px, double py, double pz, double assemb
 ShowerGenerator::ShowerGenerator()
 {
   const char* muon_path = "$WORKINGDIR/mac";
-  inputfile = new TFile(Form("%s/SmallMuonFile.root", muon_path) ,"READ");
-  datatree = (TTree*)inputfile->Get("muontree");
 
-  //  TRandom3 *ran3 = new TRandom3(50000);
-  //ran3->SetSeed(time(NULL));
 
-  
-  max_entries = datatree->GetEntries();
-
-  start_energy = 0;    //muon start energy in surface GeV
-  start_costheta = 0;    //muon start angle
-  particle_energy = 0;
-  particle_momentumX = 0;  //GeV
-  particle_momentumY = 0;  //GeV
-  particle_momentumZ = 0;  //GeV
-  weight = 0;
-  
-   datatree->SetBranchAddress("startenergy", &start_energy);
-   datatree->SetBranchAddress("startcostheta", &start_costheta);
-   datatree->SetBranchAddress("energy", &start_energy);
-   datatree->SetBranchAddress("px", &particle_momentumX);
-   datatree->SetBranchAddress("py", &particle_momentumY);
-   datatree->SetBranchAddress("pz", &particle_momentumZ);
-   datatree->SetBranchAddress("weight", &weight);
-	 G4cout << max_entries << " " << inputfile->GetName() << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -383,51 +361,40 @@ ShowerGenerator::~ShowerGenerator()
 void ShowerGenerator::GeneratePrimaryVertex(G4Event* anEvent)
 {
 
-  bool validmuon = false;
+  //bool validmuon = false;
   double xx = 0;
   double yy = 0;
   double zz = 17.999999;
-  double comparator = 0;
-  double comparee = 0;
-  int counter = 0;
   int attemptsatmuon = 0;
   double energynorm = 0;
+  double P=1;
+  double zenith_angle;
+  double azimuthal_angle;
+  //TF1 *simplecos = new TF1("simplecos","cos(x)",0.,70.*TMath::DegToRad()); 
 
-  while(!validmuon)
-    {
-      // Select random entry within file
-      //Flat version (stable:) 
-      //int ev_ID = (int)(G4UniformRand()*max_entries);
-      comparator = G4UniformRand(); //should be between 0 and 1
-      comparee = 0;
-      counter = 0;
-      
-      //  G4cout << "Comparator: " << std::setprecision(20) << comparator << G4endl;
-      while(comparee<comparator)
-	{
-	  
-	  datatree->GetEntry(counter);
-	  
-	  comparee += weight; //weight is normalized so that total sum is 1.0 to high precision
-	  if(counter>max_entries)
-	    G4cout << G4endl << "Sampling method error" << G4endl; //should never happen
-	  counter++;
-	}
-      
-      //use the initial parameters of whichever muon was selected using comparator
-      
-      datatree->GetEntry(counter-1);
-      //datatree->GetEntry(ev_ID);
-      
+  //02-18-20 update: for now, the trig efficiency cut is being turned off
+
+  //while(!validmuon)
+  //{
+
       xx = (G4UniformRand()-0.5)*99.9;//from -49.95m to 49.95m
       yy = (G4UniformRand()-0.5)*99.9;
+
+      //zenith_angle=simplecos->GetRandom();                                                                                                                              
+      zenith_angle = G4UniformRand()*70*TMath::Pi()/180;
+      azimuthal_angle = G4UniformRand()*360*TMath::Pi()/180;
+
+      particle_momentumX=P*sin(zenith_angle)*cos(azimuthal_angle);
+      particle_momentumY=P*sin(zenith_angle)*sin(azimuthal_angle);
+      particle_momentumZ=(-1)*P*cos(zenith_angle);
       
       attemptsatmuon++;
-      validmuon = passcuts(xx,yy,particle_momentumX,particle_momentumY,particle_momentumZ,13,6.5,13);
+      //validmuon = passcuts(xx,yy,particle_momentumX,particle_momentumY,particle_momentumZ,13,6.5,13);
 
-    }//while !validmuon
+      //}//while !validmuon                                                                                                                                                
+      
   
-  G4cout <<"It took " << attemptsatmuon << " attempts to sample a valid muon." << G4endl;
+      //G4cout <<"It took " << attemptsatmuon << " attempts to sample a valid muon." << G4endl;
  
   //for all shower particles
   particle_time = 0.0*s;
@@ -446,22 +413,16 @@ void ShowerGenerator::GeneratePrimaryVertex(G4Event* anEvent)
   double py_MJD = particle_momentumY;
   double pz_MJD = particle_momentumZ;
   
-  //Temporarily implemented as of March 2019
 
-  //Retroactively make the energy a flat distribution from 0 to 20 TeV
-  //First normalize the momenta so the particle thinks it's at 1 GeV  
-  energynorm = TMath::Sqrt(px_MJD*px_MJD+py_MJD*py_MJD+pz_MJD*pz_MJD);
-  px_MJD = px_MJD/energynorm;
-  py_MJD = py_MJD/energynorm;
-  pz_MJD = pz_MJD/energynorm;
-  //Now multiple by a random number between 0 and 2000
-  //Should technically be 200000, but I want statistics dammit!
+  //Retroactively make the energy a flat distribution from 0 to 2 TeV
+  //Should technically be 200 TeV but for the foreseeable future,
+  //we want higher statistics in the 0-2 TeV range where most muons live
   energynorm = G4UniformRand()*2000;
   px_MJD = px_MJD*energynorm;
   py_MJD = py_MJD*energynorm;
   pz_MJD = pz_MJD*energynorm;
   energynorm = TMath::Sqrt(px_MJD*px_MJD+py_MJD*py_MJD+pz_MJD*pz_MJD);
-  G4cout <<"Particle energy (in GeV): " << energynorm << G4endl;
+  //G4cout <<"Particle energy (in GeV): " << energynorm << G4endl;
   //G4cout <<"Px: "<< px_MJD << "Py: " <<py_MJD << "Pz: " << pz_MJD<< G4endl;
   G4ThreeVector momentum(px_MJD*GeV,py_MJD*GeV,pz_MJD*GeV);
   
@@ -482,7 +443,8 @@ void ShowerGenerator::GeneratePrimaryVertex(G4Event* anEvent)
 
 //weighting with incident muon distribution
 //https://escholarship.org/uc/item/6jm8g76d#page-3
-double ShowerGenerator::Distribution(double Energy, double CosTheta)
+//Deprecated (now handled elsewhere)
+/*double ShowerGenerator::Distribution(double Energy, double CosTheta)
 {
   double CosThetaStar = sqrt(
 	(pow(CosTheta,2) + pow(0.102573,2) -0.068287*pow(CosTheta,0.958633)+0.0407253*pow(CosTheta,0.817285) )/
@@ -493,7 +455,7 @@ double ShowerGenerator::Distribution(double Energy, double CosTheta)
 	  *((1./(1+(1.1*Energy*CosThetaStar)/115.))+(0.054/(1+(1.1*Energy*CosThetaStar)/850.)));
 
   return (I);
-}
+  }*/
 
 
 /*Deprecated

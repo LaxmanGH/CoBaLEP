@@ -25,15 +25,16 @@ void eventbuilder(void)
   int n = 0;
   TString checkedstring;
 
-  while((checkedname = (char*)gSystem->GetDirEntry(directoryP))) {
-    checkedstring = checkedname;
-    cout << "Checked string: " << checkedstring << endl;
-    if(checkedstring.BeginsWith(allfilesbeginningwith))
-      {      
-	acceptedname[n] = checkedname;
-	n++;
-      }
-  }
+  while((checkedname = (char*)gSystem->GetDirEntry(directoryP)))
+    {
+      checkedstring = checkedname;
+      cout << "Checked string: " << checkedstring << endl;
+      if(checkedstring.BeginsWith(allfilesbeginningwith))
+	{      
+	  acceptedname[n] = checkedname;
+	  n++;
+	}
+    }
 
   for(int i = 0;i < n;i++)
     {
@@ -227,7 +228,7 @@ void eventbuilder(void)
     cout <<"New file created" << endl;
     sumtree->Fill();//Not 100% sure this is necessary
 
-    TFile *output = new TFile(Form("swumtree%i.root",truenum),"recreate");
+    TFile *output = new TFile(Form("sumtree%i.root",truenum),"recreate");
     sumtree->Write();
     output->Close();
     

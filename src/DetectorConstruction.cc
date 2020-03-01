@@ -78,13 +78,7 @@ DetectorConstruction::~DetectorConstruction()
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
 
-  //Geometry options are: September2018WithCuts, OriginalWithRock, NewRock, NoRock,
-  //and NeutronMultiplicityValidation (for neutron study only)
-  //March2019WithCuts (not currently used)
-  //TrigStudy (for trig efficiency calculations)
-  //LArColumn (for LAr showering studies) and LArStudy (for pathlength studies)
-  //pCDR for the most up-to-date version of the pCDR geometry
-  //PolyValidation (for poly shield neutron studies)
+  //Check the geom/ folder for a list of all usable .gdml filenames
 
   //If possible, import an existing geometry using GDML
   //G4String inputgeometry = "/home/usd.local/cj.barton/workingfolder/geom/September2018WithCuts.gdml";
@@ -114,12 +108,12 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //May change with different geometry selections
 
   //For a list of all GeometryOption choices, check the .icc file that you're including. Make sure to include only one .icc file, and make sure it's the correct one!  
-  G4String GeometryOption = "PolyValidation";
+  G4String GeometryOption = "pCDR2020";
   G4String LArScintillators = "NotImplementedYet";
   G4String DetectorComposition = "NotImplementedYet";
 	
-  //#include "FlagshipGeometries.icc"	
-  #include "SideStudyGeometries.icc"
+  #include "FlagshipGeometries.icc"	
+  //#include "SideStudyGeometries.icc"
 
   //fill gas
 

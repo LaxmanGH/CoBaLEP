@@ -32,8 +32,8 @@ void hitbuilder(int startnumber)
   //are modifiable right here with these constant values.
 
   bool cleanmode = true;
-  double energycutoff = 0.0001; //keV
-  double timecutoff = 100000000000000; //ns
+  double energycutoff = 0.001; //keV
+  double timecutoff = 100000000000000000; //ns
   double t1 = double(clock());
   int maximumstepsallowedinevent = 1000000;
   //Search for the next instance of this variable
@@ -145,7 +145,7 @@ void hitbuilder(int startnumber)
 	current G4event will be used to keep track of which steps ARE
 	selected, and also which ones have BEEN seected in previous
 	loops. Once every step has been selected and written, the
-	G4event is done building and we can move one.
+	G4event is done building and we can move on.
 
       */
       
@@ -154,9 +154,9 @@ void hitbuilder(int startnumber)
       //Initialize variables for this purpose
       int checkevent = eventnumber; //The event# to be compared against
       int numberofstepsinevent = 0; //Obvious name notation
-      int G4eventsize[100] = {0}; //each G4event needs its own index size
-      //Maximum of 100 events with hits possible
-      //but should be much less than this
+      vector<int> G4eventsize; //each G4event needs its own index size
+      G4eventsize.clear();
+
       int G4eventsizemover = 0;
 
       int masterincrementer = 0;
@@ -182,7 +182,7 @@ void hitbuilder(int startnumber)
 	  else//Non-matching event#, new hit
 	    {
 	      //Record step size of current G4event	      	      
-	      G4eventsize[G4eventsizemover] = numberofstepsinevent;
+	      G4eventsize.push_back(numberofstepsinevent);
 	      cout <<"Size of G4event: " << numberofstepsinevent <<  endl;
 	      //Start recording size of new G4event
 	      numberofstepsinevent = 1;
@@ -195,8 +195,9 @@ void hitbuilder(int startnumber)
 	  
 	}//while(i<entries)
 
-      G4eventsize[G4eventsizemover] = numberofstepsinevent; //to catch the last one
+      G4eventsize.push_back(numberofstepsinevent); //to catch the last one
 
+      cout << "Number of non-empty G4Events:  " << G4eventsizemover << endl;
       cout << "Size of G4event: " << numberofstepsinevent << endl << "Number of entries determined" << endl;
 
       

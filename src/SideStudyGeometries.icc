@@ -10,6 +10,7 @@
   MCNPComparisonWater
   MCNPComparisonLAr
   PolyValidation
+  LEGEND200
 */
 
 //Must declare all variables outside of the conditional statements
@@ -83,6 +84,24 @@ G4VPhysicalVolume *physical_polysquare;
 G4VPhysicalVolume *physical_Gd2O3square;
 G4VPhysicalVolume *physical_Larquare;
 G4VPhysicalVolume *physical_Gesquare;
+
+//For LEGEND-200 geometry mockup, to be used by Giuseppe et. al
+G4Box *L200watershield;
+G4Tubs *L200coppershield;
+G4Tubs *L200argonshield;
+G4Tubs *L200detector;
+G4Tubs *L200fakeshroud;
+G4LogicalVolume *logical_L200watershield;
+G4LogicalVolume *logical_L200coppershield;
+G4LogicalVolume *logical_L200argonshield;
+G4LogicalVolume *logical_L200detector;
+G4LogicalVolume *logical_L200fakeshroud;
+G4VPhysicalVolume *physical_L200watershield;
+G4VPhysicalVolume *physical_L200coppershield;
+G4VPhysicalVolume *physical_L200argonshield;
+G4VPhysicalVolume *physical_L200detector;
+G4VPhysicalVolume *physical_L200fakeshroud;
+
 
 //Used pretty much anywhere
 G4Box* solid_Rock; //= new G4Box("sol_Rock",50*m,50*m,30*m);
@@ -288,7 +307,7 @@ if(GeometryOption == "GeOnly")
      G4cout << "As of Jan 2020, the poly shield is 10 cm thick, with an outer radius of 2m, and a 5mm inner lining of gadolinium oxide" << G4endl;
      G4cout << "Total thickness of liquid argon shielding: 0 m" << G4endl << G4endl << G4endl;
 
-     polysquare = new G4Box("polysq",0.05*m,5.0*m,5.0*m);
+
      Gd2O3square = new G4Box("Gd2O3sq",0.0025*m,5.0*m,5.0*m);
      Gesquare = new G4Box("Gesq",0.0025*m,5.0*m,5.0*m);
      logical_polysquare = new G4LogicalVolume(polysquare,mat_poly,"log_polysquare");
@@ -304,6 +323,123 @@ if(GeometryOption == "GeOnly")
      return physical_World;
 
    }//PolyValidation
+
+
+
+ else if (GeometryOption=="LEGEND200")
+   {
+
+     //A side study intended to give Giuseppe et. al. at Roma some mock data for a scintillation study. This LEGEND 200 geometry is NOT accurate, and it is NOT complete. HOWEVER, it matches what my outdated version of MaGe reports as the dimensions for the bulk inner components, and dammit, that's going to have to be good enough for them. We all want to do efficiency studies, but we also gotta take what we can get at this point, considering what resources we have at our disposal. Rant over!
+
+     G4cout << "Incorporating very skeletal LEGEND-200 like geometry... Should be good enough for bulk simulations in the liquid argon, at the very least." << G4endl << G4endl;
+
+
+//Matches the specifications in Mage. Specifications which Suck with a capital S, by the way.
+     L200watershield = new G4Box("water200",5.0*m,5.0*m,5.0*m);
+     L200coppershield = new G4Tubs("cu200",0*m, 2*m, 2*m,0, 2*M_PI);
+     L200argonshield = new G4Tubs("ar200",0*m, 1.95*m, 1.95*m,0, 2*M_PI);
+     L200detector = new G4Tubs("det200",0*mm, 37.5*mm, 31.25*mm,0, 2*M_PI);
+     L200fakeshroud = new G4Tubs("shr200",290*mm, 295*mm, 1.5*m,0, 2*M_PI);
+     //At these dimensions, TOTAL detector mass is 195.48 kg
+     //There's an outer ring of 12, an inner ring of 6, and one detector smacko dabbo in the center
+     //I've designed the 19 string array to be 7 deep and consist of identical detectors
+     //The outer circle should be off x axis, the inner circle should be on x axis
+     //Could do the other way, it's equivalent, but eh
+
+     logical_L200watershield = new G4LogicalVolume(L200watershield,mat_Water,"log_water200");
+     logical_L200watershield->SetVisAttributes ( new G4VisAttributes(G4Colour(0.3,0.6,1.0,0.2)) );//Blue
+     logical_L200coppershield = new G4LogicalVolume(L200coppershield,mat_Cu,"log_cu200");
+     logical_L200coppershield->SetVisAttributes ( new G4VisAttributes(G4Colour(0.62, 0.3, 0.2,0.7) ));//Brown
+     logical_L200argonshield = new G4LogicalVolume(L200argonshield,mat_ArLiq,"log_ar200");
+     logical_L200argonshield->SetVisAttributes(new G4VisAttributes(G4Colour(0.1, 0.4, 0.1)));//Green
+     logical_L200detector = new G4LogicalVolume(L200detector,mat_Detector,"log_det200");
+     logical_L200detector->SetVisAttributes ( new G4VisAttributes(G4Colour(0.6,0.1,0.6)) );//Purple
+     logical_L200fakeshroud = new G4LogicalVolume(L200fakeshroud,mat_ArLiq,"log_shr200");
+     logical_L200fakeshroud->SetVisAttributes ( new G4VisAttributes(G4Colour(0.8,0.8,0.8, 0.5)) );//Off-white
+
+physical_L200watershield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_L200watershield,"phy_water200",logical_World,false,0,checkOverlaps);
+physical_L200coppershield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_L200coppershield,"phy_cu200",logical_L200watershield,false,0,checkOverlaps);
+physical_L200argonshield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_L200argonshield,"phy_ar200",logical_L200coppershield,false,0,checkOverlaps);
+physical_L200fakeshroud = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_L200fakeshroud,"phy_shr200",logical_L200argonshield,false,0,checkOverlaps);
+
+//Let's try an inscribing radius of, I dunno,  240mm? The shroud is at 295 mm and the detectors have 37mm radius
+//Vertical spacing of whocaresumm 100mm
+ int detectornumber = 0;
+ int inscribingradius = 240;//mm
+ int verticalspacing = 100;//mm
+
+     double azimuth = 0;
+  
+     double x = 0;//mm
+     double y = 0;//mm
+     double z = 250;//km                      nah just kidding this one is mm too
+
+     for(int i=0;i<72;i++)
+       {//outer ring, 12 strings, 6 detectors per string
+	 
+	 if(i%12==0&&i!=0)
+	   z = z - verticalspacing;
+	 
+	 azimuth = (2*TMath::Pi()*(i%12))/12;
+	 
+	 x = TMath::Cos(azimuth)*inscribingradius;
+	 y = TMath::Sin(azimuth)*inscribingradius;
+
+detector_name = "phy_L200det";
+detector_name += G4UIcommand::ConvertToString(detectornumber);
+physical_L200detector = new G4PVPlacement(0,G4ThreeVector(x*mm,y*mm,z*mm),logical_L200detector,"phy_det",logical_L200argonshield,false,detectornumber,checkOverlaps);
+
+	 detectornumber++;
+
+       }
+     
+     z = 250;
+     inscribingradius = 125;
+     
+     for(int i=0;i<36;i++)
+       {//inner ring, off-axis, 6 strings, 6 detectors per string
+	 
+	 if(i%6==0&&i!=0)
+	   z = z - verticalspacing;
+	 
+
+	 azimuth = (2*TMath::Pi()*(i%6-0.5))/6;
+	 if(!i%6)//negative, needs to be corrected
+	   azimuth = (2*TMath::Pi())*11/12;
+		      
+	 x = TMath::Cos(azimuth)*inscribingradius;
+	 y = TMath::Sin(azimuth)*inscribingradius;
+
+	 detector_name = "phy_L200det";
+	 detector_name += G4UIcommand::ConvertToString(detectornumber);
+	 physical_L200detector = new G4PVPlacement(0,G4ThreeVector(x*mm,y*mm,z*mm),logical_L200detector,"phy_det",logical_L200argonshield,false,detectornumber,checkOverlaps);
+
+
+	 detectornumber++;
+
+       }
+
+     //Final string, dead center
+     x = 0;
+     y = 0;
+     z = 200;
+
+     for(int  i =0;i<6;i++)
+       {
+
+	 detector_name = "phy_L200det";
+	 detector_name += G4UIcommand::ConvertToString(detectornumber);
+	 physical_L200detector = new G4PVPlacement(0,G4ThreeVector(x*mm,y*mm,z*mm),logical_L200detector,"phy_det",logical_L200argonshield,false,detectornumber,checkOverlaps);
+	 
+	 z = z-80;
+	 detectornumber++;	 
+       }
+
+     G4cout << detectornumber << " detectors placed." << G4endl << G4endl;
+
+     return physical_World;
+
+   }//LEGEND200
 
 
 

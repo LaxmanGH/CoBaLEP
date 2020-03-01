@@ -1,4 +1,4 @@
-/// \file CoBaLEP.cc
+
 /// \brief Main program of the  example
 
 #include "DetectorConstruction.hh"
@@ -50,8 +50,8 @@
 //Some templates copied directly from the Geant4 Users' Guide
 
 const int maxsteps=100000000;
-int currentsteps=0; //global ints just to keep track of file size limits
-int savedsteps = 0;
+unsigned long long int currentsteps=0; //global ints just to keep track of file size limits
+unsigned long long int savedsteps = 0;
 
 //////////////////////////////////////////////////
 
@@ -179,7 +179,7 @@ public:
 //Step info only: the PID of the nucleus this particle originated from. Is 0 if the particle didn't originate from a nucleus. Is persistent across multiple secondaries. e.g. if a nucleus creates a positron which creates two photons, the positron and the photons will all have the same parentnucleusPID
 
   int         ParentTrackID;
-  double      energy;
+  double      energydeposition;
   double      kineticenergy;
   double      time;
   double      x;
@@ -210,7 +210,7 @@ public:
   double      nuclearx;  
   double      nucleary;  
   double      nuclearz;  
-  double startenergy;
+  double startingkineticenergy;
 
   //variables specifically to parse detector number from detector name (used in the Write method)
   G4String    name;
@@ -258,7 +258,7 @@ void IO::Open(char* inputseed)
   fTree->Branch("PID",&PID,"PID/I");
   //PDG encoding particle ID
   fTree->Branch("ParentTrackID",&ParentTrackID,"ParentTrackID/I");
-  fTree->Branch("energy",&energy,"energy/D");
+  fTree->Branch("energydeposition",&energydeposition,"energydeposition/D");
   fTree->Branch("kineticenergy", &kineticenergy, "kineticenergy/D");
   fTree->Branch("time",&time,"time/D");
   fTree->Branch("x",&x,"x/D");
@@ -280,6 +280,7 @@ void IO::Open(char* inputseed)
   fTree->Branch("tracknumber",&tracknumber,"tracknumber/I");
   fTree->Branch("detectornumber",&detectornumber,"detectornumber/I");
   //fTree->Branch("isentryevent", &isentryevent, "isentryevent/I");
+  fTree->Branch("material", &material);
   fTree->Branch("creatorprocess", &creatorprocess);
   fTree->Branch("startx",&startx,"startx/D");
   fTree->Branch("starty",&starty,"starty/D");
@@ -303,7 +304,7 @@ void IO::Open(char* inputseed)
   nuclearTree->Branch("randomseed",&randomseed,"randomseed/I");
   nuclearTree->Branch("primaryPID",&primaryPID,"primaryPID/I");
   nuclearTree->Branch("creatorprocess",&creatorprocess);
-  nuclearTree->Branch("startenergy",&startenergy,"startenergy/D");
+  nuclearTree->Branch("startingkineticenergy",&startingkineticenergy,"startingkineticenergy/D");
   nuclearTree->Branch("time",&time,"time/D");
   G4cout << "Output files opened." << G4endl;
 
@@ -315,7 +316,7 @@ void IO::Write(G4Track *track, int isadetector, int isentry)
   
   PID = track->GetDefinition()->GetPDGEncoding();
   ParentTrackID = track->GetParentID();
-  energy = track->GetStep()->GetTotalEnergyDeposit()/CLHEP::keV;
+  energydeposition = track->GetStep()->GetTotalEnergyDeposit()/CLHEP::keV;
   kineticenergy = track->GetDynamicParticle()->GetKineticEnergy()/CLHEP::keV;
   time = track->GetGlobalTime()/CLHEP::ns;
 
@@ -420,7 +421,6 @@ void IO::WriteNuclear(G4Track *track)
 
   PID = track->GetDefinition()->GetPDGEncoding();  
   creatorprocess = track->GetCreatorProcess()->GetProcessName();  
-  //Why did I remove this?
   material = track->GetLogicalVolumeAtVertex()->GetMaterial()->GetName();
   x = track->GetPosition().x();
   y = track->GetPosition().y();
@@ -429,10 +429,10 @@ void IO::WriteNuclear(G4Track *track)
   muonpx = G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetPx()/CLHEP::keV;
   muonpy = G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetPy()/CLHEP::keV;
   muonpz = G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetPz()/CLHEP::keV;
-  startenergy = track->GetKineticEnergy();
+  startingkineticenergy = track->GetKineticEnergy();
   time = track->GetGlobalTime()/CLHEP::ns;
 
-
+  
   nuclearTree->Fill();
 }
 
@@ -478,6 +478,7 @@ public:
     fio->Close();
     t1=(double(clock())-t1);
     G4cout << G4endl << "Time:   " << t1/1000000 << G4endl << "steps simulated: " << currentsteps << G4endl << "steps saved: " << savedsteps << G4endl << G4endl;
+    _exit(0);
   } //Write TTree, close TFile, stop clock
 
  };
@@ -501,6 +502,7 @@ public:
   void UserTrackingAction();
   void PreUserTrackingAction(const G4Track* aTrack)
   {
+    
     if(aTrack->GetDefinition()->GetPDGEncoding()>10000000&&aTrack->GetDefinition()->GetPDGEncoding()!=1000080160&&aTrack->GetDefinition()->GetPDGEncoding()!=1000140280)
       {//Particle is a nucleus, its secondaries should be tagged (certain nuclei excluded)
 
@@ -520,7 +522,8 @@ public:
 	}
   }
 
-  void PostUserTrackingAction(const G4Track* aTrack)
+  
+    void PostUserTrackingAction(const G4Track* aTrack)
   {
     if(aTrack->GetUserInformation())
       {
@@ -541,7 +544,7 @@ public:
 	  }//if(secondaries
       }//if(aTrack->GetUser
   }//PostUser
-
+  
 
 
 };//TrackingAction
@@ -603,25 +606,32 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     material = step->GetPreStepPoint()->GetMaterial()->GetName();  
   else
     material = "Rock";
-//cuts go here
+  
   currentsteps++;
+
+  const G4VPhysicalVolume* prePoint = step->GetPreStepPoint()->GetPhysicalVolume();
+  const G4VPhysicalVolume* postPoint = step->GetPostStepPoint()->GetPhysicalVolume();
 
   if(savedsteps<maxsteps)
     {//hits inside detector detection
-      
-      G4String whatgeometry = step->GetPreStepPoint()->GetPhysicalVolume()->GetName();
 
-      const G4String detectornames = "phy_Det";
-      const G4String fillgasname = "phy_FillGas"; //LAr surrounding detector
-      const G4String liquidargon = "phy_liquidArgon";
+//cuts go here
       
-      if(material=="GermaniumEnriched")//~strstr(whatgeometry.c_str(),detectornames.c_str())) //if pre step point originates in a detector
+      if(prePoint&&postPoint)
 	{
-	  fio->Write(step->GetTrack(), 1, 0); //non-entry event
-	 savedsteps++;
-	}//if(strstr
+	  //Make sure both points exist first...
+	  //if(material=="GermaniumEnriched" || step->GetPostStepPoint()->GetMaterial()->GetName()=="GermaniumEnriched")
+	  //if((prePoint->GetName()=="phy_innerLArShield1"||prePoint->GetName()=="phy_innerLArShield2"||prePoint->GetName()=="phy_innerLArShield3"||prePoint->GetName()=="phy_innerLArShield4")&&(postPoint->GetName()=="phy_wrap1"||postPoint->GetName()=="phy_wrap2"||postPoint->GetName()=="phy_wrap3"||postPoint->GetName()=="phy_wrap4"))
+	  //Simulation for particle parameters BEFORE going through PE shielding
+	  //if(postPoint->GetName()=="phy_polyshield"&&prePoint->GetName()!="phy_polyshield"&&prePoint->GetName()!="phy_Gd2O3shield")
+	  if(material=="GermaniumEnriched")
+	    {//Should be good for outside sims
+	    fio->Write(step->GetTrack(), 1, 1);
+	    savedsteps++;
+	  }
+	} 
 
-    }   //if maxsteps
+   }   //if maxsteps
 
   //if(currentsteps>=maxsteps)
   //  {
@@ -684,15 +694,15 @@ int main(int argc,char** argv)
   //G4GDMLParser parser;
   //parser.Write("geom/NewGeometry.gdml", W, false);
 
-#ifdef G4VIS_USE
+  #ifdef G4VIS_USE
   // Initialize visualization
   G4VisManager* visManager = new G4VisExecutive;
   visManager->Initialize();
 #endif
-
+  
   // Get the pointer to the User Interface manager
    G4UImanager* UImanager = G4UImanager::GetUIpointer(); 
-
+ 
   if (argc!=1) {
     // batch mode
     G4String command = "/control/execute ";
@@ -700,7 +710,7 @@ int main(int argc,char** argv)
 
     UImanager->ApplyCommand(command+fileName);
   }
-  else {
+    else {
     // interactive mode : define UI session
     inputseed="413413413";
 #ifdef G4UI_USE
@@ -718,12 +728,11 @@ int main(int argc,char** argv)
   // owned and deleted by the run manager, so they should not be deleted
   // in the main() program !
 
-#ifdef G4VIS_USE
+  #ifdef G4VIS_USE
   delete visManager;
-#endif
+  #endif
   delete runManager;
-
-  return 0;
+  
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
