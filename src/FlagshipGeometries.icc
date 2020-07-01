@@ -1,3 +1,4 @@
+#include "Geometries.hh"
 //Current standard geometry used for generating physics results, as well as past versions. Brief description of each version can be found at the beginning of its conditional.
 
 //The following is a list of all geometry options currently implemented:
@@ -8,120 +9,11 @@
   March2019WithCuts
   pCDR2019
   pCDR2020
+  LNGS
 */
 //You can also run a diagnostic by using the option 'Diagnostic'
 
 
-//Definition of all variables must take place OUTSIDE the conditional statements.
-
-
-//Ambiguous variables used in pretty much every geometry
-G4Box* solid_Rock; //= new G4Box("sol_Rock",50*m,50*m,30*m);
-G4Box* solid_Lab; //= new G4Box("sol_Lab",35*m,10*m,4*m);
-
-//Variables for detailed shaping of the surrounding rock,  used in the very first geometry (OriginalWithRock).
-G4Tubs* solid_CutOut;
-G4SubtractionSolid *solid_Rock2;//Lab cut out
-G4SubtractionSolid *solid_Rock3;//Detector space cut out
-G4LogicalVolume* logical_Rock;
-G4VPhysicalVolume* physical_Rock;
-
-
-//In addition to the above variables, the following are used in these geometries:
-//OriginalWithRangeCuts
-//September2018WithCuts
-//March2019WithCuts
-G4Tubs* inner_CutOut; //Space for detectors and inner rock region
-G4SubtractionSolid *outer_Rock; //Outer rock with inner cutout removed
-G4SubtractionSolid *outer_Rock2;//Inner cutout AND lab space removed
-G4LogicalVolume* logical_outerRock;
-G4VPhysicalVolume* physical_outerRock;
-G4Tubs* inner_Rock;//Inner rock
-G4SubtractionSolid* inner_Rock2;//Inner rock with lab space removed
-G4LogicalVolume* logical_innerRock;
-G4VPhysicalVolume* physical_innerRock;
-G4Region *OuterRockRegion;//For range cuts
-G4Region *InnerRockRegion;//For range cuts
-
-
-//After the geometry overhaul, the only variables from the above that saw continued use were solid_Rock, solid_Lab, and the three outer_Rock variables. All of the additional variables below this were added during the overhaul.
-
-//Variables used exclusively in the 2019 version:
-G4Tubs *upperLArShield;
-G4LogicalVolume *logical_upperLArShield;
-G4VPhysicalVolume *physical_upperLArShield;
-G4Tubs *upperSSVessel;
-G4LogicalVolume *logical_upperSSVessel;
-G4VPhysicalVolume *physical_upperSSVessel;
-//Variables used exclusively in the 2020 version:
-G4Tubs *vacuumSpace;
-G4LogicalVolume *logical_vacuumSpace;
-G4VPhysicalVolume *physical_vacuumSpace;
-//There was no vacuum space implemented in 2019
-G4Tubs *innerSSVessel;
-G4LogicalVolume *logical_innerSSVessel;
-G4VPhysicalVolume *physical_innerSSVessel;
-//There were no chimneys implemented in 2019
-G4Tubs *SSChimney;
-G4LogicalVolume *logical_SSChimney;
-G4VPhysicalVolume *physical_SSChimney;
-//Variables used in both versions:
-G4Box *waterShield;
-G4LogicalVolume *logical_waterShield;
-G4VPhysicalVolume *physical_waterShield;
-G4Tubs *outerSSVessel;
-G4LogicalVolume *logical_outerSSVessel;
-G4VPhysicalVolume *physical_outerSSVessel;
-G4Tubs *outerLArShield;
-G4LogicalVolume *logical_outerLArShield;
-G4VPhysicalVolume *physical_outerLArShield;
-G4Tubs *innerCopperCryostat;
-G4LogicalVolume *logical_innerCopperCryostat1;
-G4LogicalVolume *logical_innerCopperCryostat2;
-G4LogicalVolume *logical_innerCopperCryostat3;
-G4LogicalVolume *logical_innerCopperCryostat4;
-G4VPhysicalVolume *physical_innerCopperCryostat;
-G4Tubs *innerLArShield;
-G4LogicalVolume *logical_innerLArShield1;
-G4LogicalVolume *logical_innerLArShield2;
-G4LogicalVolume *logical_innerLArShield3;
-G4LogicalVolume *logical_innerLArShield4;
-G4VPhysicalVolume *physical_innerLArShield;
-G4Tubs *ICPCshell;
-G4Tubs *borehole;
-G4SubtractionSolid *ICPCdetector;
-G4LogicalVolume *logical_ICPCdetector;
-G4VPhysicalVolume *physical_ICPCdetector;
-
-
-//Optional poly shield implementation
-//Search keyword 'Bernhard' for more information
-G4Tubs *polysolid;
-G4Tubs *Gd2O3solid;
-G4Tubs *subtractGd2O3;
-G4SubtractionSolid *polyshield;
-G4SubtractionSolid *Gd2O3shield;
-G4LogicalVolume *logical_polyshield;
-G4LogicalVolume *logical_Gd2O3shield;
-G4VPhysicalVolume *physical_polyshield;
-G4VPhysicalVolume *physical_Gd2O3shield;
-
-//Optional kill surface
-//Search keyword 'wrapper' for more information
-G4Tubs *wrapsolid;
-//G4LogicalVolume *logical_wrap;
-//~Artificial
-G4LogicalVolume *logical_wrap1;
-G4LogicalVolume *logical_wrap2;
-G4LogicalVolume *logical_wrap3;
-G4LogicalVolume *logical_wrap4;
-G4VPhysicalVolume *physical_wrap;
-
-//Diagnostics subtraction solids
-G4SubtractionSolid *subsolid1;
-G4SubtractionSolid *subsolid2;
-G4SubtractionSolid *subsolid3;
-G4SubtractionSolid *subsolid4;
 
 if(GeometryOption == "OriginalWithRock")//Original rock definition
   {
@@ -607,20 +499,190 @@ if(GeometryOption == "OriginalWithRock")//Original rock definition
        }
      
      return physical_World;     
-
+     
    }//pCDR 2020
 
 
+ else if(GeometryOption=="LNGS")
+   {
+     //Based (as much as it can be) on the design shown at Steve's Dec 2019 LEGEND meeting talk on alternative designs for LNGS
+     //The idea is to use the L200 vessel for 1/4 of the detectors, then build one huge water tank next to it to house 3 very similar
+     //newly-built vessels. I assume the material is going to be 316Ti, much as it is for the L200 vessel, with a copper lining in the middle part.
 
-else if(GeometryOption=="Diagnostic")
-{
-  //Make a diagnostic geometry, with every component spatially separated and weighed
-  //This will involve a lot of subtraction solids... Should probably work from the inside out, from oldest to newest geometry option
+     G4cout <<"Geometry is LNGS-specific baseline design, implemented April 2020" << G4endl << G4endl;
 
-  G4cout << G4endl << G4endl << "Diagnostic option selected. Printing all shape names and masses for pCDR-like geometries..." << G4endl << G4endl;
-  G4cout << "All masses given in kg" << G4endl << G4endl;
-  G4cout <<"pCDR2019 diagnostics:" << G4endl << G4endl << G4endl;
+     //Define the overall lab space. Looks like 1500cm along y, 4400 cm along x, 1000 cm along z will suffice
+     //Can't forget the 3m of rock on all sides... Man, muons are gonna take a long time in here!
+     //The roof is arched, so put another semicircle of 500cm radius on top for extra lab space
 
+
+     LNGSrock = new G4Box("sol_LNGSrock",2500*cm,1050*cm,1175*cm);
+     LNGSlabLower = new G4Box("sol_LNGSlabLower",2200*cm,750*cm,500*cm);
+     LNGSlabUpper = new G4Tubs("sol_LNGSlabUpper",0, 750*cm, 2200*cm, 0, 1*M_PI);
+     logical_LNGSrock  = new G4LogicalVolume(LNGSrock,mat_Rock,"log_LNGSrock");
+     logical_LNGSrock->SetVisAttributes ( new G4VisAttributes(G4Colour(0.5,0.5,0.5,0.75)) );//Gray, mostly transparent
+     physical_LNGSrock  = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_LNGSrock,"phy_LNGSrock",logical_World,false,0,checkOverlaps);  
+     logical_LNGSlabLower  = new G4LogicalVolume(LNGSlabLower,mat_air,"log_LNGSlabLower");
+     logical_LNGSlabLower->SetVisAttributes ( new G4VisAttributes(G4Colour(0.5,0.5,0.5,0.75)) );//Gray, mostly transparent
+     physical_LNGSlabLower  = new G4PVPlacement(0,G4ThreeVector(0,0,-375*cm),logical_LNGSlabLower,"phy_LNGSlabLower",logical_LNGSrock,false,0,checkOverlaps);
+     logical_LNGSlabUpper  = new G4LogicalVolume(LNGSlabUpper,mat_air,"log_LNGSlabUpper");
+     logical_LNGSlabUpper->SetVisAttributes ( new G4VisAttributes(G4Colour(0.5,0.5,0.5,0.75)) );//Gray, mostly transparent
+     rotm  = new G4RotationMatrix();
+     rotm->rotateX(90*deg); 
+     rotm->rotateY(90*deg);
+      rotm->rotateX(180*deg); 
+     physical_LNGSlabUpper  = new G4PVPlacement(rotm,G4ThreeVector(0,0,125*cm),logical_LNGSlabUpper,"phy_LNGSlabUpper",logical_LNGSrock,false,0,checkOverlaps);
+
+     //Next, the water tanks
+     //One will have L200 dimensions (1000cm cylinder) and one will be a new rectangular prism (2000cmx1000cmx1000cm)
+     //Rectangular tank is 1664cm (we'll call it 1650) from the "left" wall (when viewed along the y axis)
+     //L200 tank is more or less right against it, minus a set of stairs (we'll say 1m displacement)
+     //Half-x of lab space is 2200 cm, so L200 tank's leftmost point is at -2100cm, e.g. its center is at -1600 cm x
+     //Rectangular tank's leftmost point is then at -550cm from center of lab space, meaning centered at +450cm
+     //Detectors are displaced in y too? Sheesh man
+     //Both sets have their centers ~950 cm from the "back" wall, when viewing along the y axis
+     //L200 tank's backmost point is +50 cm, so its center is -200 cm in y
+     //Rectangular tank is as wide in y, so same case
+     //No z information given so I'll go out on a limb and assume the detectors are sitting on the floor... Which is at -500cm from z origin
+     //So tanks can be at 0 in z no problemo
+
+LNGSsmallWaterShield =  new G4Tubs("sol_LNGSsmallWaterShield",0, 500*cm, 500*cm, 0, 2*M_PI);
+//Nobody cares about the water tank's vessel... Like, it's not even pictured in GERDA's officially published figures!
+ logical_LNGSsmallWaterShield = new G4LogicalVolume(LNGSsmallWaterShield,mat_Water,"log_LNGSsmallWaterShield");
+ logical_LNGSsmallWaterShield->SetVisAttributes( new G4VisAttributes(G4Colour(0.3, 0.6, 1.0,0.2) ));//blue
+ physical_LNGSsmallWaterShield = new G4PVPlacement(0,G4ThreeVector(-1600*cm,200*cm,0),logical_LNGSsmallWaterShield,"phy_LNGSsmallWaterShield",logical_LNGSlabLower,false,0,checkOverlaps);
+LNGSlargeWaterShield =  new G4Box("sol_LNGSlargeWaterShield",1000*cm, 500*cm, 500*cm);
+
+ logical_LNGSlargeWaterShield = new G4LogicalVolume(LNGSlargeWaterShield,mat_Water,"log_LNGSlargeWaterShield");
+ logical_LNGSlargeWaterShield->SetVisAttributes( new G4VisAttributes(G4Colour(0.3, 0.6, 1.0,0.2) ));//blue
+ physical_LNGSlargeWaterShield = new G4PVPlacement(0,G4ThreeVector(450*cm,200*cm,0),logical_LNGSlargeWaterShield,"phy_LNGSlargeWaterShield",logical_LNGSlabLower,false,0,checkOverlaps);
+
+ //Next, the stainless steel vessels
+ //I'll assume that they're radius 200 cm each, like in L200
+ //Thickness... lord knows, nobody posted them on Github, so I'll hazard a guess at, man I dunno, 1 cm?
+ //I'll put 1 cm copper plating on the inside later, as well
+ //The neck is radius 40 cm, by the way
+
+     LNGSsteelVessel = new G4Tubs("sol_LNGSsteelVessel",0*m, 2*m, 2*m,0, 2*M_PI);
+ logical_LNGSsteelVessel = new G4LogicalVolume(LNGSsteelVessel,mat_316Ti,"log_LNGSsteelVessel");
+ logical_LNGSsteelVessel->SetVisAttributes( new G4VisAttributes(G4Colour(0.85, 0.85, 0.85,0.5) ));//light gray
+ physical_LNGSsteelVessel = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_LNGSsteelVessel,"phy_LNGSsteelVessel1",logical_LNGSsmallWaterShield,false,0,checkOverlaps);
+ //Need to place copies in the large water tank too, 5m apart each as well as 5m from the x-edges of the tank
+physical_LNGSsteelVessel = new G4PVPlacement(0,G4ThreeVector(-500*cm,0,0),logical_LNGSsteelVessel,"phy_LNGSsteelVessel2",logical_LNGSlargeWaterShield,false,1,checkOverlaps);
+physical_LNGSsteelVessel = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_LNGSsteelVessel,"phy_LNGSsteelVessel3",logical_LNGSlargeWaterShield,false,2,checkOverlaps);
+physical_LNGSsteelVessel = new G4PVPlacement(0,G4ThreeVector(500*cm,0,0),logical_LNGSsteelVessel,"phy_LNGSsteelVessel4",logical_LNGSlargeWaterShield,false,3,checkOverlaps);
+ LNGSargonShield = new G4Tubs("sol_LNGSargonShield",0*m, 1.99*m, 1.99*m,0, 2*M_PI);
+ logical_LNGSargonShield = new G4LogicalVolume(LNGSargonShield,mat_ArLiq,"log_LNGSargonShield");
+ logical_LNGSargonShield->SetVisAttributes( new G4VisAttributes(G4Colour(0.2, 0.9, 0.2,0.2) ));//green
+ physical_LNGSargonShield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_LNGSargonShield,"phy_LNGSargonShield",logical_LNGSsteelVessel,false,0,checkOverlaps);
+ // physical_LNGSargonShield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_LNGSargonShield,"phy_LNGSargonShield2",logical_LNGSsteelVessel,false,1,checkOverlaps);
+ // physical_LNGSargonShield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_LNGSargonShield,"phy_LNGSargonShield3",logical_LNGSsteelVessel,false,2,checkOverlaps);
+ // physical_LNGSargonShield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_LNGSargonShield,"phy_LNGSargonShield4",logical_LNGSsteelVessel,false,3,checkOverlaps);
+
+ //Copper cladding can go inside the liquid argon. What's the height on these things? I guess I'll say 2.5m
+ //Not implemented as of 6/9/2020 nice
+ /*     LNGScopperCladding = new G4Tubs("sol_LNGScopperCladding",198*cm, 199*cm, 125*cm,0, 2*M_PI);
+ logical_LNGScopperCladding = new G4LogicalVolume(LNGScopperCladding,mat_Cu,"log_LNGScopperCladding");
+ logical_LNGScopperCladding->SetVisAttributes( new G4VisAttributes(G4Colour(0.62, 0.3, 0.2,0.7) ));//Brown
+ physical_LNGScopperCladding = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_LNGScopperCladding,"phy_LNGScopperCladding1",logical_LNGSargonShield,false,0,checkOverlaps);
+ physical_LNGScopperCladding = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_LNGScopperCladding,"phy_LNGScopperCladding1",logical_LNGSargonShield,false,1,checkOverlaps);
+ physical_LNGScopperCladding = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_LNGScopperCladding,"phy_LNGScopperCladding1",logical_LNGSargonShield,false,2,checkOverlaps);
+ physical_LNGScopperCladding = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_LNGScopperCladding,"phy_LNGScopperCladding1",logical_LNGSargonShield,false,3,checkOverlaps);*/
+
+
+     LNGSsteelNeck = new G4Tubs("sol_LNGSsteelNeck",0*m, 40*cm, 80*cm,0, 2*M_PI);
+ logical_LNGSsteelNeck = new G4LogicalVolume(LNGSsteelNeck,mat_316Ti,"log_LNGSsteelNeck");
+ logical_LNGSsteelNeck->SetVisAttributes( new G4VisAttributes(G4Colour(0.85, 0.85, 0.85,0.5) ));//light gray
+ physical_LNGSsteelNeck = new G4PVPlacement(0,G4ThreeVector(0,0,280*cm),logical_LNGSsteelNeck,"phy_LNGSsteelNeck1",logical_LNGSsmallWaterShield,false,0,checkOverlaps);
+ //Need to place copies in the large water tank too, 5m apart each as well as 5m from the x-edges of the tank
+physical_LNGSsteelNeck = new G4PVPlacement(0,G4ThreeVector(-500*cm,0,280*cm),logical_LNGSsteelNeck,"phy_LNGSsteelNeck2",logical_LNGSlargeWaterShield,false,1,checkOverlaps);
+physical_LNGSsteelNeck = new G4PVPlacement(0,G4ThreeVector(0,0,280*cm),logical_LNGSsteelNeck,"phy_LNGSsteelNeck3",logical_LNGSlargeWaterShield,false,2,checkOverlaps);
+physical_LNGSsteelNeck = new G4PVPlacement(0,G4ThreeVector(500*cm,0,280*cm),logical_LNGSsteelNeck,"phy_LNGSsteelNeck4",logical_LNGSlargeWaterShield,false,3,checkOverlaps);
+  LNGSargonNeck = new G4Tubs("sol_LNGSargonNeck",0*m, 39*cm, 80*cm,0, 2*M_PI);
+ logical_LNGSargonNeck = new G4LogicalVolume(LNGSargonNeck,mat_ArLiq,"log_LNGSargonNeck");
+ logical_LNGSargonNeck->SetVisAttributes( new G4VisAttributes(G4Colour(0.2, 0.9, 0.2,0.5) ));//green
+ physical_LNGSargonNeck = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_LNGSargonNeck,"phy_LNGSargonNeck1",logical_LNGSsteelNeck,false,0,checkOverlaps);
+ //physical_LNGSargonNeck = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_LNGSargonNeck,"phy_LNGSargonNeck2",logical_LNGSsteelNeck,false,1,checkOverlaps);
+ //physical_LNGSargonNeck = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_LNGSargonNeck,"phy_LNGSargonNeck3",logical_LNGSsteelNeck,false,2,checkOverlaps);
+ //physical_LNGSargonNeck = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_LNGSargonNeck,"phy_LNGSargonNeck4",logical_LNGSsteelNeck,false,3,checkOverlaps);
+
+ //Finally, it's time to implement the detector array
+ //For now, just use the array in the other geometry, change placement
+
+     ICPCshell = new G4Tubs("sol_ICPCshell",0*m, 4.5*cm, 3.75*cm, 0, 2*M_PI);
+     borehole = new G4Tubs("sol_borehole",0*m, 0.5*cm, 2.5*cm, 0, 2*M_PI);
+     ICPCdetector = new G4SubtractionSolid("sol_ICPC", ICPCshell, borehole,0, G4ThreeVector(0,0,1.25*cm));//carve out borehole from ICPC
+     logical_ICPCdetector  = new G4LogicalVolume(ICPCdetector,mat_Detector,"log_ICPC");
+     logical_ICPCdetector->SetVisAttributes ( new G4VisAttributes(G4Colour(0.6,0.1,0.6)) );//Purple
+     
+     const int numberofdetectors = 114;
+     const int numberofstrings = 19;//1011 kg Ge76
+     const int inscribingradius = 375;//mm
+     const int verticalspacing = 250;//mm
+     
+     double azimuth = 0;
+     int zcounter = 0;
+     int longeststring = 0;
+     
+     double x = 0;
+     double y = 0;
+     double z = 0;
+     
+     longeststring = numberofdetectors/numberofstrings;
+     if(numberofdetectors%numberofstrings)
+       longeststring++;
+     //G4cout << longeststring << G4endl << G4endl;
+     
+     z = (verticalspacing*(longeststring-1)/2);//Number at the end is a flat displacement 
+     
+     for (int i = 0; i < numberofdetectors; i++)
+       {
+	 
+	 if(!(i%numberofstrings)&&(i))
+	   z = z-verticalspacing;
+	 
+	 azimuth = (2*TMath::Pi()*(i%numberofstrings))/numberofstrings;
+	 
+	 x = TMath::Cos(azimuth)*inscribingradius;
+	 y = TMath::Sin(azimuth)*inscribingradius;
+	 
+	 //G4cout << i << G4endl << "x: " << x << G4endl<< "y: " << y << G4endl << "z: " << z << G4endl << G4endl;
+	 
+	 detector_name = "phy_DetGeCrystal_";
+	 detector_name += G4UIcommand::ConvertToString(i);
+	 physical_ICPCdetector  = new G4PVPlacement(0,G4ThreeVector(x,y,z),logical_ICPCdetector,detector_name,logical_LNGSargonShield,false,0,checkOverlaps);    
+	 
+	 /*detector_name = "phy_DetGeCrystal_";
+	 detector_name += G4UIcommand::ConvertToString(i*4+1);
+	 physical_ICPCdetector  = new G4PVPlacement(0,G4ThreeVector(x,y,z),logical_ICPCdetector,detector_name,logical_LNGSargonShield,false,1,checkOverlaps);    
+	 
+	 detector_name = "phy_DetGeCrystal_";
+	 detector_name += G4UIcommand::ConvertToString(i*4+2);
+	 physical_ICPCdetector  = new G4PVPlacement(0,G4ThreeVector(x,y,z),logical_ICPCdetector,detector_name,logical_LNGSargonShield,false,2,checkOverlaps);    
+	 
+	 detector_name = "phy_DetGeCrystal_";
+	 detector_name += G4UIcommand::ConvertToString(i*4+3);
+	 physical_ICPCdetector  = new G4PVPlacement(0,G4ThreeVector(x,y,z),logical_ICPCdetector,detector_name,logical_LNGSargonShield,false,3,checkOverlaps);    
+	 */
+       }
+
+
+
+     return physical_World;
+
+   }//LNGS
+
+
+
+ else if(GeometryOption=="Diagnostic")
+   {
+     //Make a diagnostic geometry, with every component spatially separated and weighed
+     //This will involve a lot of subtraction solids... Should probably work from the inside out, from oldest to newest geometry option
+     
+     G4cout << G4endl << G4endl << "Diagnostic option selected. Printing all shape names and masses for pCDR-like geometries..." << G4endl << G4endl;
+     G4cout << "All masses given in kg" << G4endl << G4endl;
+     G4cout <<"pCDR2019 diagnostics:" << G4endl << G4endl << G4endl;
+     
      //detector array
      //pCDR information: 19 strings, 1000kg or so mass, 400mm inscribing radius (I used 375, which should be fine...)
      ICPCshell = new G4Tubs("sol_ICPCshell",0*m, 4.5*cm, 3.75*cm, 0, 2*M_PI);
@@ -928,15 +990,6 @@ subsolid4 = new G4SubtractionSolid("sol4", subsolid3, innerCopperCryostat,0, G4T
 }//Diagnostic
 
 
-
- else
-   {
-     //No valid option selected - this clown doesn't deserve a simulation!
-
-     G4cout << G4endl << "INVALID geometry option selected. Are you sure you have the right spelling in GeometryOption, as well as the right #include uncommented, in src/DetectorConstruction.cc ? Simulations will be performed in an empty world!" << G4endl << G4endl;
-
-     return physical_World;
-   }
 
 /*
 Uncomment the first block and move it into a pCDR-compatible geometry in order to implement the poly/Gd neutron shield

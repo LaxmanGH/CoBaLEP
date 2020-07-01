@@ -1,0 +1,27 @@
+#generates Ar39 nuclei, seeded randomly throughout a volume chosen by the Roma group
+#As of 6/13 this volume is +-700 in x and y, +-845 in z
+/CoBaLEP/generator/select GPS
+
+/gps/ion 18 39 18
+/gps/pos/type Volume
+/gps/pos/shape Cylinder
+/gps/pos/centre 0 0 0 m
+/gps/pos/radius 0.7 m
+/gps/pos/halfz 0.845 m
+/gps/ang/type iso
+/gps/ene/mono 0 MeV
+
+#/vis/open HepRepFile
+#/vis/drawVolume
+#/vis/viewer/flush
+#/vis/scene/add/trajectories
+#/vis/filtering/trajectories/create/particleFilter
+#/vis/filtering/trajectories/particleFilter-0/add gamma
+#/vis/filtering/trajectories/particleFilter-0/add mu-
+#/vis/filtering/trajectories/particleFilter-0/active true
+#/vis/scene/add/hits
+#/vis/scene/endOfEventAction accumulate
+
+
+/run/beamOn 100000
+

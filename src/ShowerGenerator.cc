@@ -346,7 +346,7 @@ bool passcuts(double x, double y, double px, double py, double pz, double assemb
 ShowerGenerator::ShowerGenerator()
 {
   const char* muon_path = "$WORKINGDIR/mac";
-
+  inputfile = new TFile("$WORKINGDIR/musun26M.root","READ");
 
 }
 
@@ -360,25 +360,102 @@ ShowerGenerator::~ShowerGenerator()
 
 void ShowerGenerator::GeneratePrimaryVertex(G4Event* anEvent)
 {
+  //Sample from file for Rome group 
+  //Can be switched between by commenting/uncommenting this block and the next block
 
-  //bool validmuon = false;
+  //Begin of MUSUN sampling block; start commenting out here
+
+  datatree = (TTree*)inputfile->Get("t1");
+
+
+ //bool validmuon = false;
+  /*float xx = 0;
+  float yy = 0;
+  float zz = 17.999999;
+  float zenith_angle = 0;
+  float azimuthal_angle = 0;
+  float kineticenergy = 0;*/
   double xx = 0;
   double yy = 0;
   double zz = 17.999999;
-  int attemptsatmuon = 0;
-  double energynorm = 0;
+  double zenith_angle = 0;
+  double azimuthal_angle = 0;
+  double kineticenergy = 0;
   double P=1;
-  double zenith_angle;
-  double azimuthal_angle;
-  //TF1 *simplecos = new TF1("simplecos","cos(x)",0.,70.*TMath::DegToRad()); 
+  int sampledentry = 0;
+
+  datatree->SetBranchAddress("x",&xx);
+  datatree->SetBranchAddress("y",&yy);
+  datatree->SetBranchAddress("z",&zz);
+  datatree->SetBranchAddress("theta",&zenith_angle);
+  datatree->SetBranchAddress("phi",&azimuthal_angle);
+  datatree->SetBranchAddress("energy",&kineticenergy);
+
+  //Grab random entry from the file. All energy/angular weighting intrinsically accounted for, so flat sampling is fine.
+  //Only use for LEGEND-200 sims
+  sampledentry = G4UniformRand()*datatree->GetEntries();
+  //G4cout << sampledentry << G4endl;
+  datatree->GetEntry(sampledentry);
+
+  particle_position.setX(xx*cm);
+  particle_position.setY(yy*cm);
+  particle_position.setZ(zz*cm);
+  particle_time = 0.0*s;
+
+  particle_momentumX=P*sin(zenith_angle)*cos(azimuthal_angle);
+  particle_momentumY=P*sin(zenith_angle)*sin(azimuthal_angle);
+  particle_momentumZ=(-1)*P*cos(zenith_angle);
+
+  G4PrimaryVertex* vertex = new G4PrimaryVertex(particle_position,particle_time);
+  
+  G4ParticleDefinition* particle_definition = 0;
+  particle_definition = G4MuonMinus::MuonMinusDefinition();
+  
+  // Set momenta, no rotations done here (unlike in MaGe)
+  double px_MJD = particle_momentumX*kineticenergy;
+  double py_MJD = particle_momentumY*kineticenergy;
+  double pz_MJD = particle_momentumZ*kineticenergy;
+
+  G4ThreeVector momentum(px_MJD*GeV,py_MJD*GeV,pz_MJD*GeV);
+
+  G4PrimaryParticle* thePrimaryParticle =
+    new G4PrimaryParticle(particle_definition,
+			  px_MJD*GeV,
+			  py_MJD*GeV,
+			  pz_MJD*GeV);
+  
+  vertex->SetPrimary(thePrimaryParticle);
+  
+  anEvent->AddPrimaryVertex(vertex); //End of MUSUN sampling block, comment/uncomment here
+
+
+
 
   //02-18-20 update: for now, the trig efficiency cut is being turned off
 
   //while(!validmuon)
   //{
 
-      xx = (G4UniformRand()-0.5)*99.9;//from -49.95m to 49.95m
+  //TF1 *simplecos = new TF1("simplecos","cos(x)",0.,70.*TMath::DegToRad()); 
+
+
+
+  //Start of flat angle/energy sampling block, begin comment/uncomment here  
+
+  /*
+  double xx = 0;
+  double yy = 0;
+  double zz = 12;
+  //~Tring something new... For LNGS-specific geometry
+  //int attemptsatmuon = 0;
+  double energynorm = 0;
+  double P=1;
+  double zenith_angle = 0;
+  double azimuthal_angle = 0;
+
+  xx = (G4UniformRand()-0.5)*99.9;//from -49.95 to 49.95m//For cryopit geometry
       yy = (G4UniformRand()-0.5)*99.9;
+      //yy = (G4UniformRand()-0.5)*179.9;//from -89.95m to 89.95m//For 4 tank geometry
 
       //zenith_angle=simplecos->GetRandom();                                                                                                                              
       zenith_angle = G4UniformRand()*70*TMath::Pi()/180;
@@ -388,7 +465,7 @@ void ShowerGenerator::GeneratePrimaryVertex(G4Event* anEvent)
       particle_momentumY=P*sin(zenith_angle)*sin(azimuthal_angle);
       particle_momentumZ=(-1)*P*cos(zenith_angle);
       
-      attemptsatmuon++;
+      //attemptsatmuon++;
       //validmuon = passcuts(xx,yy,particle_momentumX,particle_momentumY,particle_momentumZ,13,6.5,13);
 
       //}//while !validmuon                                                                                                                                                
@@ -430,13 +507,14 @@ void ShowerGenerator::GeneratePrimaryVertex(G4Event* anEvent)
     new G4PrimaryParticle(particle_definition,
 			  px_MJD*GeV,
 			  py_MJD*GeV,
-			  pz_MJD*GeV);
+			  pz_MJD*GeV);'
   vertex->SetPrimary(thePrimaryParticle);
   // vertex->SetWeight(Distribution(start_energy,start_costheta));  // Implemented elsewhere
   
-  anEvent->AddPrimaryVertex(vertex);
+  anEvent->AddPrimaryVertex(vertex);*/ 
   
-  
+  //End of flat angle/energy sampling block, finish comment/uncomment here  
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

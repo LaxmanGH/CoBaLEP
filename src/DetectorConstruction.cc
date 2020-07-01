@@ -39,6 +39,7 @@
 #include "G4Element.hh"
 #include "G4Torus.hh"
 #include "G4UnionSolid.hh"
+#include "G4UserLimits.hh"
 
 #include "G4String.hh"
 #include "math.h"
@@ -50,6 +51,8 @@
 
 #include "G4Material.hh"
 #include "G4UIcommand.hh"
+#include "Geometries.hh"
+
 
 #ifndef M_PI
 #define M_PI    3.14159265358979323846f
@@ -80,7 +83,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   //Check the geom/ folder for a list of all usable .gdml filenames
 
-  //If possible, import an existing geometry using GDML
+  //If desirable, import an existing geometry using GDML
+  //Please note that GDML files are incompatble with range cuts!
   //G4String inputgeometry = "/home/usd.local/cj.barton/workingfolder/geom/September2018WithCuts.gdml";
   //inputparser.Read(inputgeometry, false);
   //G4VPhysicalVolume* W = inputparser.GetWorldVolume();
@@ -97,7 +101,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   // World
 
-  G4Box* solid_World = new G4Box("sol_World",50*m,50*m,18*m);
+  G4Box* solid_World = new G4Box("sol_World",90*m,90*m,13*m);//Expanded for LNGS volume
   G4LogicalVolume* logical_World = new G4LogicalVolume(solid_World,mat_vacuum,"log_World");
   logical_World->SetVisAttributes (G4VisAttributes::Invisible);
   G4VPhysicalVolume* physical_World = new G4PVPlacement(0,G4ThreeVector(),logical_World,"phy_World",0,false,0,checkOverlaps);
@@ -106,14 +110,48 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double assemblyzoffset = -6.5*m;
   //for displacing the detector assembly from the center of the world
   //May change with different geometry selections
+  //assemblyzoffset is only relevant for outdated geometry options (2019)
 
-  //For a list of all GeometryOption choices, check the .icc file that you're including. Make sure to include only one .icc file, and make sure it's the correct one!  
-  G4String GeometryOption = "pCDR2020";
+  //July 2020 update: include option is handled automatically! You still have to specify the geometry manually though...
+  G4String GeometryOption = "LEGEND200";
   G4String LArScintillators = "NotImplementedYet";
   G4String DetectorComposition = "NotImplementedYet";
 	
-  #include "FlagshipGeometries.icc"	
-  //#include "SideStudyGeometries.icc"
+  /*
+Valid flagship geometry names:
+  OriginalWithRock
+  OriginalWithRangeCuts
+  September2018WithCuts
+  March2019WithCuts
+  pCDR2019
+  pCDR2020
+  LNGS
+  Diagnostic (a little outdated, will update when it becomes relevant)
+
+
+Valid side study geometry names:
+  GeOnly
+  TrigStudy
+  LArStudy
+  NeutronMultiplicityValidation
+  LArColumn
+  XeColumn
+  MCNPComparisonWater
+  MCNPComparisonLAr
+  PolyValidation
+  LEGEND200
+
+An incompatible selection will default to an empty simulation world
+*/
+
+
+  //if(GeometryOption=="OriginalWithRock"|| GeometryOption=="OriginalWithRangeCuts"||  GeometryOption=="September2018WithCuts"|| GeometryOption=="March2019WithCuts"|| GeometryOption=="pCDR2019"|| GeometryOption=="pCDR2020"|| GeometryOption=="LNGS"||GeometryOption=="Diagnostic")//Flagship geometries available as of July 2020, see .icc file for descriptions
+#include "FlagshipGeometries.icc"
+      //  else
+#include "SideStudyGeometries.icc"
+
+
+    G4cout << "You shouldn't be seeing this line under normal circumstances" << G4endl;
 
   //fill gas
 

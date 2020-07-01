@@ -1,3 +1,4 @@
+#include "Geometries.hh"
 //Options for side studies to implement
 //Below is a list of all options, in the order in which they appear in this document (not sure if the order is also chronological or not). For details on each option, go to that option in this file and read about it.
 
@@ -7,107 +8,12 @@
   LArStudy
   NeutronMultiplicityValidation
   LArColumn
+  XeColumn
   MCNPComparisonWater
   MCNPComparisonLAr
   PolyValidation
   LEGEND200
 */
-
-//Must declare all variables outside of the conditional statements
-
-//For Ge only geometry
-G4Tubs *GeColumn;
-
-//Trig study variables
-G4Tubs* innerer_CutOut;
-G4Tubs* innerer_Rock;
-G4SubtractionSolid *outer_Rock; //Outer rock with inner cutout removed
-G4SubtractionSolid *outer_Rock2;//Inner cutout AND lab space removed
-G4LogicalVolume* logical_outerRock;
-G4VPhysicalVolume* physical_outerRock;
-G4Tubs* inner_Rock;//Inner rock
-G4SubtractionSolid* inner_Rock2;//Inner rock with lab space removed
-G4LogicalVolume* logical_innerRock;
-G4VPhysicalVolume* physical_innerRock;
-
-//For LAR pathlength studies
-G4Tubs *inner_Argon;
-G4Tubs *outer_Copper;
-G4LogicalVolume *logical_Argon;
-G4LogicalVolume *logical_Copper;
-G4VPhysicalVolume *physical_Argon;
-G4VPhysicalVolume *physical_Copper;
-
-//For neutron multiplicity study
-G4Box* solid_innerWorld;
-G4LogicalVolume* logical_innerWorld;
-G4VPhysicalVolume* physical_innerWorld;
-G4Box* solid_neutronRock;
-G4LogicalVolume* logical_neutronRock;
-G4VPhysicalVolume* physical_neutronRock;
-G4String rock_name;
-G4ThreeVector rock_position;
-
-//For LArColumn showering study
-G4Box* solid_neutronLAr;
-G4LogicalVolume* logical_neutronLAr;
-G4VPhysicalVolume* physical_neutronLAr;
-G4String LAr_name;
-G4ThreeVector LAr_position;
-
-//For MCNP comparison studies
-G4Box *outerSteel;
-G4Box *h2oShield;
-G4Box *argonShield;
-G4Box *geTarget;
-G4LogicalVolume *logicalSteel;
-G4PVPlacement *physicalSteel;
-G4LogicalVolume *logicalh2o;
-G4PVPlacement *physicalh2o;
-G4LogicalVolume *logicalAr1;
-G4PVPlacement *physicalAr1;
-G4LogicalVolume *logicalAr2;
-G4PVPlacement *physicalAr2;
-G4LogicalVolume *logicalGe;
-G4PVPlacement *physicalGe;
-
-//For poly validation studies
-G4Box *polysquare;
-G4Box *Gd2O3square;
-G4Box *Larquare;
-G4Box *Gesquare;
-G4LogicalVolume *logical_polysquare;
-G4LogicalVolume *logical_Gd2O3square;
-G4LogicalVolume *logical_Larquare;
-G4LogicalVolume *logical_Gesquare;
-G4VPhysicalVolume *physical_polysquare;
-G4VPhysicalVolume *physical_Gd2O3square;
-G4VPhysicalVolume *physical_Larquare;
-G4VPhysicalVolume *physical_Gesquare;
-
-//For LEGEND-200 geometry mockup, to be used by Giuseppe et. al
-G4Box *L200watershield;
-G4Tubs *L200coppershield;
-G4Tubs *L200argonshield;
-G4Tubs *L200detector;
-G4Tubs *L200fakeshroud;
-G4LogicalVolume *logical_L200watershield;
-G4LogicalVolume *logical_L200coppershield;
-G4LogicalVolume *logical_L200argonshield;
-G4LogicalVolume *logical_L200detector;
-G4LogicalVolume *logical_L200fakeshroud;
-G4VPhysicalVolume *physical_L200watershield;
-G4VPhysicalVolume *physical_L200coppershield;
-G4VPhysicalVolume *physical_L200argonshield;
-G4VPhysicalVolume *physical_L200detector;
-G4VPhysicalVolume *physical_L200fakeshroud;
-
-
-//Used pretty much anywhere
-G4Box* solid_Rock; //= new G4Box("sol_Rock",50*m,50*m,30*m);
-G4Box* solid_Lab; //= new G4Box("sol_Lab",35*m,10*m,4*m);
-
-
 
 if(GeometryOption == "GeOnly")
   {
@@ -239,6 +145,28 @@ if(GeometryOption == "GeOnly")
 
 
 
+ else if(GeometryOption=="XeColumn")
+   {
+     //Simple column of Xe separated into slabs, for showering study.
+     G4cout << "Xe showering study" << G4endl << G4endl;
+     solid_neutronXe = new G4Box("sol_neutronXe",.5*cm,10*m,10*m);
+     logical_neutronXe = new G4LogicalVolume(solid_neutronXe,mat_Xe131,"log_neutronXe");
+     logical_neutronXe->SetVisAttributes ( new G4VisAttributes(G4Colour(0.9,0.9,0.1) )); //yellow?
+     
+     for(int j = 1;j<2001;j++)
+       {
+	 Xe_name = "phy_neutronXe";
+	 Xe_name+=G4UIcommand::ConvertToString(j);
+	 Xe_position = G4ThreeVector(0.5*cm,0,0);
+	 new G4PVPlacement(0,Xe_position,logical_neutronXe,Xe_name,logical_World,false,j,checkOverlaps);
+       } 
+
+     return physical_World;
+
+   }//XeColumn
+
+
+
  else if(GeometryOption=="MCNPComparisonWater")
    {
      //Studies designed to compare MCNP simulations carried out by the research group at ORNL with the results from CoBaLEP in an identical setup. As of February 2020, these investigations are ongoing but low priority... This is the more important configuration, with water, stainless steel, and liquid argon
@@ -335,12 +263,14 @@ if(GeometryOption == "GeOnly")
 
 
 //Matches the specifications in Mage. Specifications which Suck with a capital S, by the way.
-     L200watershield = new G4Box("water200",5.0*m,5.0*m,5.0*m);
-     L200coppershield = new G4Tubs("cu200",0*m, 2*m, 2*m,0, 2*M_PI);
+     L200watershield = new G4Tubs("water200",0*m,5.0*m,5.0*m,0, 2*M_PI);
+     L200steelvessel = new G4Tubs("ves200",0*m, 2*m, 2*m,0, 2*M_PI);
      L200argonshield = new G4Tubs("ar200",0*m, 1.95*m, 1.95*m,0, 2*M_PI);
-     L200detector = new G4Tubs("det200",0*mm, 37.5*mm, 31.25*mm,0, 2*M_PI);
-     L200fakeshroud = new G4Tubs("shr200",290*mm, 295*mm, 1.5*m,0, 2*M_PI);
-     //At these dimensions, TOTAL detector mass is 195.48 kg
+     L200detector = new G4Tubs("det200",0*mm, 42.5*mm, 30.0*mm,0, 2*M_PI);
+     //L200fakeshroud = new G4Tubs("shr200",290*mm, 295*mm, 1.5*m,0, 2*M_PI);
+     L200rocksolid = new G4Tubs("rocksolid200",0*m,8.0*m,8.0*m,0, 2*M_PI);
+     L200rock = new G4SubtractionSolid("rock200", L200rocksolid, L200watershield ,0 , G4ThreeVector(0,0,0));//cut out assembly from rock
+     //At these dimensions, TOTAL germanium detector mass is 206.6 kg
      //There's an outer ring of 12, an inner ring of 6, and one detector smacko dabbo in the center
      //I've designed the 19 string array to be 7 deep and consist of identical detectors
      //The outer circle should be off x axis, the inner circle should be on x axis
@@ -348,19 +278,25 @@ if(GeometryOption == "GeOnly")
 
      logical_L200watershield = new G4LogicalVolume(L200watershield,mat_Water,"log_water200");
      logical_L200watershield->SetVisAttributes ( new G4VisAttributes(G4Colour(0.3,0.6,1.0,0.2)) );//Blue
-     logical_L200coppershield = new G4LogicalVolume(L200coppershield,mat_Cu,"log_cu200");
-     logical_L200coppershield->SetVisAttributes ( new G4VisAttributes(G4Colour(0.62, 0.3, 0.2,0.7) ));//Brown
+     logical_L200steelvessel = new G4LogicalVolume(L200steelvessel,mat_316Ti,"log_ves200");
+     logical_L200steelvessel->SetVisAttributes ( new G4VisAttributes(G4Colour(0.62, 0.3, 0.2,0.7) ));//Brown
      logical_L200argonshield = new G4LogicalVolume(L200argonshield,mat_ArLiq,"log_ar200");
      logical_L200argonshield->SetVisAttributes(new G4VisAttributes(G4Colour(0.1, 0.4, 0.1)));//Green
+//~     logical_L200argonshield->SetUserLimits(new G4UserLimits(10.*cm,1000*m,10000000000*s,0*keV,0.1*mm));
+
      logical_L200detector = new G4LogicalVolume(L200detector,mat_Detector,"log_det200");
      logical_L200detector->SetVisAttributes ( new G4VisAttributes(G4Colour(0.6,0.1,0.6)) );//Purple
-     logical_L200fakeshroud = new G4LogicalVolume(L200fakeshroud,mat_ArLiq,"log_shr200");
-     logical_L200fakeshroud->SetVisAttributes ( new G4VisAttributes(G4Colour(0.8,0.8,0.8, 0.5)) );//Off-white
+     //logical_L200fakeshroud = new G4LogicalVolume(L200fakeshroud,mat_ArLiq,"log_shr200");
+     //logical_L200fakeshroud->SetVisAttributes ( new G4VisAttributes(G4Colour(0.8,0.8,0.8, 0.5)) );//Off-white
+     logical_L200rock = new G4LogicalVolume(L200rock,mat_Rock,"log_rock200");
+     logical_L200rock->SetVisAttributes ( new G4VisAttributes(G4Colour(0.5,0.5,0.5, 0.7)) );//Gray
 
+physical_L200rock = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_L200rock,"phy_rock200",logical_World,false,0,checkOverlaps);
 physical_L200watershield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_L200watershield,"phy_water200",logical_World,false,0,checkOverlaps);
-physical_L200coppershield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_L200coppershield,"phy_cu200",logical_L200watershield,false,0,checkOverlaps);
-physical_L200argonshield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_L200argonshield,"phy_ar200",logical_L200coppershield,false,0,checkOverlaps);
-physical_L200fakeshroud = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_L200fakeshroud,"phy_shr200",logical_L200argonshield,false,0,checkOverlaps);
+physical_L200steelvessel = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_L200steelvessel,"phy_ves200",logical_L200watershield,false,0,checkOverlaps);
+physical_L200argonshield = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_L200argonshield,"phy_ar200",logical_L200steelvessel,false,0,checkOverlaps);
+//~physical_L200fakeshroud = new G4PVPlacement(0,G4ThreeVector(0,0,0),logical_L200fakeshroud,"phy_shr200",logical_L200argonshield,false,0,checkOverlaps);
+
 
 //Let's try an inscribing radius of, I dunno,  240mm? The shroud is at 295 mm and the detectors have 37mm radius
 //Vertical spacing of whocaresumm 100mm
@@ -446,7 +382,7 @@ physical_L200detector = new G4PVPlacement(0,G4ThreeVector(x*mm,y*mm,z*mm),logica
  else
    {//No valid option selected - this clown doesn't deserve a simulation!
 
-     G4cout << G4endl << "INVALID geometry option selected. Are you sure you have the right spelling in GeometryOption, as well as the right #include uncommented, in src/DetectorConstruction.cc ? Simulations will be performed in an empty world!" << G4endl << G4endl;
+     G4cout << G4endl << "INVALID geometry option selected. Are you sure you have the right spelling in GeometryOption? Simulations will be performed in an empty world!" << G4endl << G4endl;
 
      return physical_World;
    }

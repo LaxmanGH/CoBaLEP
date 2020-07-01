@@ -28,6 +28,7 @@ G4Material* mat_Fe = nist->FindOrBuildMaterial("G4_Fe");
 G4Material* mat_H = nist->FindOrBuildMaterial("G4_H");
 G4Material* mat_Gd = nist->FindOrBuildMaterial("G4_Gd");
 G4Material* mat_B = nist->FindOrBuildMaterial("G4_B");
+//G4Material* mat_Xe = nist->FindOrBuildMaterial("G4_Xe");
 
 G4Material* mat_316Ti= new G4Material("StainlessSteel", 7.99 * g / cm3, 11);
 mat_316Ti->AddMaterial(mat_C,0.0004);
@@ -55,6 +56,29 @@ mat_boratedpoly->AddMaterial(mat_B,0.050);
 G4Material* mat_Gd2O3 = new G4Material("GadoliniumOxide", 7.4 * g / cm3, 2);
 mat_Gd2O3->AddMaterial(mat_Gd,0.868);
 mat_Gd2O3->AddMaterial(mat_Oxygen,0.132);
+
+//Xe and He doping upon Stefan's request
+  G4Isotope* iso_Xe131 = new G4Isotope("Xenon131", 54, 131, 130.9051 * g / mole);
+
+  G4Element* ele_Xe = new G4Element("Xenon", "Xe", 1);
+  ele_Xe->AddIsotope(iso_Xe131, 1.0);
+
+  G4Isotope* iso_He3 = new G4Isotope("He3", 2, 3, 3.016029 * g / mole);
+
+  G4Element* ele_He = new G4Element("Helium", "He", 1);
+  ele_He->AddIsotope(iso_He3, 1.0);
+
+ G4Material* mat_Xe131 = new G4Material("Xe131", 3.1*g/cm3, 1, kStateLiquid, 87.0*kelvin, 1.0*bar);
+mat_Xe131->AddElement(ele_Xe, 1.0);
+
+ G4Material* mat_XedopedAr1000 = new G4Material("XeAr1000ppm", 1.396*g/cm3, 2, kStateLiquid, 87.0*kelvin, 1.0*bar);
+mat_XedopedAr1000->AddMaterial(mat_Ar,0.99777619);//0.99977782 for 100 ppm, 0.99777619 for 1000 ppm
+mat_XedopedAr1000->AddElement(ele_Xe,0.00222381);//0.00022218 for 100 ppm, 0.00222381 for 1000 ppm
+
+G4Material* mat_HedopedArhundredth = new G4Material("HeAr100massfrac", 1.38144*g/cm3, 2, kStateLiquid, 87.0*kelvin, 1.0*bar);//Density 1.394 for 0.1%
+mat_HedopedArhundredth->AddMaterial(mat_Ar,0.99);
+mat_HedopedArhundredth->AddElement(ele_He,0.01);
+
 
 G4Material* mat_Rock= new G4Material("Rock", 2.86 * g / cm3, 2);
 G4double sum_minors = 0.22/1000000. + 0.33/1000000. + 0.96/100.;

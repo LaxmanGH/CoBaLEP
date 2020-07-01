@@ -52,7 +52,7 @@
 const int maxsteps=100000000;
 unsigned long long int currentsteps=0; //global ints just to keep track of file size limits
 unsigned long long int savedsteps = 0;
-
+//unsigned long long int killed=0;
 //////////////////////////////////////////////////
 
 //Class used to store and retrieve user-defined information from the track of the particle.
@@ -159,7 +159,7 @@ public:
 
   //member functions
   void Open(char* inputseed);
-  void Write(G4Track *track, int isadetector, int isentry);
+  void Write(G4Track *track, int isadetector);
   void WriteNuclear(G4Track *track);
   void Close();
 
@@ -200,8 +200,8 @@ public:
   double      steplength;
   int         tracknumber;
   int         detectornumber;
-  int         isentryevent;
   std::string creatorprocess;
+  std::string process;
   std::string material;
   double      startx;
   double      starty;
@@ -279,9 +279,9 @@ void IO::Open(char* inputseed)
   fTree->Branch("steplength",&steplength,"steplength/D");
   fTree->Branch("tracknumber",&tracknumber,"tracknumber/I");
   fTree->Branch("detectornumber",&detectornumber,"detectornumber/I");
-  //fTree->Branch("isentryevent", &isentryevent, "isentryevent/I");
-  fTree->Branch("material", &material);
+    fTree->Branch("material", &material);
   fTree->Branch("creatorprocess", &creatorprocess);
+  fTree->Branch("process", &process);
   fTree->Branch("startx",&startx,"startx/D");
   fTree->Branch("starty",&starty,"starty/D");
   fTree->Branch("startz",&startz,"startz/D");
@@ -301,6 +301,7 @@ void IO::Open(char* inputseed)
   nuclearTree->Branch("muonpy",&muonpy,"muonpy/D");
   nuclearTree->Branch("muonpz",&muonpz,"muonpz/D");
   nuclearTree->Branch("tracknumber",&tracknumber,"tracknumber/I");
+  nuclearTree->Branch("eventnumber",&eventnumber,"eventnumber/I");
   nuclearTree->Branch("randomseed",&randomseed,"randomseed/I");
   nuclearTree->Branch("primaryPID",&primaryPID,"primaryPID/I");
   nuclearTree->Branch("creatorprocess",&creatorprocess);
@@ -311,7 +312,7 @@ void IO::Open(char* inputseed)
 }
 
 
-void IO::Write(G4Track *track, int isadetector, int isentry)
+void IO::Write(G4Track *track, int isadetector)
 {
   
   PID = track->GetDefinition()->GetPDGEncoding();
@@ -320,21 +321,13 @@ void IO::Write(G4Track *track, int isadetector, int isentry)
   kineticenergy = track->GetDynamicParticle()->GetKineticEnergy()/CLHEP::keV;
   time = track->GetGlobalTime()/CLHEP::ns;
 
-  if(isentry==0) //Step did NOT start in LAr and end up in Ge
-    {
-      x = track->GetStep()->GetPreStepPoint()->GetPosition().x()/CLHEP::mm;
-      y = track->GetStep()->GetPreStepPoint()->GetPosition().y()/CLHEP::mm;
-      z = track->GetStep()->GetPreStepPoint()->GetPosition().z()/CLHEP::mm;
-      material = track->GetStep()->GetPreStepPoint()->GetMaterial()->GetName();
-    }
-
-  if(isentry==1) //Step started in LAr and ended in Ge; so called 'entry event'
-    {//Turns out this is defunct. I left it in for legacy purposes.
-      x = track->GetStep()->GetPostStepPoint()->GetPosition().x()/CLHEP::mm;
-      y = track->GetStep()->GetPostStepPoint()->GetPosition().y()/CLHEP::mm;
-      z = track->GetStep()->GetPostStepPoint()->GetPosition().z()/CLHEP::mm;
-      material = track->GetStep()->GetPostStepPoint()->GetMaterial()->GetName();
-    }
+  x = track->GetStep()->GetPreStepPoint()->GetPosition().x()/CLHEP::mm;
+  y = track->GetStep()->GetPreStepPoint()->GetPosition().y()/CLHEP::mm;
+  z = track->GetStep()->GetPreStepPoint()->GetPosition().z()/CLHEP::mm;
+  
+  material = track->GetStep()->GetPreStepPoint()->GetMaterial()->GetName();  
+  process = track->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
+  
   px = track->GetMomentumDirection().x();
   py = track->GetMomentumDirection().y();
   pz = track->GetMomentumDirection().z();
@@ -353,11 +346,13 @@ void IO::Write(G4Track *track, int isadetector, int isentry)
   stepnumber = savedsteps;
   steplength = track->GetStep()->GetStepLength()/CLHEP::mm;
   tracknumber = track->GetTrackID();
-  isentryevent = isentry;
-  if(PID!=13) //muons have no creator process and cause a seg fault
+
+  if(track->GetCreatorProcess())
     creatorprocess = track->GetCreatorProcess()->GetProcessName();
-  else
-    creatorprocess = "None";
+  else if(tracknumber==1)//Primary particles don't have a creatorprocess
+    creatorprocess = "Source";
+  else //This is only a very good guess as to what the problem is with these particles
+    creatorprocess=="Inelastic";
 
   startx = track->GetVertexPosition().x()/CLHEP::mm;
   starty = track->GetVertexPosition().y()/CLHEP::mm;
@@ -365,11 +360,7 @@ void IO::Write(G4Track *track, int isadetector, int isentry)
   
   if(isadetector==1)
     {
-      //below steps just used to parse detector number from detector name
-      if(isentry==0)
 	name = track->GetStep()->GetPreStepPoint()->GetPhysicalVolume()->GetName();
-      if(isentry==1)
-	name = track->GetStep()->GetPostStepPoint()->GetPhysicalVolume()->GetName();
       
       j=0;
       num ="";  
@@ -388,10 +379,7 @@ void IO::Write(G4Track *track, int isadetector, int isentry)
     }//if(isadetector==1
 
   if(isadetector==0)
-    {
-      detectornumber = 1181; //Used in implementation of LAr as its own detector
-      
-    }//if(isadetector==0
+      detectornumber = 9999; //Used in implementation of LAr as its own detector
 
   if(track->GetUserInformation())
     {//If this particle originated from a nucleus
@@ -410,7 +398,7 @@ void IO::Write(G4Track *track, int isadetector, int isentry)
 
 void IO::WriteNuclear(G4Track *track)
 {
-  //PID = track->GetDefinition()->GetPDGEncoding();;
+  PID = track->GetDefinition()->GetPDGEncoding();;
    if(track->GetUserInformation())
      {//If particle is a nuclear DAUGHTER of a nucleus
       T01TrackInformation* info = (T01TrackInformation*)(track->GetUserInformation());
@@ -420,12 +408,21 @@ void IO::WriteNuclear(G4Track *track)
     primaryPID = 0;
 
   PID = track->GetDefinition()->GetPDGEncoding();  
-  creatorprocess = track->GetCreatorProcess()->GetProcessName();  
+  tracknumber = track->GetTrackID();
+
+  if(track->GetCreatorProcess())
+    creatorprocess = track->GetCreatorProcess()->GetProcessName();
+  else if(tracknumber==1)//Primary particles don't have a creatorprocess
+    creatorprocess = "Source";
+  else //This is only a very good guess as to what the problem is with these particles
+    creatorprocess=="Inelastic";
+
   material = track->GetLogicalVolumeAtVertex()->GetMaterial()->GetName();
   x = track->GetPosition().x();
   y = track->GetPosition().y();
   z = track->GetPosition().z();
-  tracknumber = track->GetTrackID();
+
+  eventnumber = G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetEventID();
   muonpx = G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetPx()/CLHEP::keV;
   muonpy = G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetPy()/CLHEP::keV;
   muonpz = G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetPz()/CLHEP::keV;
@@ -502,8 +499,11 @@ public:
   void UserTrackingAction();
   void PreUserTrackingAction(const G4Track* aTrack)
   {
-    
-    if(aTrack->GetDefinition()->GetPDGEncoding()>10000000&&aTrack->GetDefinition()->GetPDGEncoding()!=1000080160&&aTrack->GetDefinition()->GetPDGEncoding()!=1000140280)
+    int cutID = aTrack->GetDefinition()->GetPDGEncoding();
+    //The motivation for cutID is that the vast majority of tracks with a nuclear PID are very low energy nuclei excited by elastic scatters
+    //We're primarily interested in nuclei created through hard scatters or through neutron or alpha capture etc, and their decay products
+    //Any isotope which is scattered on elastically frequently can and should have its cut ID added to the cut line below
+    if(cutID>10000000&&cutID!=1000080160&&cutID!=1000140280)
       {//Particle is a nucleus, its secondaries should be tagged (certain nuclei excluded)
 
 	//if(aTrack->GetUserInformation())
@@ -513,15 +513,17 @@ public:
 	//  G4cout << orinfo->GetOriginalParticle()->GetPDGEncoding() << G4endl << G4endl;
 	//  G4cout << aTrack->GetDefinition()->GetPDGEncoding() << G4endl;
 	//  }
-
+	
 	G4Track* theTrack = (G4Track*)aTrack;
+	
 	fio->WriteNuclear(theTrack);//Done BEFORE TrackInformation is assigned	
 	T01TrackInformation* anInfo = new T01TrackInformation(aTrack);//When declaring from a TRACK, original particle information is overwritten
 	//This means that in a long nuclear decay chain, the information about which nucleus started it is lost...
+	//Or at the very least, it's stored, but is uncorrelated
 	theTrack->SetUserInformation(anInfo);
-	}
+      }
   }
-
+  
   
     void PostUserTrackingAction(const G4Track* aTrack)
   {
@@ -606,40 +608,37 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     material = step->GetPreStepPoint()->GetMaterial()->GetName();  
   else
     material = "Rock";
-  
+
   currentsteps++;
 
   const G4VPhysicalVolume* prePoint = step->GetPreStepPoint()->GetPhysicalVolume();
   const G4VPhysicalVolume* postPoint = step->GetPostStepPoint()->GetPhysicalVolume();
 
+  /*Implemented for Romie homies	
+	//Don't simulate argon that was seeded into the germanium, it doesn't belong there!
+  if(material=="GermaniumEnriched"&&PID==1000180390)
+    {
+      step->GetTrack()->SetTrackStatus(fKillTrackAndSecondaries);
+      killed++;
+    }
+  else */
+
   if(savedsteps<maxsteps)
     {//hits inside detector detection
 
-//cuts go here
-      
-      if(prePoint&&postPoint)
+      if(prePoint&&postPoint)//Make sure both points exist first...
 	{
-	  //Make sure both points exist first...
-	  //if(material=="GermaniumEnriched" || step->GetPostStepPoint()->GetMaterial()->GetName()=="GermaniumEnriched")
-	  //if((prePoint->GetName()=="phy_innerLArShield1"||prePoint->GetName()=="phy_innerLArShield2"||prePoint->GetName()=="phy_innerLArShield3"||prePoint->GetName()=="phy_innerLArShield4")&&(postPoint->GetName()=="phy_wrap1"||postPoint->GetName()=="phy_wrap2"||postPoint->GetName()=="phy_wrap3"||postPoint->GetName()=="phy_wrap4"))
-	  //Simulation for particle parameters BEFORE going through PE shielding
-	  //if(postPoint->GetName()=="phy_polyshield"&&prePoint->GetName()!="phy_polyshield"&&prePoint->GetName()!="phy_Gd2O3shield")
-	  if(material=="GermaniumEnriched")
-	    {//Should be good for outside sims
-	    fio->Write(step->GetTrack(), 1, 1);
+	  //cuts go here
+	  if((material=="GermaniumEnriched")&&step->GetTotalEnergyDeposit()/CLHEP::keV>1)
+	    {
+	    fio->Write(step->GetTrack(), 1);
 	    savedsteps++;
-	  }
-	} 
+	    //step->GetTrack()->SetTrackStatus(fKillTrackAndSecondaries);
+	    }
+	}
 
-   }   //if maxsteps
+    }   //if maxsteps
 
-  //if(currentsteps>=maxsteps)
-  //  {
-  //    G4cout << G4endl << "Simulation is too large. Force exit." << G4endl;
-  //    return;
-  //  }
-	    
-  
 }	     //void SteppingAction
 
 //////////////////////////////////////////////////

@@ -1,5 +1,4 @@
 	//liquid Argon
-G4cout << G4endl << "WARNING: changes made to geometry in order to test neutron showering in LAr shielding." << G4endl << G4endl;
 /* Polycone implementation; deprecated
 	G4double liquidArgon_Z[6] = {3.95*m,1.00001*m,1*m,-1*m,-1.00001*m,-3.95*m};
 	G4double liquidArgon_RMin[6] = {0*m,0*m,1.00001*m,1.00001*m,0*m,0*m};
