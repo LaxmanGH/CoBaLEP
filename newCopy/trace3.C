@@ -20,7 +20,7 @@ void trace3(void)
   bool wasprocessed = false;
   int failedtimesaves = 0;
   double t1 = double(clock());
-
+  int totalprocessed = 0;
 
 
   //I/O
@@ -33,21 +33,34 @@ void trace3(void)
   currenttree->SetBranchAddress("stepnumber",&stepnumber);
   currenttree->SetBranchAddress("randomseed",&filenumber);
   currenttree->GetEntry(0);
-  TFile *output = new TFile("cutsfromtrace.root","recreate");
+  cout <<filenumber<<endl << endl;
+  TFile *output = new TFile(Form("cutsfromtracer%i.root",filenumber),"recreate");
   output->cd();
-  TTree* outputtree = (TTree*)currenttree->CloneTree(0);
+TTree* outputtree = (TTree*)(currenttree->CloneTree(0));
   input->cd();
 
   while(!validsteps.eof())
     {
       if(filecheck!=filenumber)
 	{//Change of file; close current input and open new one
+	  totalprocessed+=outputtree->GetEntries();
+	  output->cd();
+	  outputtree->Write();
+	  output->Write();
+	  delete outputtree;
+	  output->Close();
+
           delete currenttree;
 	  input->Close();
 	  input = new TFile(Form("output%i.root",filecheck),"read");
 	  currenttree = (TTree*)input->Get("fTree"); //fetch the Tree header in memory
 	  currenttree->SetBranchAddress("stepnumber",&stepnumber);
+	  currenttree->SetBranchAddress("randomseed",&filenumber);
+	  currenttree->GetEntry(0);
 	  cout <<filenumber<<endl << endl;
+	  output = new TFile(Form("cutsfromtracer%i.root",filenumber),"recreate");
+	  outputtree = (TTree*)currenttree->CloneTree(0);
+	  input->cd();
 	}
 
       wasprocessed = false;
@@ -85,12 +98,18 @@ void trace3(void)
       validsteps >> filecheck >> stepcheck;
     }//Process all target steps
 
-
+  totalprocessed+=outputtree->GetEntries();
   output->cd();
   outputtree->Write();
+  output->Write();
+  output->Close();
+
+  gSystem->Exec("hadd -f cutsfromtraceback.root cutsfromtracer*");
+  gSystem->Exec("rm cutsfromtracer*");
 
   t1 = (double(clock()) - t1)/1000000;
-  cout << "Processing complete." << endl << "Time taken: " << t1 << endl << "Steps written: " << outputtree->GetEntries() << endl << "Failed time saves: " << failedtimesaves << endl << endl;
+  cout << "Processing complete." << endl << "Time taken: " << t1 << endl << "Steps written: " << totalprocessed << endl << "Failed time saves: " << failedtimesaves << endl << endl;
+
 
 }//EOF
 
